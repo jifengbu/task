@@ -38,7 +38,7 @@ module.exports = React.createClass({
     goToSubTask(obj, itemIndex) {
         app.navigator.push({
             component: TaskSupervision,
-            passProps:{item:obj, index:itemIndex},
+            passProps:{data:obj, index:itemIndex},
         });
     },
     renderRow(obj, i, n) {

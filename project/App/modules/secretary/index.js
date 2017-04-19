@@ -85,7 +85,7 @@ const HomeTabBar = React.createClass({
                 <TabNavigator.Item
                     key={item.index}
                     selected={this.state.tabIndex === item.index}
-                    renderBadge={() => item.index===1&&<TaskListBadge />}
+                    renderBadge={() => item.index===1 ? <TaskListBadge /> :null}
                     title={item.title}
                     titleStyle={styles.titleStyle}
                     selectedTitleStyle={styles.selecteTitleStyle}

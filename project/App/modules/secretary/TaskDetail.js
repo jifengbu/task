@@ -13,7 +13,7 @@ const {
 } = ReactNative;
 
 const PublishTask = require('./PublishTask');
-const { Button } = COMPONENTS;
+const { Button, TaskStepList } = COMPONENTS;
 
 module.exports = React.createClass({
     statics: {
@@ -66,6 +66,7 @@ module.exports = React.createClass({
                 <View style={[styles.textStyle,{justifyContent: 'center'}]}>
                     <Button onPress={this.doModifyTask.bind(null, obj, this.props.data.id, n)} style={styles.btnLogin} textStyle={styles.btnLoginText}>变更任务</Button>
                 </View>
+                <TaskStepList listData={obj.logsList}/>
             </View>
         )
     },
@@ -108,6 +109,7 @@ module.exports = React.createClass({
                         <View style={[styles.textStyle,{justifyContent: 'center'}]}>
                             <Button onPress={this.doModifyTask.bind(null, obj, this.props.data.id, null)} style={styles.btnLogin} textStyle={styles.btnLoginText}>变更任务</Button>
                         </View>
+                        <TaskStepList listData={obj.logsList}/>
                     </View>
                 }
                 <View style={styles.emptyStyle}/>
