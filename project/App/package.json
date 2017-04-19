@@ -1,0 +1,24 @@
+{
+  "name": "App",
+  "dependencies": {
+    "@remobile/react-native-cache-image": "^1.0.4",
+    "@remobile/react-native-camera": "^1.0.7",
+    "@remobile/react-native-clip-rect": "^1.0.0",
+    "@remobile/react-native-cordova": "^1.1.1",
+    "@remobile/react-native-echarts": "^1.0.7",
+    "@remobile/react-native-file-transfer": "^1.0.7",
+    "@remobile/react-native-image-crop": "^1.0.1",
+    "@remobile/react-native-smart-keyboard": "^1.0.0",
+    "@remobile/react-native-splashscreen": "^1.0.7",
+    "@remobile/react-native-sqlite": "^1.0.2",
+    "@remobile/react-native-toast": "^1.0.6",
+    "@remobile/react-native-update": "^1.0.8",
+    "@remobile/react-native-zip": "^1.0.4",
+    "react-native-fs": "git://github.com/remobile/react-native-fs.git",
+    "react-native-picker": "^4.0.18",
+    "react-native-smart-badge": "^1.1.1",
+    "react-native-swiper": "^1.5.4",
+    "react-native-tab-navigator": "^0.3.3",
+    "react-tween-state": "^0.1.5"
+  }
+}

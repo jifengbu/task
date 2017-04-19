@@ -1,0 +1,36 @@
+rootProject.name = 'GHwgh'
+
+include ':app'
+
+//RemobileLibraries
+include ':react-native-splashscreen'
+project(':react-native-splashscreen').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-splashscreen/android')
+
+include ':react-native-toast'
+project(':react-native-toast').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-toast/android')
+
+include ':react-native-cordova'
+project(':react-native-cordova').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-cordova/android')
+
+include ':react-native-zip'
+project(':react-native-zip').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-zip/android')
+
+include ':react-native-update'
+project(':react-native-update').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-update/android')
+
+include ':react-native-remobile-camera'
+project(':react-native-remobile-camera').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-camera/android')
+
+include ':react-native-file-transfer'
+project(':react-native-file-transfer').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-file-transfer/android')
+
+include ':react-native-sqlite'
+project(':react-native-sqlite').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-sqlite/android')
+
+//VendorLibraries
+include ':react-native-picker'
+project(':react-native-picker').projectDir = new File(settingsDir, '../App/node_modules/react-native-picker/android')
+
+include ':react-native-fs'
+project(':react-native-fs').projectDir = new File(settingsDir, '../App/node_modules/react-native-fs/android')
+

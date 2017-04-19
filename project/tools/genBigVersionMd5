@@ -1,0 +1,66 @@
+#!/bin/bash
+
+proj="cardc"
+distpath="../../../CardNodeServer/tools/dist/${proj}"
+
+function genIOSBundle() {
+    react-native bundle \
+        --platform ios \
+        --reset-cache \
+        --verbose \
+        --entry-file index.ios.js \
+        --bundle-output ./tools/www/index.ios.bundle \
+        --assets-dest ./tools/www/ \
+        --dev false
+}
+
+function genAndroidBundle() {
+    react-native bundle \
+        --platform android \
+        --reset-cache \
+        --verbose \
+        --entry-file index.android.js \
+        --bundle-output ./tools/www/index.android.bundle \
+        --assets-dest ./tools/www/ \
+        --dev false
+}
+
+function genMd5List() {
+    node -e "var o=process.argv;require('./getMd5List')(o[1],o[2])" ${1}
+    mv ./${1}_md5.json ${distpath}/${1}_md5.json
+    rm -fr www
+    echo "${distpath}"
+}
+
+function buildAndroid() {
+    rm -fr www
+    mkdir www
+    pushd ..
+    genAndroidBundle
+    popd
+    genMd5List android
+}
+
+function buildIos() {
+    rm -fr www
+    mkdir www
+    pushd ..
+    genIOSBundle
+    popd
+    genMd5List ios
+}
+
+function main() {
+    if [ "$1" = "android" ];then
+        buildAndroid
+    elif [ "$1" = "ios" ];then
+        buildIos
+    elif [ "$1" = "all" ];then
+        buildAndroid
+        buildIos
+    else
+        echo "Usage: ./getBigVersionMd5 ios|android|all"
+    fi
+}
+
+main $@

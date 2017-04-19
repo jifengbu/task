@@ -1,0 +1,28 @@
+#!/bin/bash
+
+src="${1-./img/logo.png}"
+
+#ios
+ffmpeg -i ${src} -s 40x40 ../ios/GHwgh/icons/icon-40.png -y
+ffmpeg -i ${src} -s 80x80 ../ios/GHwgh/icons/icon-40@2x.png -y
+ffmpeg -i ${src} -s 50x50 ../ios/GHwgh/icons/icon-50.png -y
+ffmpeg -i ${src} -s 100x100 ../ios/GHwgh/icons/icon-50@2x.png -y
+ffmpeg -i ${src} -s 60x60 ../ios/GHwgh/icons/icon-60.png -y
+ffmpeg -i ${src} -s 120x120 ../ios/GHwgh/icons/icon-60@2x.png -y
+ffmpeg -i ${src} -s 180x180 ../ios/GHwgh/icons/icon-60@3x.png -y
+ffmpeg -i ${src} -s 72x72 ../ios/GHwgh/icons/icon-72.png -y
+ffmpeg -i ${src} -s 144x144 ../ios/GHwgh/icons/icon-72@2x.png -y
+ffmpeg -i ${src} -s 76x76 ../ios/GHwgh/icons/icon-76.png -y
+ffmpeg -i ${src} -s 152x152 ../ios/GHwgh/icons/icon-76@2x.png -y
+ffmpeg -i ${src} -s 29x29 ../ios/GHwgh/icons/icon-small.png -y
+ffmpeg -i ${src} -s 58x58 ../ios/GHwgh/icons/icon-small@2x.png -y
+ffmpeg -i ${src} -s 57x57 ../ios/GHwgh/icons/icon.png -y
+ffmpeg -i ${src} -s 114x114 ../ios/GHwgh/icons/icon@2x.png -y
+
+cp ../ios/GHwgh/icons/icon@2x.png ../App/resource/image/splash/logo.png
+
+#android
+ffmpeg -i ${src} -s 48x48 ../android/app/src/main/res/mipmap-mdpi/ic_launcher.png -y
+ffmpeg -i ${src} -s 72x72 ../android/app/src/main/res/mipmap-hdpi/ic_launcher.png -y
+ffmpeg -i ${src} -s 96x96 ../android/app/src/main/res/mipmap-xhdpi/ic_launcher.png -y
+ffmpeg -i ${src} -s 144x144 ../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png -y
