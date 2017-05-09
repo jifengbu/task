@@ -14,11 +14,11 @@ export default async ({
 }) => {
     let _audioList = [];
     if (audioList) {
-        _audioList = audioList.map((item) => { item.img = getMediaId(item.img); return item; });
+        _audioList = audioList.map((item) => { return getMediaId(item) });
     }
     let _imageList= [];
     if (imageList) {
-        _imageList = audioList.map((item) => { item.img = getMediaId(item.img); return item; });
+        _imageList = audioList.map((item) => { return getMediaId(item) });
     }
     const doc = new TaskModel({
         publisherId: userId,

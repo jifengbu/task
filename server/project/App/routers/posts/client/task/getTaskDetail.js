@@ -2,9 +2,9 @@ import { TaskModel } from '../../../../models';
 
 export default async ({
     userId,
-    TaskId,
+    taskId,
 }) => {
-    const doc = await TaskModel.findById(TaskId).populate({
+    const doc = await TaskModel.findById(taskId).populate({
         path: 'senderId',
         select: { name: 1, phone: 1 },
     });

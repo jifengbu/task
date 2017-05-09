@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import passportLocalMongoose from 'passport-local-mongoose';
-import { formatTime, formatMedia } from '../utils';
+import { formatTime, getMediaPath } from '../utils';
 const Schema = mongoose.Schema;
 
 const taskSchema = new mongoose.Schema({
@@ -19,9 +18,8 @@ const taskSchema = new mongoose.Schema({
     endTime: { type: Date, default: Date.now }, // 任务结束时间
     publishTime: { type: Date, default: Date.now }, // 任务发布时间
 });
-taskSchema.plugin(passportLocalMongoose, { usernameField: 'phone' });
 
-taskSchema.virtual('userId').get(function () {
+taskSchema.virtual('id').get(function () {
     return this._id;
 });
 
@@ -29,10 +27,8 @@ const transform = {
     virtuals: true,
     transform: function (doc, ret, options) {
         formatTime(ret, 'startTime', 'endTime', 'publishTime');
-        formatMedia(ret, 'head');
         ret.audioList  && (ret.audioList = ret.audioList.map((o) => getMediaPath(o)));
         ret.imageList  && (ret.imageList = ret.imageList.map((o) => getMediaPath(o)));
-        delete ret.id;
         delete ret._id;
         delete ret.__v;
         return ret;

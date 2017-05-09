@@ -1,10 +1,10 @@
-var { until, post, upload, client: { userId }, shipper: { roadmapId } } = require('../../utils');
+var { until, post, upload, client: { userId, taskId } } = require('../../utils');
 var files = {};
 
-function uploadFile (type) {
+function uploadFile (type, filetype) {
     var defaultOptions = {
         url: '/uploadFile',
-        files: { file: ['img/' + type + '.png'] },
+        files: { file: ['res/' + type + '.' + (filetype || 'jpg')] },
         params: {
             userId,
         },
@@ -22,20 +22,22 @@ function uploadFile (type) {
     });
 }
 
-uploadFile('commentImg0');
-uploadFile('commentImg1');
+uploadFile('cargo');
+uploadFile('star', 'mp3');
 
 until(
-    () => files['commentImg0'] && files['commentImg1'],
+    () => files['cargo'] && files['star'],
     (cb) => setTimeout(cb, 200),
     () => {
         var param = {
             userId,
-            roadmapId,
-            content: '这是一个测试',
-            imgList: [files['commentImg0'], files['commentImg1']],
+            taskId,
+            title: '测试任务',
+            content: '认真测试',
+            audioList: [files['star']],
+            imageList: [files['cargo']],
         };
 
-        post('/client/submitComment', param);
+        post('/client/modifyTask', param);
     }
 );

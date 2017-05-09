@@ -8,9 +8,8 @@ export modifyPersonalInfo from './common/modifyPersonalInfo'; // 修改个人信
 export submitFeedback from './common/submitFeedback'; // 提交反馈意见
 
 // task
-export placeTask from './task/placeTask'; // 创建任务
+export createTask from './task/createTask'; // 创建任务
 export modifyTask from './task/modifyTask'; // 修改任务
-export cancelTask from './task/cancelTask'; // 取消任务
-export recoverTask from './task/recoverTask'; // 取消任务
+export removeTask from './task/removeTask'; // 删除任务
 export getTaskList from './task/getTaskList'; // 获取任务列表
 export getTaskDetail from './task/getTaskDetail'; // 获取任务详情

@@ -17,8 +17,6 @@ if (fs.existsSync(adminPath)) {
 
 module.exports = {
     client,
-    shipper,
-    shop,
     admin,
     saveClient (obj) {
         fs.writeFileSync(clientPath, JSON.stringify(obj));

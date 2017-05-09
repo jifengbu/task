@@ -3,6 +3,7 @@ import { getMediaId, omitNil } from '../../../../utils';
 
 export default async ({
     userId,
+    taskId,
     executorId,
     title,
     content,
@@ -14,13 +15,13 @@ export default async ({
 }) => {
     let _audioList = [];
     if (audioList) {
-        _audioList = audioList.map((item) => { item.img = getMediaId(item); return item; });
+        _audioList = audioList.map((item) => { return getMediaId(item) });
     }
     let _imageList= [];
     if (imageList) {
-        _imageList = audioList.map((item) => { item.img = getMediaId(item); return item; });
+        _imageList = audioList.map((item) => { return getMediaId(item) });
     }
-    const doc = await TaskModel.findByIdAndUpdate(TaskId, omitNil({
+    const doc = await TaskModel.findByIdAndUpdate(taskId, omitNil({
         executorId,
         title,
         content,

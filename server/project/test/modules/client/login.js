@@ -1,4 +1,4 @@
-var { post, saveCardC, client } = require('../../utils');
+var { post, saveClient, client } = require('../../utils');
 var { clientPhone } = require('../../config');
 var args = process.argv.splice(2);
 
@@ -10,6 +10,6 @@ var param = {
 post('/client/login', param).then((obj) => {
     if (obj.success) {
         client.userId = obj.context.userId;
-        saveCardC(client);
+        saveClient(client);
     }
 });

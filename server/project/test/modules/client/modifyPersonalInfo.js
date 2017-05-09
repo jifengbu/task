@@ -4,7 +4,7 @@ var files = {};
 function uploadFile (type) {
     var defaultOptions = {
         url: '/uploadFile',
-        files: { file: ['img/' + type + '.jpg'] },
+        files: { file: ['res/' + type + '.jpg'] },
         params: {
             userId,
         },

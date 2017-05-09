@@ -4,9 +4,9 @@ var args = process.argv.splice(2);
 
 var param = {
     userId,
-    keyword: args[0] || '',
+    type: 1,
     pageNo: 0,
     pageSize: 3,
 };
 
-post('/client/getCargoList', param);
+post('/client/getTaskList', param);

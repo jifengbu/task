@@ -17,3 +17,4 @@ node_modules
 download
 *.idea
 local.properties
+/server/project/test/utils/data/*.json

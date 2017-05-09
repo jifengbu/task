@@ -1,10 +1,10 @@
-var { until, post, upload, client: { userId, orderId } } = require('../../utils');
+var { until, post, upload, client: { userId } } = require('../../utils');
 var files = {};
 
 function uploadFile (type, filetype) {
     var defaultOptions = {
         url: '/uploadFile',
-        files: { file: ['img/' + type + '.' + (filetype || 'jpg')] },
+        files: { file: ['res/' + type + '.' + (filetype || 'jpg')] },
         params: {
             userId,
         },
@@ -23,22 +23,24 @@ function uploadFile (type, filetype) {
 }
 
 uploadFile('cargo');
+uploadFile('star', 'mp3');
 
 until(
-    () => files['cargo'],
+    () => files['cargo'] && files['star'],
     (cb) => setTimeout(cb, 200),
     () => {
         var param = {
             userId,
-            orderId,
-            size: { length: 21, width: 3, height: 3 },
-            descriptList: [{
-                img: files['cargo'],
-                text: '海鲜(包括一些石油)',
-            }],
-            embraceAddress: { latitude: 10, longitude: 10, name: '小河区黄河路' },
+            executorId: userId,
+            title: '测试任务',
+            content: '认真测试',
+            audioList: [files['star']],
+            imageList: [files['cargo']],
+            type: 1,
+            startTime: '2017-05-15 03:00:00',
+            endTime: '2017-05-16 03:00:00',
         };
 
-        post('/client/modifyOrder', param);
+        post('/client/createTask', param);
     }
 );
