@@ -1,0 +1,62 @@
+#!/bin/bash
+
+source ~/command/common
+
+SERVER="120.25.96.74"
+
+function genDistForProject() {
+    pushd ../../${1}/project 1>/dev/null
+    vim -e -s config.js -c ":%s/localhost/${SERVER}/" -c ":wq"
+    npm run dist
+    vim -e -s config.js -c ":%s/${SERVER}/localhost/" -c ":wq"
+    pushd ../dist 1>/dev/null
+    tar zcvf ${2}.tar.gz app.js main.css package.json public
+    mv ${2}.tar.gz ../../CardNodeServer/tools/dist
+    popd 1>/dev/null
+    popd 1>/dev/null
+}
+
+function show_help()
+{
+    echo "xdist [-t[targets]]"
+    echo ""
+    echo "  -t [targets]:targets as follows:"
+    echo "      a, b, m, s[a: CardA_pc, b: CardB_pc, m: CardM_pc, s: CardNodeServer]"
+    echo "      uses: -t a+b+m"
+    echo "      uses: -t all"
+    echo ""
+}
+
+function main()
+{
+    local has_oper a b m s all targets
+    has_oper=0; a=1; b=2; m=4; s=8; all=15;
+    while getopts :t: opt;do
+        has_oper=1
+        case $opt in
+            t)targets=$(($OPTARG));;
+            *)show_help;exit;;
+        esac
+    done
+    [ $has_oper -eq 0 ] && show_help && exit
+
+    mkdir -p dist
+
+    if (($targets&a));then
+        genDistForProject CardA_pc admin
+    fi
+
+    if (($targets&b));then
+        genDistForProject CardB_pc cardb
+    fi
+
+    if (($targets&m));then
+        genDistForProject CardM_pc cardm
+    fi
+
+    if (($targets&s));then
+        genDistForProject CardNodeServer server
+    fi
+}
+
+main "$@"

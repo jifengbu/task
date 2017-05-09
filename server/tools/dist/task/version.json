@@ -1,0 +1,12 @@
+{
+    "iosPassed": true,
+    "iosJsVersionCode":0,
+    "iosDescription":["发布第一个版本"],
+    "androidPassed": {
+        "baidu": false,
+        "default": true
+    },
+    "versionName":"1.5",
+    "androidJsVersionCode":0,
+    "androidDescription": ["修正错误", "解决完发现的bug"]
+}

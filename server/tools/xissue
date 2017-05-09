@@ -1,0 +1,176 @@
+#!/bin/bash
+
+source ~/command/common
+ip="120.25.96.74"
+password=88164657YHrt
+remote_dir=/root/nodejs/workspace/server/download
+_type="version"
+_name=""
+
+function xissue_version()
+{
+	expect -c "
+    set timeout 30000;
+		spawn scp -r "dist/${_name}/version.json" "root@${ip}:${remote_dir}/${_name}/app/version.json"
+		expect {
+			\"*password:\" {send \"${password}\r\"}
+		}
+		interact
+    "
+}
+
+function xissue_ios()
+{
+    mkdir -p ${_name}
+    cp dist/${_name}/ios_md5.json ${_name}/ios_md5.json
+    cp dist/${_name}/version.json ${_name}/version.json
+    pushd ${_name}
+    tar zcvf ${_name}.tar.gz *
+	expect -c "
+    set timeout 30000;
+		spawn scp -r "${_name}.tar.gz" "root@${ip}:${remote_dir}/${_name}/app/${_name}.tar.gz"
+		expect {
+			\"*password:\" {send \"${password}\r\"}
+		}
+		interact
+    "
+    popd
+    rm -fr ${_name}
+    expect -c "
+    set timeout 30000;
+        spawn ssh root@${ip};
+        expect {
+            \"*password:\" {send \"${password}\r\"; exp_continue}
+            \"*#\" {send \" cd  ${remote_dir}/${_name}/app\rtar zxf ${_name}.tar.gz\rrm -f ${_name}.tar.gz\rexit\r\"}
+        }
+        interact
+    "
+}
+
+function xissue_android()
+{
+    mkdir -p ${_name}
+    cp dist/${_name}/${_name}_default.apk ${_name}/${_name}.apk
+    cp dist/${_name}/android_md5.json ${_name}/android_md5.json
+    cp dist/${_name}/version.json ${_name}/version.json
+    pushd ${_name}
+    tar zcvf ${_name}.tar.gz *
+	expect -c "
+    set timeout 30000;
+		spawn scp -r "${_name}.tar.gz" "root@${ip}:${remote_dir}/${_name}/app/${_name}.tar.gz"
+		expect {
+			\"*password:\" {send \"${password}\r\"}
+		}
+		interact
+    "
+    popd
+    rm -fr ${_name}
+    expect -c "
+    set timeout 30000;
+        spawn ssh root@${ip};
+        expect {
+            \"*password:\" {send \"${password}\r\"; exp_continue}
+            \"*#\" {send \" cd  ${remote_dir}/${_name}/app\rtar zxf ${_name}.tar.gz\rrm -f ${_name}.tar.gz\rexit\r\"}
+        }
+        interact
+    "
+}
+
+function xissue_jsandroid()
+{
+    mkdir -p ${_name}
+    cp dist/${_name}/jsandroid.zip ${_name}/jsandroid.zip
+    cp dist/${_name}/jsandroid_all.zip ${_name}/jsandroid_all.zip
+    cp dist/${_name}/android_md5.json ${_name}/android_md5.json
+    cp dist/${_name}/version.json ${_name}/version.json
+    pushd ${_name}
+    tar zcvf ${_name}.tar.gz *
+	expect -c "
+    set timeout 30000;
+		spawn scp -r "${_name}.tar.gz" "root@${ip}:${remote_dir}/${_name}/app/${_name}.tar.gz"
+		expect {
+			\"*password:\" {send \"${password}\r\"}
+		}
+		interact
+    "
+    popd
+    rm -fr ${_name}
+    expect -c "
+    set timeout 30000;
+        spawn ssh root@${ip};
+        expect {
+            \"*password:\" {send \"${password}\r\"; exp_continue}
+            \"*#\" {send \" cd  ${remote_dir}/${_name}/app\rtar zxf ${_name}.tar.gz\rrm -f ${_name}.tar.gz\rexit\r\"}
+        }
+        interact
+    "
+}
+
+function xissue_jsios()
+{
+    mkdir -p ${_name}
+    cp dist/${_name}/jsios.zip ${_name}/jsios.zip
+    cp dist/${_name}/jsios_all.zip ${_name}/jsios_all.zip
+    cp dist/${_name}/ios_md5.json ${_name}/ios_md5.json
+    cp dist/${_name}/version.json ${_name}/version.json
+    pushd ${_name}
+    tar zcvf ${_name}.tar.gz *
+	expect -c "
+    set timeout 30000;
+		spawn scp -r "${_name}.tar.gz" "root@${ip}:${remote_dir}/${_name}/app/${_name}.tar.gz"
+		expect {
+			\"*password:\" {send \"${password}\r\"}
+		}
+		interact
+    "
+    popd
+    rm -fr ${_name}
+    expect -c "
+    set timeout 30000;
+        spawn ssh root@${ip};
+        expect {
+            \"*password:\" {send \"${password}\r\"; exp_continue}
+            \"*#\" {send \" cd  ${remote_dir}/${_name}/app\rtar zxf ${_name}.tar.gz\rrm -f ${_name}.tar.gz\rexit\r\"}
+        }
+        interact
+    "
+}
+
+function xissue_package() {
+    case ${_type} in
+        version) xissue_version;;
+        android) xissue_android;;
+        ios) xissue_ios;;
+        jsandroid) xissue_jsandroid;;
+        jsios) xissue_jsios;;
+    esac
+}
+
+function show_help()
+{
+	local -a list
+	list="xissue"
+	list=("${list[@]}" "Usage :xissue [-t|-n|-h]")
+    list=("${list[@]}" "xissue -n [name]: pdshop")
+	list=("${list[@]}" "xissue -t [type]: android/ios/jsandroid/jsios [default: version]")
+	list=("${list[@]}" "xissue -h:show help")
+	__msgbox "${list[@]}"
+}
+
+function main()
+{
+    local has_oper
+    has_oper=0
+	while getopts :n:t:h opt;do
+        has_oper=1
+		case ${opt} in
+			n)_name="$OPTARG";;
+			t)_type="$OPTARG";;
+			*)show_help;exit;;
+		esac
+	done
+    [ $has_oper -eq 0 -o "$_name" = "" ] && show_help && exit
+    xissue_package
+}
+
+main "$@"

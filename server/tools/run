@@ -1,0 +1,65 @@
+#!/bin/bash
+
+function doCommand() {
+    if [ "$1" = "start" ];then
+        pushd $2
+        pm2 start "app.js" --name "$2"
+        popd
+    elif [ "$1" = "restart" ];then
+        pm2 restart "$2" --update-env
+    elif [ "$1" = "stop" ];then
+        pm2 stop "$2"
+    elif [ "$1" = "delete" ];then
+        pm2 delete "$2"
+    fi
+}
+
+function show_help()
+{
+    echo "run -c[command] -t[targets]"
+    echo ""
+    echo "  -c [command]:command as follows:"
+    echo "      start restart stop delete"
+    echo ""
+    echo "  -t [targets]:targets as follows:"
+    echo "      a, b, m, s[a: admin, b: cardb, m: cardm, s: server]"
+    echo "      uses: -t a+b+m"
+    echo "      uses: -t all"
+    echo ""
+}
+
+function main()
+{
+    local has_oper a b m s all targets command
+    has_oper=0; a=1; b=2; m=4; s=8; all=15;
+    while getopts :t:c: opt;do
+        has_oper=1
+        case $opt in
+            t)targets=$(($OPTARG));;
+            c)command=$OPTARG;;
+            *)show_help;exit;;
+        esac
+    done
+    [ $has_oper -eq 0 ] && show_help && exit
+
+    if (($targets&a));then
+        doCommand $command admin
+    fi
+
+    if (($targets&b));then
+        doCommand $command cardb
+    fi
+
+    if (($targets&m));then
+        doCommand $command cardm
+    fi
+
+    if (($targets&s));then
+        mkdir -p server/download/cardc/app
+        mkdir -p server/download/cardb/app
+        mkdir -p server/download/cardm/app
+        doCommand $command server
+    fi
+}
+
+main "$@"

@@ -1,0 +1,21 @@
+{
+  "name": "Card_Server",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "pm2 start app.js"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.20.0",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "gridfs-stream": "^1.1.1",
+    "mongoose": "^4.7.2",
+    "mongoose-auto-increment": "^5.0.1",
+    "multer": "^1.2.1",
+    "nodemailer": "^3.1.8",
+    "passport-local-mongoose": "^4.0.0"
+  },
+  "devDependencies": {
+    "pm2": "^2.2.2"
+  }
+}
