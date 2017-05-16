@@ -2,11 +2,13 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import multer from 'multer';
 import mongoose from 'mongoose';
+import http from 'http';
 import path from 'path';
 import fs from 'fs';
 
 import config from '../config';
 import routers from './routers';
+import { registerSocket } from './routers/sockets';
 
 const storage = {
     _handleFile (req, file, cb) {
@@ -51,4 +53,8 @@ app.use(express.static(path.resolve('download')));
 // Routers
 app.use(routers);
 
-export default app;
+//socket.io
+const server = http.Server(app);
+registerSocket(server);
+
+export default server;

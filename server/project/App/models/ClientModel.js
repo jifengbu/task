@@ -12,11 +12,16 @@ const clientSchema = new mongoose.Schema({
     head: { type: Schema.Types.ObjectId, ref: 'Media' }, // 用户头像
     birthday: { type: String }, // 生日
     reservePhone: [{ type: String }], // 预备电话
+    salary: { type: Number, default: 0 }, // 工资
+    post: { type: String }, // 职位
+    partment: { type: String }, // 部门
+    superior: { type: Schema.Types.ObjectId, ref: 'Client' }, // 上级
+    subors: [{ type: Schema.Types.ObjectId, ref: 'Client' }], // 下属
     registerTime: { type: Date, default: Date.now }, // 注册时间
 });
 clientSchema.plugin(passportLocalMongoose, { usernameField: 'phone' });
 
-clientSchema.virtual('userId').get(function () {
+clientSchema.virtual('id').get(function () {
     return this._id;
 });
 
@@ -25,7 +30,6 @@ const transform = {
     transform: function (doc, ret, options) {
         formatTime(ret, 'registerTime');
         formatMedia(ret, 'head');
-        delete ret.id;
         delete ret._id;
         delete ret.__v;
         return ret;

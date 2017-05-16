@@ -26,6 +26,6 @@ export default async ({ userId, type, pageNo, pageSize }) => {
 
     return { success: true, context: {
         count,
-        TaskList: docs,
+        taskList: docs,
     } };
 };

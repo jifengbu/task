@@ -1,4 +1,4 @@
-var { post, client: { userId } } = require('../../utils');
+var { post, saveClient, client, client: { userId } } = require('../../utils');
 
 var args = process.argv.splice(2);
 
@@ -9,4 +9,9 @@ var param = {
     pageSize: 3,
 };
 
-post('/client/getTaskList', param);
+post('/client/getTaskList', param).then((obj) => {
+    if (obj.context.taskList.length) {
+        client.taskId = obj.context.taskList[0].id;
+        saveClient(client);
+    }
+});
