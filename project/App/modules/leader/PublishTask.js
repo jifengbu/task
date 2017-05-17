@@ -8,60 +8,37 @@ const {
     View,
     ScrollView,
     TextInput,
+    TouchableHighlight,
     TouchableOpacity,
 } = ReactNative;
 
 const moment = require('moment');
 const ExamineTask = require('./ExamineTask.js');
+const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
 
-const { Picker, Button } = COMPONENTS;
+const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
 module.exports = React.createClass({
-    statics: {
-        title: '书记，主任下发任务',
-    },
-    getDefaultProps() {
-        return {
-            task: {
-                supervisor: '王经理',
-                executor: '王东来',
-                remind: '每天提醒1次',
-            }
-        };
-    },
     getInitialState () {
-        const {title, description, startTime, endTime, supervisor, executor, remind} = this.props.task;
         return {
-            title,
-            description,
-            supervisor,
-            executor,
-            remind,
+            title: '',
+            description: '',
+            tabIndex: 0,
             startTime: moment(),
             endTime: moment(),
-            urgent: false,
+            supervisor: '李经理',
+            executor: '李敏镐',
+            overlayShowLongPressMessageBox: false,
         };
     },
-    showSelectSuperVisor() {
-        const {supervisor} = this.props.task;
-        Picker(['王经理', '李经理'], [supervisor], '').then((value)=>{
-            this.setState({supervisor: value[0]});
-        });
+    changeTab (tabIndex) {
+        this.setState({ tabIndex });
     },
-    showSelectExecutor() {
-        const {executor} = this.props.task;
-        Picker(['王东来', '李敏镐'], [executor], '').then((value)=>{
-            this.setState({executor: value[0]});
-        });
+    showLongPressMessageBox (filepath, index) {
+        this.setState({ overlayShowLongPressMessageBox: true });
     },
-    showSelectRemind() {
-        const {remind} = this.props.task;
-        Picker(['每天提醒1次', '每天提醒2次',  '每天提醒3次'], [remind], '').then((value)=>{
-            this.setState({remind: value[0]});
-        });
-    },
-    changeUrgent () {
-        this.setState({ urgent: !this.state.urgent });
+    playVoice (filepath, index) {
+
     },
     showDataPicker(index) {
         let date = index===0 ? this.state.startTime : this.state.endTime;
@@ -129,244 +106,559 @@ module.exports = React.createClass({
     getTimeText (date) {
         return moment(date).format('HH时mm分');
     },
-    publishTask() {
-        const {title, description, startTime, endTime, supervisor, executor, remind, urgent} = this.state;
-        if (!(title&&description&&startTime&&endTime&&supervisor&&executor&&remind)) {
-            Toast('信息填写不完整');
-            return;
-        }
-        const params = {
-            title,
-            description,
-            startTime: startTime.format('YYYY-MM-DD HH:mm:ss'),
-            endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-            supervisor,
-            executor,
-            remind,
-            urgent,
-        };
-        console.log(params);
-        app.socket.sendData('PUBLISH_TASK_RQ', params, (data)=>{
-            Toast('发布成功成功');
-            this.setState({title: '', description: '', urgent: false});
-            app.showMainScene(0);
-        }, true);
+    showSelectSuperVisor() {
+        Picker(['王经理', '李经理'], ['李经理'], '').then((value)=>{
+            this.setState({supervisor: value[0]});
+        });
+    },
+    showSelectExecutor() {
+        Picker(['王东来', '李敏镐'], ['李敏镐'], '').then((value)=>{
+            this.setState({executor: value[0]});
+        });
+    },
+    showBigImage (localUrlImages, index) {
+        // app.showModal(
+        //     <AidBigImage
+        //         doImageClose={app.closeModal}
+        //         defaultIndex={index}
+        //         defaultImageArray={localUrlImages} />
+        // );
     },
     render () {
-        const {title, description, startTime, endTime, supervisor, executor, remind} = this.state;
+        const {startTime, endTime} = this.state;
+        const isFirstTap = this.state.tabIndex === 0;
         return (
-            <ScrollView style={styles.container}>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>{'任务主题'+':'}</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'请输入任务主题'}
-                        onChangeText={(text) => this.setState({title: text})}
-                        defaultValue={title}
-                        />
+            <View style={styles.container}>
+                <View style={styles.tabContainer}>
+                    <TouchableOpacity
+                        underlayColor='rgba(0, 0, 0, 0)'
+                        onPress={this.changeTab.bind(null, 0)}
+                        style={styles.touchTab}>
+                        <Text style={[styles.tabText, isFirstTap ? { color:'#fff000', fontSize: 16 } : { color:'#FFFFFF' }]} >
+                            {'综合任务'}
+                        </Text>
+                    </TouchableOpacity>
+                    <View style={styles.tabLine} />
+                    <TouchableOpacity
+                        underlayColor='rgba(0, 0, 0, 0)'
+                        onPress={this.changeTab.bind(null, 1)}
+                        style={styles.touchTab}>
+                        <Text style={[styles.tabText, !isFirstTap ? { color:'#fff000', fontSize: 16 } : { color:'#FFFFFF' }]} >
+                            {'单一任务'}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>{'任务描述'+':'}</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'请输入任务描述'}
-                        onChangeText={(text) => this.setState({description: text})}
-                        defaultValue={description}
-                        />
-                </View>
-                <View style={styles.protocalContainer}>
-                    <TouchableOpacity onPress={this.changeUrgent}>
-                        <Image
-                            resizeMode='cover'
-                            source={this.state.urgent ? app.img.common_tick_press : app.img.common_tick}
-                            style={styles.protocal_icon}
+                <ScrollView style={styles.pageContainer}>
+                    <View style={styles.mainTakContainer}>
+                        <TextInput
+                            underlineColorAndroid='transparent'
+                            style={[styles.input, {height: 35}]}
+                            numberOfLines = {1}
+                            placeholder={'点击输入任务主题'}
+                            textStyle={styles.contentText}
+                            placeholderTextColor={'#A7A7A7'}
+                            onChangeText={(text) => this.setState({title: text})}
                             />
-                    </TouchableOpacity>
-                    <Text style={styles.protocal_text}>  加急任务 </Text>
-                </View>
-                <View style={styles.emptyStyle}/>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>任务开始时间:</Text>
-                    <View style={styles.updownlside}>
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            onPress={this.showDataPicker.bind(null, 0)}
-                            style={styles.timeTextContainer}
-                            >
-                            <Text style={styles.timeText}>
-                                {this.getDateText(startTime)}
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            onPress={this.showTimePicker.bind(null, 0)}
-                            style={[styles.timeTextContainer, { marginLeft: 10 }]}
-                            >
-                            <Text style={styles.timeText}>
-                                {this.getTimeText(this.state.startTime)}
-                            </Text>
-                        </TouchableOpacity>
+                        <TextInput
+                            underlineColorAndroid='transparent'
+                            style={[styles.input, {height: 100}]}
+                            multiline = {true}
+                            placeholder={'点击输入任务描述'}
+                            textStyle={styles.contentText}
+                            placeholderTextColor={'#A7A7A7'}
+                            onChangeText={(text) => this.setState({description: text})}
+                            />
                     </View>
-                </View>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>任务结束时间:</Text>
-                    <View style={styles.updownlside}>
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            onPress={this.showDataPicker.bind(null, 1)}
-                            style={styles.timeTextContainer}
-                            >
-                            <Text style={styles.timeText}>
-                                {this.getDateText(endTime)}
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            onPress={this.showTimePicker.bind(null, 1)}
-                            style={[styles.timeTextContainer, { marginLeft: 10 }]}
-                            >
-                            <Text style={styles.timeText}>
-                                {this.getTimeText(this.state.endTime)}
-                            </Text>
-                        </TouchableOpacity>
+                    <View style={styles.childTaskContainer}>
+                        <DImage
+                            resizeMode='stretch'
+                            source={app.img.home_task_bg}
+                            style={styles.titleBgImage}>
+                            <Text style={styles.titleText}>{'子任务1'}</Text>
+                        </DImage>
+                        <TextInput
+                            underlineColorAndroid='transparent'
+                            style={[styles.input, {height: 35}]}
+                            numberOfLines = {1}
+                            placeholder={'点击输入任务主题'}
+                            textStyle={styles.contentText}
+                            placeholderTextColor={'#A7A7A7'}
+                            onChangeText={(text) => this.setState({title: text})}
+                            />
+                        <TextInput
+                            underlineColorAndroid='transparent'
+                            style={[styles.input, {height: 100}]}
+                            multiline = {true}
+                            placeholder={'点击输入任务描述'}
+                            textStyle={styles.contentText}
+                            placeholderTextColor={'#A7A7A7'}
+                            onChangeText={(text) => this.setState({description: text})}
+                            />
                     </View>
-                </View>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>选择任务监督人：</Text>
-                    <TouchableOpacity
-                        activeOpacity={0.5}
-                        onPress={this.showSelectSuperVisor}
-                        style={styles.inputContainer}
-                        >
-                        <Text style={styles.inputText}>
-                            {supervisor||'请选择任务监督人'}
-                        </Text>
+                    <View style={styles.voiceUpside}>
+                        <TouchableOpacity onPress={this.showMessageBox} style={styles.voiceButtonView}>
+                            <DImage resizeMode='cover' source={app.img.home_voice_icon2} style={styles.voiceStyle} />
+                        </TouchableOpacity>
+                        <ScrollView horizontal style={styles.voiceContainer}>
+                            {
+                                ['http: //sdfsdf', 'http: //sdfsdf'].map((item, i) => {
+                                    return (
+                                        <View key={i} style={[styles.audioContainer]}>
+                                            <TouchableOpacity
+                                                key={i}
+                                                activeOpacity={0.6}
+                                                onPress={this.playVoice.bind(null, item, i)}
+                                                delayLongPress={1500}
+                                                onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
+                                                style={styles.audioPlay}>
+                                                <Image source={app.img.home_voice_say_play} style={styles.imagevoice} />
+                                                <Text style={styles.textTime} >{'26' + "''"}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    );
+                                })
+                            }
+                        </ScrollView>
+                    </View>
+                    <View style={styles.chooseContainer}>
+                        <Text style={styles.menuText}>任务监督人:</Text>
+                        <View style={styles.updownlside}>
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.showSelectSuperVisor}
+                                style={styles.timeTextContainer}
+                                >
+                                <Text style={styles.timeText}>
+                                    {this.state.supervisor||'选择监督人'}
+                                </Text>
+                                <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.menuText}>任务执行人:</Text>
+                        <View style={styles.updownlside}>
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.showSelectExecutor}
+                                style={styles.timeTextContainer}
+                                >
+                                <Text style={styles.timeText}>
+                                    {this.state.executor||'选择执行人'}
+                                </Text>
+                                <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={styles.chooseContainer}>
+                        <Text style={styles.menuText}>开始时间:</Text>
+                        <View style={styles.updownlside}>
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.showDataPicker.bind(null, 0)}
+                                style={styles.timeTextContainer}
+                                >
+                                <Text style={styles.timeText}>
+                                    {this.getDateText(startTime)}
+                                </Text>
+                                <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.showTimePicker.bind(null, 0)}
+                                style={[styles.timeTextContainer, { marginLeft: 10 }]}
+                                >
+                                <Text style={styles.timeText}>
+                                    {this.getTimeText(this.state.startTime)}
+                                </Text>
+                                <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={styles.chooseContainer}>
+                        <Text style={styles.menuText}>结束时间:</Text>
+                        <View style={styles.updownlside}>
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.showDataPicker.bind(null, 1)}
+                                style={styles.timeTextContainer}
+                                >
+                                <Text style={styles.timeText}>
+                                    {this.getDateText(endTime)}
+                                </Text>
+                                <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.showTimePicker.bind(null, 1)}
+                                style={[styles.timeTextContainer, { marginLeft: 10 }]}
+                                >
+                                <Text style={styles.timeText}>
+                                    {this.getTimeText(this.state.endTime)}
+                                </Text>
+                                <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={styles.remindContainer}>
+                        <View style={styles.divisionLine}/>
+                        <View style={styles.remindTitleView}>
+                            <View style={styles.remindTitleLeftView}>
+                                <DImage
+                                    resizeMode='stretch'
+                                    source={app.img.home_clock}
+                                    style={styles.clockImage} />
+                                <Text style={styles.remindTitle}>{'任务提醒'}</Text>
+                            </View>
+                            <Button style={styles.btnSet} textStyle={styles.btnSetText}>{'点击设置'}</Button>
+                        </View>
+                        <View style={styles.divisionLine}/>
+                        <View style={styles.remindItem}>
+                            <DImage
+                                resizeMode='stretch'
+                                source={app.img.home_remind_check}
+                                style={styles.checkImage} />
+                            <Text style={styles.remindItemTitle}>{'每天08:30提醒一次'}</Text>
+                        </View>
+                        <View style={styles.divisionLine}/>
+                    </View>
+                    <View style={styles.imageUpLoadContainer}>
+                        <View style={styles.remindTitleLeftView}>
+                            <DImage
+                                resizeMode='cover'
+                                source={app.img.home_accessory}
+                                style={styles.clockImage} />
+                            <Text style={styles.remindTitle}>{'附件'}</Text>
+                        </View>
+                        <View style={styles.imageStyleView}>
+                            <DelayTouchableOpacity
+                                activeOpacity={0.6}
+                                style={styles.imageButtonView}
+                                onPress={this.showPohotoImg}>
+                                <DImage resizeMode='cover' source={app.img.home_add_image_icon} style={styles.imagelogostyle} />
+                            </DelayTouchableOpacity>
+                            <ScrollView horizontal style={styles.imageContainer}>
+                                {
+                                    ['http://sdfsdf', 'http://sdfsdf'].map((item, i) => {
+                                        return (
+                                            <TouchableHighlight
+                                                key={i}
+                                                underlayColor='rgba(0, 0, 0, 0)'
+                                                onPress={this.showBigImage}
+                                                onLongPress={this.showImageLongPressMessageBox}
+                                                style={styles.bigImageTouch}>
+                                                <Image
+                                                    key={i}
+                                                    resizeMode='stretch'
+                                                    source={{ uri: item }}
+                                                    style={styles.imageStyletu}
+                                                    />
+                                            </TouchableHighlight>
+                                        );
+                                    })
+                                }
+                            </ScrollView>
+                        </View>
+                    </View>
+                    <TouchableOpacity style={styles.addKidTaskContainer}>
+                        <DImage
+                            resizeMode='stretch'
+                            source={app.img.home_add}
+                            style={styles.addImage} />
+                        <Text style={styles.addText}>{'添加子任务'}</Text>
                     </TouchableOpacity>
-                </View>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>选择任务执行人：</Text>
-                    <TouchableOpacity
-                        activeOpacity={0.5}
-                        onPress={this.showSelectExecutor}
-                        style={styles.inputContainer}
-                        >
-                        <Text style={styles.inputText}>
-                            {executor||'请选择任务执行人'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>任务提醒设置：</Text>
-                    <TouchableOpacity
-                        activeOpacity={0.5}
-                        onPress={this.showSelectRemind}
-                        style={styles.inputContainer}
-                        >
-                        <Text style={styles.inputText}>
-                            {remind}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.emptyStyle}/>
-                <View style={[styles.textStyle,{justifyContent: 'center'}]}>
-                    <Button onPress={this.publishTask} style={styles.btnLogin} textStyle={styles.btnLoginText}>任务下发</Button>
-                </View>
-                <View style={styles.emptyStyle}/>
-            </ScrollView>
+                    <Button onPress={this.doAnonymousLogin} style={styles.btnSubmit} textStyle={styles.btnSubmitText}>{'送    审'}</Button>
+                </ScrollView>
+                {
+                    this.state.overlayShowLongPressMessageBox &&
+                    <VoiceLongPressMessageBox
+                        doDelete={this.doDeleteVoice}
+                        doBack={this.doBack} />
+                }
+            </View>
         );
     },
 });
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
     },
-    btnLogin: {
-        height: 46,
-        width: 220,
-        marginVertical: 20,
+    pageContainer: {
+        flex: 1,
+        marginBottom: 60,
+    },
+    tabContainer: {
+        width:sr.w,
+        height: 50,
+        flexDirection: 'row',
+        backgroundColor: '#ea372f',
+        alignItems: 'center',
+    },
+    touchTab: {
+        flex: 1,
+        alignItems:'center',
+        justifyContent:'center',
+        flexDirection: 'row',
+    },
+    tabButtonCenter: {
+        flex: 1,
+        alignItems:'center',
+        justifyContent:'center',
+    },
+    tabButtonRight: {
+        flex: 1,
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius: 9,
+    },
+    tabText: {
+        fontSize: 13,
+    },
+    tabLine: {
+        width: 2,
+        height: 20,
+        alignSelf: 'center',
+        backgroundColor: '#FFFFFF',
+    },
+    mainTakContainer: {
+        width: sr.w,
+    },
+    input: {
+        width: sr.w-20,
+        marginLeft: 10,
+        marginTop: 10,
         borderRadius: 6,
-        backgroundColor: '#3BA9B0',
+        textAlignVertical: 'top',
+        paddingVertical: 2,
+        backgroundColor: '#f1f1f1',
     },
-    btnLoginText: {
-        fontSize: 18,
-        fontWeight: '600',
+    contentText: {
+        fontSize: 16,
+        color: '#A7A7A7',
+        lineHeight: 24,
+        fontFamily: 'STHeitiSC-Medium',
+    },
+    childTaskContainer: {
+        width: sr.w,
+        marginTop: 10,
+    },
+    titleBgImage: {
+        width: sr.w,
+        height: 40,
+        justifyContent: 'center',
+    },
+    titleText: {
+        marginLeft: 10,
+        fontSize: 16,
         color: '#FFFFFF',
+        fontFamily: 'STHeitiSC-Medium',
+        backgroundColor: 'transparent',
     },
-    textStyle: {
+    voiceUpside: {
+        height: 47,
+        marginTop: 21,
+        flexDirection:'row',
+        backgroundColor:'#FFFFFF',
+    },
+    voiceStyleView: {
+        height: 48,
+        width:50,
+        justifyContent: 'center',
+    },
+    voiceButtonView: {
+        marginLeft:10,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    voiceStyle: {
+        height: 32,
+        width: 21,
+    },
+    voiceContainer: {
+        flexDirection: 'row',
+        marginLeft:20,
+    },
+    audioContainer: {
+        width: 70,
+        height:47,
+        marginRight: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection:'row',
+    },
+    audioPlay: {
+        height: 35,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#EEEEEE',
+    },
+    imagevoice:{
+        width:17,
+        height:22,
+        marginRight: 10,
+    },
+    bigImageTouch: {
+        flexDirection: 'row',
+        width: 100,
+        height: 100,
+        marginHorizontal: 2,
+    },
+    textTime:{
+        fontSize: 12,
+        textAlign: 'left',
+        color :'gray',
+    },
+    chooseContainer: {
         width:sr.w,
         height:45,
         flexDirection: 'row',
         alignItems:'center',
     },
-    protocalContainer: {
-        flexDirection: 'row',
-        marginTop: 10,
-        marginLeft: 20,
-    },
-    protocal_icon: {
-        height: 18,
-        width: 18,
-        marginRight: 10,
-    },
-    title: {
+    menuText: {
         color: 'black',
-        marginHorizontal: 20,
         fontSize: 14,
+        marginLeft: 15,
     },
     updownlside:{
         height:30,
-        marginHorizontal:10,
         flexDirection:'row',
         alignItems: 'center',
     },
     timeTextContainer: {
         height: 35,
         borderRadius: 4,
-        borderWidth: 1,
-        borderColor: '#D7D7D7',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#f1f1f1',
         flexDirection: 'row',
         alignItems:'center',
         paddingVertical: 5,
         paddingHorizontal: 10,
     },
     timeText: {
-        fontSize: 14,
-        backgroundColor: '#FFFFFF',
+        fontSize: 13,
+        backgroundColor: 'transparent',
     },
-    input: {
-        width: 200,
-        height: 45,
-        fontSize: 14,
+    downCheckImage: {
+        width: 21,
+        height: 12,
     },
-    inputContainer: {
-        width: 200,
-        height: 45,
-        justifyContent: 'center',
+    divisionLine: {
+        width: sr.w-20,
+        height: 1,
+        marginLeft: 10,
+        backgroundColor: '#D7D7D7',
     },
-    inputText: {
-        fontSize: 14,
-    },
-    emptyStyle: {
+    remindContainer: {
         width: sr.w,
-        height: 30,
-        backgroundColor: '#FFFFFF',
     },
-    topLine: {
-        position: 'absolute',
-        left: 0,
-        bottom: 0,
-        width: sr.w,
-        height: 2,
-        backgroundColor: 'black',
-    },
-    topTextStyle: {
+    remindTitleView: {
         width: sr.w,
         height: 40,
-        marginBottom: 20,
-        justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    remindTitleLeftView: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginLeft: 10,
+        marginTop: 10,
+    },
+    clockImage: {
+        width: 25,
+        height: 25,
+    },
+    remindTitle: {
+        fontSize: 14,
+        color: '#323232',
+        marginLeft: 5,
+        fontFamily: 'STHeitiSC-Medium',
+    },
+    btnSet: {
+        height: 30,
+        width: 80,
+        marginRight: 10,
+        alignSelf: 'center',
+        borderRadius: 6,
+        backgroundColor: '#f3433d',
+    },
+    btnSetText: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#FFFFFF',
+    },
+    remindItem: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginVertical: 10,
+        marginLeft: 20,
+    },
+    checkImage: {
+        width: 20,
+        height: 20,
+    },
+    remindItemTitle: {
+        fontSize: 12,
+        color: '#323232',
+        marginLeft: 5,
+    },
+    imageUpLoadContainer: {
+        width: sr.w,
+    },
+    imageStyleView: {
+        height: 134,
+        alignItems: 'center',
+        flexDirection:'row',
+    },
+    imageButtonView: {
+        height: 105,
+        width:105,
+        marginLeft:10,
+        backgroundColor:'#EEEEEE',
+    },
+    imagelogostyle: {
+        height: 105,
+        width:105,
+    },
+    imageContainer: {
+        flexDirection: 'row',
+        marginLeft:10,
+    },
+    imageStyletu: {
+        width: 100,
+        height: 100,
+        marginRight: 10,
+    },
+    addKidTaskContainer: {
+        width: sr.w,
+        height: 45,
+        alignItems: 'center',
+        backgroundColor: '#f1f1f1',
+        flexDirection: 'row',
+    },
+    addImage: {
+        width: 20,
+        height: 20,
+        marginLeft: 15,
+    },
+    addText: {
+        fontSize: 14,
+        color: '#f34c47',
+        marginLeft: 10,
+    },
+    btnSubmit: {
+        height: 35,
+        width: sr.w - 40,
+        marginTop: 30,
+        alignSelf: 'center',
+        borderRadius: 6,
+        marginBottom: 30,
+        backgroundColor: '#20c5bb',
+    },
+    btnSubmitText: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#FFFFFF',
     },
 });

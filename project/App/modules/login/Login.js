@@ -69,11 +69,10 @@ module.exports = React.createClass({
     mixins: [SceneMixin],
     statics: {
         title: '',
-        rightButton: { title: '注册', handler: () => { app.scene.doShowRegister(); } },
     },
     componentDidMount () {
         app.personal.setNeedLogin(true);
-        app.toggleNavigationBar(true);
+        app.toggleNavigationBar(false);
     },
     doLogin () {
         const { phone, password } = this.state;
@@ -107,14 +106,14 @@ module.exports = React.createClass({
     },
     doAnonymousLogin () {
         const { phone, password } = this.state;
-        if (!app.utils.checkPhone(phone)) {
-            Toast('手机号码不是有效的手机号码');
-            return;
-        }
-        if (!app.utils.checkPassword(password)) {
-            Toast('密码必须有6-20位的数字，字母，下划线组成');
-            return;
-        }
+        // if (!app.utils.checkPhone(phone)) {
+        //     Toast('手机号码不是有效的手机号码');
+        //     return;
+        // }
+        // if (!app.utils.checkPassword(password)) {
+        //     Toast('密码必须有6-20位的数字，字母，下划线组成');
+        //     return;
+        // }
         app.socket.register(phone);
         app.login.savePhone(phone);
         app.utils.until(
@@ -221,20 +220,11 @@ module.exports = React.createClass({
         const row = this.state.dataSource.getRowCount();
         const listHeight = row > 4 ? styles.listHeightMax : row < 2 ? styles.listHeightMin : null;
         return (
-            <View style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <Image
-                        resizeMode='stretch'
-                        source={app.img.login_logo}
-                        style={styles.logo}
-                        />
-                </View>
-                <Image
-                    resizeMode='stretch'
-                    source={app.img.login_input_border}
-                    style={styles.inputContainer}
-                    onLayout={this.onPhoneTextInputLayout}
-                    >
+            <Image
+                resizeMode='stretch'
+                source={app.img.login_background}
+                style={styles.container}>
+                <View style={{height: sr.s(360)}} />
                     <Image
                         resizeMode='stretch'
                         source={app.img.login_user}
@@ -243,7 +233,7 @@ module.exports = React.createClass({
                     <TextInput
                         underlineColorAndroid='transparent'
                         placeholderTextColor='#FFFFFF'
-                        placeholder='您的手机号码'
+                        placeholder='请输入您的用户名'
                         maxLength={11}
                         onChangeText={this.onPhoneTextChange}
                         defaultValue={this.state.phone}
@@ -252,12 +242,11 @@ module.exports = React.createClass({
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
                         />
-                </Image>
-                <Image
-                    resizeMode='stretch'
-                    source={app.img.login_input_border}
-                    style={styles.inputContainer}
-                    >
+                    <Image
+                        resizeMode='stretch'
+                        source={app.img.login_line}
+                        style={styles.line}
+                        />
                     <Image
                         resizeMode='stretch'
                         source={app.img.login_locked}
@@ -266,22 +255,14 @@ module.exports = React.createClass({
                     <TextInput
                         underlineColorAndroid='transparent'
                         placeholderTextColor='#FFFFFF'
-                        placeholder='您的密码'
+                        placeholder='请输入您的密码'
                         secureTextEntry
                         onChangeText={(text) => this.setState({ password: text })}
                         defaultValue={this.state.password}
                         style={styles.text_input}
                         />
-                </Image>
-                <Button onPress={this.doAnonymousLogin} style={styles.btnLogin} textStyle={styles.btnLoginText}>登      陆</Button>
-                <TouchableOpacity onPress={this.doShowForgetPassword}>
-                    <Image
-                        resizeMode='stretch'
-                        source={app.img.login_forgot_password}
-                        style={styles.btnForgetPassWordContainer}
-                        />
-                </TouchableOpacity>
-                {this.state.qqinstalled || this.state.weixininstalled ? <WeixinQQPanel qqinstalled={this.state.qqinstalled} weixininstalled={this.state.weixininstalled} /> : <NoWeixinQQPanel />}
+                <Button onPress={this.doAnonymousLogin} style={styles.btnLogin} textStyle={styles.btnLoginText}>登   录</Button>
+                <NoWeixinQQPanel />
                 {
                     this.state.showList &&
                     <ListView
@@ -294,15 +275,15 @@ module.exports = React.createClass({
                         style={[styles.list, { top: this.listTop }, listHeight]}
                         />
                 }
-            </View>
+            </Image>
         );
     },
 });
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#3BA9B0',
+        width: sr.fw,
+        height: sr.fh,
     },
     logoContainer: {
         height: 120,
@@ -316,27 +297,27 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: 280,
-        height: 46,
-        marginLeft: (sr.w-280)/2,
+        height: 60,
         marginTop: 20,
-        flexDirection: 'row',
         overflow: 'hidden',
-        alignItems:'center',
-        marginBottom: 16,
+    },
+    line: {
+        width: sr.w,
+        height: 2,
+        marginBottom: 10,
     },
     input_icon: {
         width: 28,
         height: 28,
-        marginLeft: 20,
-        marginRight: 10,
+        marginLeft: 30,
     },
     text_input: {
         height:40,
         width: 200,
+        marginLeft: 30,
         fontSize:14,
         color: '#FFFFFF',
-        alignSelf: 'center',
-        backgroundColor: '#60BBC0',
+        backgroundColor: 'transparent',
     },
     btnForgetPassWordContainer: {
         height: 15,
@@ -345,17 +326,16 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     btnLogin: {
-        height: 46,
-        width: sr.w - 100,
-        marginLeft: 50,
+        height: 50,
+        width: sr.w,
         marginTop: 20,
-        borderRadius: 23,
-        backgroundColor: '#FFFFFF',
+        borderRadius: 0,
+        backgroundColor: '#F2443D',
     },
     btnLoginText: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#60BBC0',
+        color: 'white',
     },
     thirdpartyContainer: {
         flex:1,

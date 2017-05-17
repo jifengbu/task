@@ -56,10 +56,10 @@ const styles = StyleSheet.create({
         marginTop:6,
         marginBottom:6,
         borderRadius:6,
-        backgroundColor: '#A0D26F',
+        backgroundColor: '#FFFFFF',
         borderBottomWidth: 0,
     },
     cancelText: {
-        color:'#FFFFFF',
+        color:'#A1A2A3',
     },
 });

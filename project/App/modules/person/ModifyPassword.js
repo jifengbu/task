@@ -6,6 +6,7 @@ const {
     StyleSheet,
     View,
     TextInput,
+    Text,
 } = ReactNative;
 
 const { Button, Label } = COMPONENTS;
@@ -69,23 +70,30 @@ module.exports = React.createClass({
     render () {
         return (
             <View style={styles.container}>
-                <Label img={app.img.login_user}>请输入旧密码</Label>
+                <View style={{flexDirection:'row'}}>
+                    <Text style={styles.text}>旧密码</Text>
+                    <TextInput
+                        underlineColorAndroid='transparent'
+                        placeholder='点击输入您的旧密码'
+                        style={styles.text_input}
+                        secureTextEntry
+                        onChangeText={(text) => this.setState({ oldPassword: text })}
+                        />
+                </View>
+                <View style={styles.line} />
+                <View style={{flexDirection:'row'}}>
+                <Text style={styles.text}>新密码</Text>
                 <TextInput
                     underlineColorAndroid='transparent'
-                    placeholder='请输入旧密码'
-                    style={styles.text_input}
-                    secureTextEntry
-                    onChangeText={(text) => this.setState({ oldPassword: text })}
-                    />
-                <Label img={app.img.login_user}>请输入新密码</Label>
-                <TextInput
-                    underlineColorAndroid='transparent'
-                    placeholder='请输入新密码'
+                    placeholder='点击输入您的新密码'
                     style={styles.text_input}
                     secureTextEntry
                     onChangeText={(text) => this.setState({ newPassword1: text })}
                     />
-                <Label img={app.img.login_user}>请再次输入新密码</Label>
+                </View>
+                <View style={styles.line} />
+                <View style={{flexDirection:'row'}}>
+                <Text style={styles.text}>再次输入</Text>
                 <TextInput
                     underlineColorAndroid='transparent'
                     placeholder='请再次输入新密码'
@@ -93,7 +101,8 @@ module.exports = React.createClass({
                     secureTextEntry
                     onChangeText={(text) => this.setState({ newPassword2: text })}
                     />
-                <Button onPress={this.doSubmit} style={[styles.btnSubmit, { backgroundColor:app.THEME_COLOR }]}>提交</Button>
+                </View>
+                <Button onPress={this.doSubmit} textStyle={{fontSize: 15, fontWeight: '600'}} style={[styles.btnSubmit, { backgroundColor:'#20C5BB' }]}>确      认</Button>
             </View>
         );
     },
@@ -106,23 +115,30 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 25,
     },
+    line: {
+        height: 1,
+        backgroundColor: '#999999',
+        marginVertical: 6,
+    },
+    text: {
+        marginLeft: 6,
+        marginTop: 12,
+        width: 60,
+        fontSize: 14,
+        color: '#666666',
+    },
     text_input: {
+        marginLeft: 20,
+        width: 200,
         height: 40,
         fontSize: 14,
-        paddingLeft: 10,
-        backgroundColor: 'white',
+        backgroundColor: 'transparent',
         textAlignVertical: 'top',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginBottom: 20,
-        borderColor: '#DBDBDB',
     },
     btnSubmit: {
-        position: 'absolute',
         width: sr.w - 50,
-        marginLeft: 25,
-        height: 40,
-        bottom: 60,
-        borderRadius: 10,
+        height: 36,
+        marginTop: 60,
+        borderRadius: 4,
     },
 });
