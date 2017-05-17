@@ -2,7 +2,7 @@ import { ClientModel } from '../../../../models';
 import { getKeywordCriteriaForClient } from '../../../../utils';
 
 export default async ({ userId, keyword, pageNo, pageSize }) => {
-    const criteria = getKeywordCriteriaForClient({keyword});
+    const criteria = getKeywordCriteriaForClient(keyword);
     const count = pageNo===0 ? await ClientModel.count(criteria) : undefined;
     const query = ClientModel.find(criteria).sort({ registerTime: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
     const docs = await query

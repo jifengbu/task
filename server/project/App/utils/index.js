@@ -55,6 +55,20 @@ export function getKeywordCriteriaForTask (keyword, criteria = {}) {
     }
     return criteria;
 }
+export function getKeywordCriteriaForClient (keyword, criteria = {}) {
+    if (keyword) {
+        const regex = new RegExp('.*' + (keyword || '') + '.*', 'gim');
+        criteria = { ...criteria, $or: [{ name: regex }, { phone: regex }] };
+    }
+    return criteria;
+}
+export function getKeywordCriteriaForPartment (keyword, criteria = {}) {
+    if (keyword) {
+        const regex = new RegExp('.*' + (keyword || '') + '.*', 'gim');
+        criteria = { ...criteria, $or: [{ name: regex }, { phone: regex }] };
+    }
+    return criteria;
+}
 export function omitNil (obj) {
     return _.omitBy(obj, _.isNil);
 }
