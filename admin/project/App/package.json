@@ -1,0 +1,10 @@
+{
+  "name": "CardB_pc_App",
+  "version": "0.0.1",
+  "dependencies": {
+    "antd": "^2.5.2",
+    "echarts-for-react": "^1.1.6",
+    "material-ui": "^0.16.4",
+    "react-tap-event-plugin": "^2.0.1"
+  }
+}
