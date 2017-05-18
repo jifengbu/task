@@ -7,13 +7,13 @@ export default async ({
     const doc = await PartmentModel.findById(partmentId)
     .populate({
         path: 'chargeMan',
-        select: { name: 1, phone: 1, head: 1 },
+        select: { name: 1, phone: 1, head: 1, email: 1, reservePhone: 1 },
     }).populate({
         path: 'superior',
         select: { name: 1 },
     }).populate({
         path: 'members',
-        select: { name: 1, phone: 1, head: 1 },
+        select: { name: 1, phone: 1, head: 1, email: 1, reservePhone: 1 },
     }).populate({
         path: 'subors',
         select: { name: 1 },

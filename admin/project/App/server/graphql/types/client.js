@@ -16,5 +16,6 @@ export const clientType = new GraphQLObjectType({
         phone: { type: GraphQLString },
         email: { type: GraphQLString },
         head: { type: GraphQLString },
+        reservePhone: { type: new GraphQLList(GraphQLString) },
     },
 });

@@ -3,7 +3,7 @@ import antd_form_create from 'decorators/antd_form_create';
 import styles from './index.less';
 import _ from 'lodash';
 import verification from 'helpers/verification';
-import { Button, Modal, Form, Row, Col, Input, Icon, Spin, Select, InputNumber, Upload, notification } from 'ant-design';
+import { Table, Button, Modal, Form, Row, Col, Input, Icon, Spin, Select, InputNumber, Upload, notification } from 'ant-design';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentDelete from 'material-ui/svg-icons/action/delete';
@@ -13,6 +13,32 @@ import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Dragger = Upload.Dragger;
+
+const columns = [{
+    title: '头像',
+    width: 50,
+    dataIndex: 'head',
+    render: (data) => <img src={data || '/img/common/default_head.png'} className={styles.head} />,
+}, {
+    title: '姓名',
+    width: 120,
+    dataIndex: 'name',
+    render: (data) => data||'未知',
+}, {
+    title: '电话',
+    width: 150,
+    dataIndex: 'phone',
+}, {
+    title: '邮箱',
+    width: 250,
+    dataIndex: 'email',
+    render: (data) => data||'无',
+}, {
+    title: '预留电话',
+    width: 300,
+    dataIndex: 'reservePhone',
+    render: (data) => (data || []).join('; ')||'无',
+}];
 
 @antd_form_create
 export default class PartmentDetail extends React.Component {
@@ -26,6 +52,8 @@ export default class PartmentDetail extends React.Component {
                 name: 1,
                 phone: 1,
                 head: 1,
+                email: 1,
+                reservePhone: 1,
             },
             superior: {
                 name: 1,
@@ -34,6 +62,8 @@ export default class PartmentDetail extends React.Component {
                 name: 1,
                 phone: 1,
                 head: 1,
+                email: 1,
+                reservePhone: 1,
             },
             subors: {
                 name: 1,
@@ -42,6 +72,7 @@ export default class PartmentDetail extends React.Component {
     };
     state = {
         waiting : false,
+        current: 1,
         editing: this.props.operType === 0,
         partment: _.cloneDeep(this.props.partment) || (this.props.operType === 0 ? {
             phoneList: [],
@@ -160,10 +191,20 @@ export default class PartmentDetail extends React.Component {
         partment.phoneList[index] = event.target.value;
         this.setState({ partment });
     }
+    onRowClick (record, index) {
+        const { current } = this.state;
+        this.selectd = { lastSelectIndex: index, lastCurrent: current };
+        this.setState({ selectedCargoId: record.id, cargoModalVisible: true });
+    }
+    rowClassName (record, index) {
+        const { lastCurrent, lastSelectIndex } = this.selectd||{};
+        const { current } = this.state;
+        return current === lastCurrent && lastSelectIndex === index ? styles.selected : '';
+    }
     render () {
         const { form, operType } = this.props;
         const { current, waiting, editing, partment } = this.state;
-        const { name, descript, phoneList = [], subors = [], members = [] } = partment;
+        const { name, descript, phoneList = [], subors = [], members = [], chargeMan = {} } = partment;
 
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
@@ -258,6 +299,35 @@ export default class PartmentDetail extends React.Component {
                             </FormItem>
                         ))
                     }
+                    <FormItem
+                        {...formItemLayout}
+                        label='负责人：'
+                        >
+                        <div className={styles.iconButtonContainer}>
+                        {
+                            editing &&
+                            <FloatingActionButton className={styles.iconButton} onTouchTap={::this.addPhoneItem}>
+                                <EditorModeEdit />
+                            </FloatingActionButton>
+                        }
+                        <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
+                        {`${chargeMan.name} ( ${chargeMan.phone} )`}
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='成员：'
+                        >
+                        <div className={styles.tableContainer}>
+                            <Table
+                                rowKey={(record, key) => key}
+                                columns={columns}
+                                dataSource={members}
+                                pagination={pagination}
+                                rowClassName={::this.rowClassName}
+                                onRowClick={::this.onRowClick} />
+                        </div>
+                    </FormItem>
                 </Form>
                 {
                     editing && operType === 1 &&
