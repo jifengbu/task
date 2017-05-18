@@ -13,12 +13,17 @@ const {
 } = ReactNative;
 
 const moment = require('moment');
-const ExamineTask = require('./ExamineTask.js');
+const AudioRecorder = require('../../native/index.js').AudioRecorder;
+const RemindSetting = require('./RemindSetting.js');
 const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
+const RecordVoiceMessageBox = require('./RecordVoiceMessageBox.js');
 
 const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
 module.exports = React.createClass({
+    statics: {
+        title: '单一任务',
+    },
     getInitialState () {
         return {
             title: '',
@@ -29,6 +34,7 @@ module.exports = React.createClass({
             supervisor: '李经理',
             executor: '李敏镐',
             overlayShowLongPressMessageBox: false,
+            overlayShowMessageBox: false,
         };
     },
     changeTab (tabIndex) {
@@ -36,6 +42,60 @@ module.exports = React.createClass({
     },
     showLongPressMessageBox (filepath, index) {
         this.setState({ overlayShowLongPressMessageBox: true });
+    },
+    showMessageBox () {
+        this.setState({ overlayShowMessageBox: true });
+    },
+    recordVoice () {
+        // AudioRecorder.playStop();
+        // for (let i = 0; i < this.isPlaying.length; i++) {
+        //     this.isPlaying[i] = false;
+        // }
+        // this.setState({ isPlaying: this.isPlaying });
+        // const time = Date.now();
+        // const name = app.audioFileMgr.getFileNameFromTime(time);
+        // const filepath = app.audioFileMgr.getFilePathFromName(name);
+        // this.fileInfo = {
+        //     time: time,
+        //     name: name,
+        //     filepath: filepath,
+        // };
+        // AudioRecorder.record((result) => {
+        //
+        // }, (error) => {
+        //     Toast('录制音频文件失败，请稍后再试');
+        // }, filepath);
+    },
+    stopRecordVoice (voiceTime) {
+        // this.timeArray.push(voiceTime);
+        // this.setState({ voiceTime:voiceTime });
+        // AudioRecorder.stop((result) => {
+        //     // this.uploadVoice(this.fileInfo.filepath, voiceTime);
+        // }, (error) => {
+        //     Toast('录制音频文件失败，请稍后再试');
+        // });
+        this.setState({ overlayShowMessageBox: false });
+    },
+    doGiveup () {
+        // AudioRecorder.stop((result) => {
+        //     fs.unlink(this.fileInfo.filepath);
+        // }, (error) => {
+        //     Toast('放弃录音失败，请稍后再试');
+        // });
+        this.setState({ overlayShowMessageBox: false });
+    },
+    uploadVoice (filePath, voiceTime) {
+        const options = {};
+        options.fileKey = 'file';
+        options.fileName = filePath.substr(filePath.lastIndexOf('/') + 1);
+        options.mimeType = 'm4a';
+        options.params = {
+            userID:app.personal.info.userID,
+        };
+        this.uploadOn = true;
+        this.curUploadFile = filePath;
+        UPLOAD(filePath, app.route.ROUTE_UPDATE_FILE, options, (progress) => console.log(progress),
+        this.uploadVoiceSuccessCallback.bind(null, voiceTime, filePath), this.uploadVoiceErrorCallback.bind(null, filePath), true);
     },
     playVoice (filepath, index) {
 
@@ -124,58 +184,18 @@ module.exports = React.createClass({
         //         defaultImageArray={localUrlImages} />
         // );
     },
+    goRemindSetting() {
+        app.navigator.push({
+            component: RemindSetting,
+        })
+    },
     render () {
         const {startTime, endTime} = this.state;
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
-                <View style={styles.tabContainer}>
-                    <TouchableOpacity
-                        underlayColor='rgba(0, 0, 0, 0)'
-                        onPress={this.changeTab.bind(null, 0)}
-                        style={styles.touchTab}>
-                        <Text style={[styles.tabText, isFirstTap ? { color:'#fff000', fontSize: 16 } : { color:'#FFFFFF' }]} >
-                            {'综合任务'}
-                        </Text>
-                    </TouchableOpacity>
-                    <View style={styles.tabLine} />
-                    <TouchableOpacity
-                        underlayColor='rgba(0, 0, 0, 0)'
-                        onPress={this.changeTab.bind(null, 1)}
-                        style={styles.touchTab}>
-                        <Text style={[styles.tabText, !isFirstTap ? { color:'#fff000', fontSize: 16 } : { color:'#FFFFFF' }]} >
-                            {'单一任务'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
                 <ScrollView style={styles.pageContainer}>
-                    <View style={styles.mainTakContainer}>
-                        <TextInput
-                            underlineColorAndroid='transparent'
-                            style={[styles.input, {height: 35}]}
-                            numberOfLines = {1}
-                            placeholder={'点击输入任务主题'}
-                            textStyle={styles.contentText}
-                            placeholderTextColor={'#A7A7A7'}
-                            onChangeText={(text) => this.setState({title: text})}
-                            />
-                        <TextInput
-                            underlineColorAndroid='transparent'
-                            style={[styles.input, {height: 100}]}
-                            multiline = {true}
-                            placeholder={'点击输入任务描述'}
-                            textStyle={styles.contentText}
-                            placeholderTextColor={'#A7A7A7'}
-                            onChangeText={(text) => this.setState({description: text})}
-                            />
-                    </View>
                     <View style={styles.childTaskContainer}>
-                        <DImage
-                            resizeMode='stretch'
-                            source={app.img.home_task_bg}
-                            style={styles.titleBgImage}>
-                            <Text style={styles.titleText}>{'子任务1'}</Text>
-                        </DImage>
                         <TextInput
                             underlineColorAndroid='transparent'
                             style={[styles.input, {height: 35}]}
@@ -308,7 +328,7 @@ module.exports = React.createClass({
                                     style={styles.clockImage} />
                                 <Text style={styles.remindTitle}>{'任务提醒'}</Text>
                             </View>
-                            <Button style={styles.btnSet} textStyle={styles.btnSetText}>{'点击设置'}</Button>
+                            <Button onPress={this.goRemindSetting} style={styles.btnSet} textStyle={styles.btnSetText}>{'点击设置'}</Button>
                         </View>
                         <View style={styles.divisionLine}/>
                         <View style={styles.remindItem}>
@@ -358,13 +378,6 @@ module.exports = React.createClass({
                             </ScrollView>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.addKidTaskContainer}>
-                        <DImage
-                            resizeMode='stretch'
-                            source={app.img.home_add}
-                            style={styles.addImage} />
-                        <Text style={styles.addText}>{'添加子任务'}</Text>
-                    </TouchableOpacity>
                     <Button onPress={this.doAnonymousLogin} style={styles.btnSubmit} textStyle={styles.btnSubmitText}>{'送    审'}</Button>
                 </ScrollView>
                 {
@@ -372,6 +385,14 @@ module.exports = React.createClass({
                     <VoiceLongPressMessageBox
                         doDelete={this.doDeleteVoice}
                         doBack={this.doBack} />
+                }
+                {
+                    this.state.overlayShowMessageBox &&
+                    <RecordVoiceMessageBox
+                        showType={0}
+                        doStartRecord={this.recordVoice}
+                        doGiveup={this.doGiveup}
+                        doConfirm={this.stopRecordVoice} />
                 }
             </View>
         );
@@ -439,7 +460,6 @@ const styles = StyleSheet.create({
     },
     childTaskContainer: {
         width: sr.w,
-        marginTop: 10,
     },
     titleBgImage: {
         width: sr.w,

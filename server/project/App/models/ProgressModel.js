@@ -8,8 +8,8 @@ const progressSchema = new Schema({
     time: { type: Date, default: Date.now }, // 提醒时间
 });
 
-scheduleSchema.virtual('id').get(function () {
+progressSchema.virtual('id').get(function () {
     return this._id;
 });
 
-export default mongoose.model('Progress', mediaSchema);
+export default mongoose.model('Progress', progressSchema);

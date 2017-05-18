@@ -140,7 +140,7 @@ module.exports = React.createClass({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginBottom: 60,
+        marginBottom: 55,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#EEEEEE',

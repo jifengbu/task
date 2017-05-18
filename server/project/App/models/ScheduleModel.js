@@ -13,4 +13,4 @@ scheduleSchema.virtual('id').get(function () {
     return this._id;
 });
 
-export default mongoose.model('Schedule', mediaSchema);
+export default mongoose.model('Schedule', scheduleSchema);

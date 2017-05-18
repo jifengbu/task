@@ -20,13 +20,8 @@ module.exports = React.createClass({
         const { data, onPress} = this.props;
 
         return (
-            <TouchableOpacity style={{backgroundColor: '#FFFFFF',}} onPress={onPress}>
+            <View style={{backgroundColor: '#FFFFFF',}}>
                 <View style={[styles.rowContainer, { marginVertical: sr.s(this.props.rowHeight) }]}>
-                    <Text
-                        numberOfLines={1}
-                        style={styles.numStyle}>
-                        {data.time}
-                    </Text>
                     <Text
                         style={styles.textStyleAnother}>
                         {data.content}
@@ -51,7 +46,7 @@ module.exports = React.createClass({
                             </View>
                     }
                 </View>
-            </TouchableOpacity>
+            </View>
         );
     },
 });
@@ -72,19 +67,21 @@ const styles = StyleSheet.create({
         width: sr.w - 56,
     },
     textStyleAnother: {
-        fontSize: 12,
+        fontSize: 13,
         color: '#666666',
+        marginLeft: 20,
         fontFamily:'STHeitiSC-Medium',
-        width: sr.w - 150,
     },
     rowContainer: {
         alignItems: 'center',
+        justifyContent: 'space-between',
         flexDirection: 'row',
         backgroundColor: '#FFFFFF',
     },
     btnStyle: {
         width: 40,
         height: 22,
+        marginRight: 20,
         alignItems: 'center',
         justifyContent: 'center',
     },

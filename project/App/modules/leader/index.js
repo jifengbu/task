@@ -75,9 +75,9 @@ const HomeTabBar = React.createClass({
     },
     render () {
         const menus = [
-            { index: 0, title: '任务列表', icon: app.img.card_consumption_normal, selected: app.img.card_consumption_press },
-            { index: 1, title: '任务下发', icon: app.img.card_card_issuing_normal, selected: app.img.card_card_issuing_press },
-            { index: 2, title: '个人中心', icon: app.img.card_customer_mormal, selected: app.img.card_customer_press },
+            { index: 0, title: '我的任务', icon: app.img.home_my_task_norm, selected: app.img.home_my_task_pressed },
+            { index: 1, title: '任务列表', icon: app.img.home_task_list_norm, selected: app.img.home_task_list_pressed },
+            { index: 2, title: '新建任务', icon: app.img.home_add_task_norm, selected: app.img.home_add_task_pressed },
         ];
         const TabNavigatorItems = menus.map((item) => {
             return (
@@ -205,11 +205,11 @@ const styles = StyleSheet.create({
     },
     selecteTitleStyle: {
         fontSize:12,
-        color: '#3BA9B0',
+        color: '#ea372f',
         marginBottom: 3,
     },
     tabBarStyle: {
-        height:60,
+        height:55,
         backgroundColor: '#C9D6D6',
     },
     tabBarShadowStyle: {
