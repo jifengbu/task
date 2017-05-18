@@ -26,6 +26,10 @@
 .unit {
     margin-left: 10px;
 }
+.iconButtonInnerContainer {
+    height: 60px;
+    width: 60px;
+}
 .iconButtonContainer {
     display: flex;
     align-items: center;
@@ -60,8 +64,17 @@
     border-radius: 20px;
     margin-right: 10px;
 }
+.labelContainer {
+    height: 40px;
+    justify-content: flex-end;
+    align-items: center;
+    display: flex;
+    padding-right: 8px;
+}
 .tableContainer {
+    display: flex;
     flex: 1;
+    flex-direction: row;
     :global(.ant-table) {
         border: 1px solid #C4C4C4;
     }
@@ -73,5 +86,24 @@
         color: #787878;
         padding-left: 20px;
         padding-left: 20px;
+    }
+}
+.clientModal {
+    top: 30px;
+    width: 800px !important;
+    :global(.ant-modal-body) {
+        padding: 0;
+    }
+}
+.clientModalNoButton {
+    top: 30px;
+    width: 800px !important;
+    :global(.ant-modal-body) {
+        padding: 0;
+    }
+    :global(.ant-modal-footer) {
+        :global(.ant-btn-primary) {
+            display: none;
+        }
     }
 }

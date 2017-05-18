@@ -37,7 +37,7 @@ export default class SelectClient extends React.Component {
         clients: {
             count: 1,
             clientList: {
-                userId: 1,
+                id: 1,
                 head: 1,
                 name: 1,
                 phone: 1,
@@ -46,7 +46,12 @@ export default class SelectClient extends React.Component {
             },
         },
     };
-    state = { keyword: '', userId: '' }
+    state = { keyword: '', selectedId: this.props.selectedId }
+    componentWillReceiveProps (nextProps) {
+        if (this.props.selectedId != nextProps.selectedId) {
+            this.setState({ selectedId:  nextProps.selectedId });
+        }
+    }
     onSearch (keyword) {
         const { refresh } = this.props;
         this.setState({ current: 1, keyword });
@@ -54,8 +59,8 @@ export default class SelectClient extends React.Component {
     }
     render () {
         const self = this;
-        const { current, keyword } = this.state;
-        const { clients = {}, loadListPage, loading, loadingPage, onSelectClient } = this.props;
+        const { current, keyword, selectedId } = this.state;
+        const { clients = {}, loadListPage, loading, loadingPage, onSelect } = this.props;
         const pagination = {
             total: clients.count,
             showSizeChanger: false,
@@ -68,8 +73,10 @@ export default class SelectClient extends React.Component {
         };
         const rowSelection = {
             type: 'radio',
-            onSelect(record) {
-                onSelectClient(record);
+            selectedRowKeys: selectedId ? [ selectedId ] : [],
+            onSelect (record) {
+                self.setState({ selectedId: record.id });
+                onSelect(record);
             },
         };
         return (
@@ -87,6 +94,7 @@ export default class SelectClient extends React.Component {
                 </div>
                 <div className={styles.tableContainer}>
                     <Table
+                        rowKey={(record) => record.id}
                         loading={loadingPage}
                         columns={columns}
                         dataSource={clients.clientList}

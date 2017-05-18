@@ -13,4 +13,7 @@ module.exports = {
     createPartment: server + 'createPartment', // 创建部门
     modifyPartment: server + 'modifyPartment', // 修改部门信息
     removePartment: server + 'removePartment', // 删除部门
+
+    //用户
+    clients: server + 'getClientList', // 获取用户列表
 };

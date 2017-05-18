@@ -10,6 +10,7 @@ import ContentDelete from 'material-ui/svg-icons/action/delete';
 import NavigationArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward';
 import NavigationArrowDownward from 'material-ui/svg-icons/navigation/arrow-downward';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
+import SelectClient from 'components/SelectClient';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Dragger = Upload.Dragger;
@@ -49,6 +50,7 @@ export default class PartmentDetail extends React.Component {
             descript: 1,
             phoneList: 1,
             chargeMan: {
+                id: 1,
                 name: 1,
                 phone: 1,
                 head: 1,
@@ -56,9 +58,11 @@ export default class PartmentDetail extends React.Component {
                 reservePhone: 1,
             },
             superior: {
+                id: 1,
                 name: 1,
             },
             members: {
+                id: 1,
                 name: 1,
                 phone: 1,
                 head: 1,
@@ -66,6 +70,7 @@ export default class PartmentDetail extends React.Component {
                 reservePhone: 1,
             },
             subors: {
+                id: 1,
                 name: 1,
             },
         },
@@ -73,6 +78,9 @@ export default class PartmentDetail extends React.Component {
     state = {
         waiting : false,
         current: 1,
+        clientModalVisible: false,
+        hasClientOkButton: false,
+        clientTitle: '',
         editing: this.props.operType === 0,
         partment: _.cloneDeep(this.props.partment) || (this.props.operType === 0 ? {
             phoneList: [],
@@ -201,9 +209,39 @@ export default class PartmentDetail extends React.Component {
         const { current } = this.state;
         return current === lastCurrent && lastSelectIndex === index ? styles.selected : '';
     }
+    showSelectClient(type) {
+        this.clientType = type;
+        const { chargeMan = {} } = this.state.partment||{};
+        this.setState({
+            hasClientOkButton: false,
+            clientModalVisible: true,
+            clientTitle: type === 0 ? '负责人' : '部门成员',
+            selectedClientId: type === 0 ? chargeMan.id : '',
+        });
+    }
+    handleSelectClientCancel () {
+        this.setState({ clientModalVisible: false });
+    }
+    onSelectClient(client) {
+        const { selectedClientId, hasClientOkButton } = this.state;
+        this.tempClient = client;
+        if (!hasClientOkButton && selectedClientId !== client.id) {
+            this.setState({hasClientOkButton : true});
+        }
+    }
+    handleSelectClientOk () {
+        const { partment } = this.state;
+        if (this.clientType === 0) {
+            partment.chargeMan = this.tempClient;
+        } else {
+            partment.members.push(this.tempClient);
+        }
+        this.setState({ partment, clientModalVisible: false });
+    }
     render () {
+        const self = this;
         const { form, operType } = this.props;
-        const { current, waiting, editing, partment } = this.state;
+        const { current, waiting, editing, partment, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId } = this.state;
         const { name, descript, phoneList = [], subors = [], members = [], chargeMan = {} } = partment;
 
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
@@ -217,12 +255,16 @@ export default class PartmentDetail extends React.Component {
             initialValue: descript,
         });
         const formItemLayout = {
-            labelCol: { span: 5 },
+            labelCol: { span: 3 },
             wrapperCol: { span: 12 },
         };
         const formItemInnerLayout = {
-            labelCol: { span: 7 },
+            labelCol: { span: 5 },
             wrapperCol: { span: 10 },
+        };
+        const formItemTableLayout = {
+            labelCol: { span: 3 },
+            wrapperCol: { span: 18 },
         };
         const pagination = {
             total: members.length,
@@ -242,7 +284,7 @@ export default class PartmentDetail extends React.Component {
                 <Form className={!editing ? styles.editForm : ''}>
                     <FormItem
                         {...formItemLayout}
-                        label='部门名称:'
+                        label='部门名称'
                         hasFeedback
                         >
                         {nameDecorator(
@@ -251,7 +293,7 @@ export default class PartmentDetail extends React.Component {
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
-                        label='描述:'
+                        label='描述'
                         hasFeedback
                         >
                         {descriptDecorator(
@@ -260,7 +302,7 @@ export default class PartmentDetail extends React.Component {
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
-                        label='联系电话：'
+                        label='联系电话'
                         hasFeedback
                         >
                         <div className={styles.iconButtonContainer}>
@@ -301,24 +343,33 @@ export default class PartmentDetail extends React.Component {
                     }
                     <FormItem
                         {...formItemLayout}
-                        label='负责人：'
+                        label='负责人'
                         >
                         <div className={styles.iconButtonContainer}>
                         {
                             editing &&
-                            <FloatingActionButton className={styles.iconButton} onTouchTap={::this.addPhoneItem}>
-                                <EditorModeEdit />
-                            </FloatingActionButton>
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 0)}>
+                                    <EditorModeEdit />
+                                </FloatingActionButton>
                         }
                         <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
                         {`${chargeMan.name} ( ${chargeMan.phone} )`}
                         </div>
                     </FormItem>
                     <FormItem
-                        {...formItemLayout}
-                        label='成员：'
+                        {...formItemTableLayout}
+                        label='成员'
                         >
                         <div className={styles.tableContainer}>
+                            {
+                                editing &&
+
+                                <div className={styles.iconButtonInnerContainer}>
+                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 1)}>
+                                        <ContentAdd />
+                                    </FloatingActionButton>
+                                </div>
+                            }
                             <Table
                                 rowKey={(record, key) => key}
                                 columns={columns}
@@ -334,6 +385,12 @@ export default class PartmentDetail extends React.Component {
                     <div className={styles.buttonContainer}>
                         <Button className={styles.button} type='primary' onClick={::this.handleDelete}>删 除</Button>
                     </div>
+                }
+                {
+                    clientModalVisible &&
+                    <Modal title={'选择' + clientTitle} visible={true} className={hasClientOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectClientCancel} onOk={::this.handleSelectClientOk}>
+                        <SelectClient onSelect={::this.onSelectClient} selectedId={selectedClientId}/>
+                    </Modal>
                 }
             </div>
         );

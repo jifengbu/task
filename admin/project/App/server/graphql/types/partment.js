@@ -13,6 +13,7 @@ import { clientType } from './client';
 const simplePartmentType = new GraphQLObjectType({
     name: 'simplePartmentType',
     fields: {
+        id: { type: GraphQLID },
         name:  { type: GraphQLString },
     },
 });

@@ -11,7 +11,7 @@ import {
 export const clientType = new GraphQLObjectType({
     name: 'clientType',
     fields: {
-        userId: { type: GraphQLID },
+        id: { type: GraphQLID },
         name: { type: GraphQLString },
         phone: { type: GraphQLString },
         email: { type: GraphQLString },
