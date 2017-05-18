@@ -28,7 +28,7 @@ const columns = [{
     dataIndex: 'superior',
 }, {
     title: '下属单位个数',
-    dataIndex: 'suborsNumber',
+    dataIndex: 'suborsNum',
 }];
 
 export default class Partments extends React.Component {
@@ -48,7 +48,7 @@ export default class Partments extends React.Component {
                     name: 1,
                 },
                 membersNum: 1,
-                suborsNumber: 1,
+                suborsNum: 1,
             },
         },
     };

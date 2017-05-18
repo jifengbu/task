@@ -2,7 +2,6 @@ import React from 'react';
 import { dataConnect } from 'relatejs';
 import { bindActionCreators } from 'redux';
 import { needLoadPage } from 'helpers/utils';
-import * as shopActions from 'actions/shops';
 import Notify from './components';
 
 @dataConnect(
@@ -13,9 +12,7 @@ import Notify from './components';
             pageSize: 3,
         };
     },
-    (dispatch) => ({
-        actions : bindActionCreators(shopActions, dispatch),
-    }),
+    (dispatch) => ({}),
     (props) => ({
         fragments: Notify.fragments,
         variablesTypes: {

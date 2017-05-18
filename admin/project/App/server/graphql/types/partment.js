@@ -4,10 +4,18 @@ import {
     GraphQLString,
     GraphQLFloat,
     GraphQLInt,
+    GraphQLID,
     GraphQLList,
 } from 'graphql';
 
 import { clientType } from './client';
+
+const simplePartmentType = new GraphQLObjectType({
+    name: 'simplePartmentType',
+    fields: {
+        name:  { type: GraphQLString },
+    },
+});
 
 export const partmentType = new GraphQLObjectType({
     name: 'partmentType',
@@ -19,8 +27,8 @@ export const partmentType = new GraphQLObjectType({
         chargeMan: { type: clientType },
         members: { type: new GraphQLList(clientType) },
         membersNum: { type: GraphQLInt },
-        superior: { type: partmentType },
-        subors: { type: new GraphQLList(partmentType) },
+        superior: { type: simplePartmentType },
+        subors: { type: new GraphQLList(simplePartmentType) },
         suborsNum: { type: GraphQLInt },
     },
 });

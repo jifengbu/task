@@ -9,7 +9,7 @@ const MenuDivider = Menu.Divider;
 
 export default class Sidebar extends React.Component {
     state = {
-        current: '0',
+        current: '-1',
         openKeys: [],
     };
     selectMenuItem (current) {
