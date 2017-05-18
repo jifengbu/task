@@ -1,4 +1,4 @@
-import forEach from 'lodash/forEach';
+import forIn from 'lodash/forIn';
 import merge from 'lodash/merge';
 
 //
@@ -49,7 +49,7 @@ export function fragmentToQL (fragment) {
         return Object
         .keys(i)
         .map((key) => {
-            var result;
+            let result;
             const value = i[key];
             if (typeof value === 'object') {
                 result = `${key} { ${iterate(value)} }`;
@@ -121,7 +121,7 @@ let variablesTypes;
 function _buildQuery (fragments, inputVariables = {}) {
     const queries = [];
 
-    forEach(fragments, (fragment, key) => {
+    forIn(fragments, (fragment, key) => {
         let queryStr = '';
         const vars = inputVariables[key];
         const variablesMap = []; // slug: $slug
@@ -129,7 +129,7 @@ function _buildQuery (fragments, inputVariables = {}) {
 
         // variables calculation
         if (vars) {
-            forEach(vars, (varValue, varKey) => {
+            forIn(vars, (varValue, varKey) => {
                 if (varValue.hasOwnProperty('type') && varValue.hasOwnProperty('value') && typeof varValue.type === 'string') {
                     const name = varKey + iterator;
                     variablesTypes.push(`$${name}: ${varValue.type}`);

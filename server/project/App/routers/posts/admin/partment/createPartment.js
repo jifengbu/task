@@ -21,5 +21,22 @@ export default async ({
         subors,
     });
     await doc.save();
-    return { success: true, context: doc };
+    const context = await PartmentModel.findById(doc.id)
+    .select({
+        id: 1,
+        name: 1,
+        descript: 1,
+        phoneList: 1,
+        chargeMan: 1,
+        members: 1,
+        superior: 1,
+        subors: 1,
+    }).populate({
+        path: 'chargeMan',
+        select: { name: 1, phone: 1 },
+    }).populate({
+        path: 'superior',
+        select: { name: 1 },
+    });
+    return { success: true, context };
 };

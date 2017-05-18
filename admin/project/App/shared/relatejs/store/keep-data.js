@@ -11,8 +11,8 @@ export default {
             location = pathname;
         }
         if (data) {
-            if (this.list[location]) {
-                Object.assign(this.list[location].data, data);
+            if (this.list[location] && typeof data === 'object') {
+                this.list[location].data = Object.assign(this.list[location].data || {}, data);
             } else {
                 let obj = { connectorId, store, hasKeepData: true };
                 if (typeof data === 'object') {

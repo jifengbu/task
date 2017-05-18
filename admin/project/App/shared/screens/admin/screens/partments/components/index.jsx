@@ -12,14 +12,13 @@ const columns = [{
     title: '部门名称',
     dataIndex: 'name',
 }, {
-    title: '描述',
-    dataIndex: 'descript',
-}, {
     title: '联系电话',
     dataIndex: 'phoneList',
+    render: (data) => data.join(';'),
 }, {
     title: '负责人',
     dataIndex: 'chargeMan',
+    render: (data) => data ? (data.name ? data.name + '(' + data.phone + ')' : data.phone) : '',
 }, {
     title: '部门人数',
     dataIndex: 'membersNum',
@@ -107,7 +106,7 @@ export default class Partments extends React.Component {
                                 <ContentAdd />
                             </FloatingActionButton>
                             <span className={styles.iconAddText}>
-                                添加货车
+                                新增部门
                             </span>
                         </div>
                     }
@@ -117,10 +116,12 @@ export default class Partments extends React.Component {
                         rowKey={(record, key) => key}
                         loading={loadingPage}
                         columns={columns}
+                        expandedRowRender={record => <p>{record.descript}</p>}
                         dataSource={partments.partmentList}
                         pagination={pagination}
                         rowClassName={::this.rowClassName}
-                        onRowClick={::this.onRowClick} />
+                        onRowClick={::this.onRowClick}
+                        />
                 </div>
             </div>
         );

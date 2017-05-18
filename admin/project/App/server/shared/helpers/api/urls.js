@@ -10,4 +10,7 @@ module.exports = {
     //部门
     partments: server + 'getPartmentList', // 获取部门列表
     partment: server + 'getPartmentDetail', // 获取部门详情
+    createPartment: server + 'createPartment', // 创建部门
+    modifyPartment: server + 'modifyPartment', // 修改部门信息
+    removePartment: server + 'removePartment', // 删除部门
 };

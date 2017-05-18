@@ -101,7 +101,7 @@ export default function dataConnect (...args) {
             }
 
             componentWillUnmount () {
-                const { pathname } = this.props.location;
+                const { pathname } = this.props.location || {};
                 // 如果有保留数据，则不删除 CONNECTOR_ID，否则会删除 CONNECTOR_ID， 同时会删除 keepData
                 if (!KeepData.getHasKeepData(pathname)) {
                     this.context.store.dispatch(removeConnector(this.props.CONNECTOR_ID));
@@ -314,7 +314,7 @@ export default function dataConnect (...args) {
 
         const Connected = connect(
             () => function map (state, props) {
-                const { pathname } = props.location;
+                const { pathname } = props.location || {};
                 const refuxProps = getReduxState && getReduxState(state, props) || {};
                 const keepData = KeepData.get(pathname, refuxProps);
                 if (!this.CONNECTOR_ID) {

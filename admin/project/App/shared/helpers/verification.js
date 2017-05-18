@@ -42,7 +42,7 @@ export default {
         return /^(\d{16}|\d{19})$/.test(code);
     },
     checkEmailCode (code) {
-        var re = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+        const re = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
         if (re.test(code)) {
             return true;
         } else {

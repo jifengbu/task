@@ -3,6 +3,7 @@ import { getMediaId, omitNil } from '../../../../utils';
 
 export default async ({
     userId,
+    partmentId,
     name,
     descript,
     phoneList,
@@ -28,6 +29,12 @@ export default async ({
         members: 1,
         superior: 1,
         subors: 1,
+    }).populate({
+        path: 'chargeMan',
+        select: { name: 1, phone: 1 },
+    }).populate({
+        path: 'superior',
+        select: { name: 1 },
     });
     if (!doc) {
         return { success: false, msg: '修改失败' };

@@ -4,6 +4,7 @@ import request from 'superagent';
 import Admin from 'screens/admin';
 import Home from 'screens/admin/screens/home';
 import Partments from 'screens/admin/screens/partments';
+import PartmentDetail from 'screens/admin/screens/partments/screens/detail';
 import Statistics from 'screens/admin/screens/statistics';
 import Feedback from 'screens/admin/screens/feedback';
 import Notify from 'screens/admin/screens/notify';
@@ -35,7 +36,10 @@ function authenticate (nextState, replaceState, callback) {
 export default [
     <Route name='admin' path='/admin' component={Admin}>
         <IndexRoute component={Home} onEnter={authenticate} />
-        <Route name='adminPartments' path='partments' component={Partments} onEnter={authenticate} />
+            <Route name='adminPartments' path='partments'>
+                <IndexRoute component={Partments} onEnter={authenticate} />
+                <Route name='adminPartmentDetail' path='detail' component={PartmentDetail} onEnter={authenticate} />
+            </Route>
         <Route name='adminStatistics' path='statistics' component={Statistics} onEnter={authenticate} />
         <Route name='adminFeedback' path='feedback' component={Feedback} onEnter={authenticate} />
         <Route name='adminNotify' path='notify' component={Notify} onEnter={authenticate} />
