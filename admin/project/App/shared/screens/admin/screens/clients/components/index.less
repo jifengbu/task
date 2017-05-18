@@ -1,0 +1,53 @@
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #EAE9EC;
+}
+.searchContainer {
+    display: flex;
+    background-color: #C2CCC2;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    :global(.ant-input-affix-wrapper) {
+        border-radius: 20px !important;
+        width: 300px !important;
+    }
+    :global(.ant-input) {
+        height: 40px;
+        padding: 4px 20px;
+        border-radius: 20px;
+    }
+}
+.iconAddContainer {
+    position: absolute;
+    margin-right: 20px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    right: 0;
+    z-index: 1000;
+}
+.iconAdd {
+    transform: scale(0.7);
+}
+.iconAddText {
+    font-size: 12px;
+    color: #FF4081;
+}
+.tableContainer {
+    flex: 1;
+    overflow: auto;
+}
+.selected {
+    background-color: #FFD39B;
+}
+.selected:hover {
+  background-color: #FFD39B !important;
+}
+.image {
+    width: 90px;
+    height: 60px;
+}

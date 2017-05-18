@@ -9,7 +9,7 @@
 node_modules
 /**/*.iml
 /**/build
-/**/*shared*
+/**/*xcshared*
 /**/*xcuserdata*
 /**/.svn
 /**/public
