@@ -5,11 +5,19 @@ import {
     GraphQLList,
 } from 'graphql';
 import { authorize } from '../../authorize';
-import { shopsType } from '../../types/shop';
+import { partmentType } from '../../types/partment';
 import { post, urls } from 'helpers/api';
 
+const partmentsType = new GraphQLObjectType({
+    name: 'partmentsType',
+    fields: {
+        count: { type: GraphQLInt },
+        partmentList: { type: new GraphQLList(partmentType) },
+    },
+});
+
 export default {
-    type: shopsType,
+    type: partmentsType,
     args: {
         keyword: {
             type: GraphQLString,
@@ -23,7 +31,7 @@ export default {
     },
     async resolve (root, params, options) {
         authorize(root);
-        let ret = await post(urls.applyPublishCardShops, params, root) || {};
+        let ret = await post(urls.partments, params, root) || {};
         return ret.success ? ret.context : {};
     },
 };

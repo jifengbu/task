@@ -1,7 +1,7 @@
 import * as user from './user';
-import * as shop from './shop';
+import * as partment from './partment';
 
 export default {
     ...user,
-    ...shop,
+    ...partment,
 };

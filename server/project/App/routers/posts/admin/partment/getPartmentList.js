@@ -14,10 +14,23 @@ export default async ({ userId, keyword, pageNo, pageSize }) => {
         members: 1,
         superior: 1,
         subors: 1,
+    }).populate({
+        path: 'chargeMan',
+        select: { name: 1, phone: 1 },
+    }).populate({
+        path: 'superior',
+        select: { name: 1 },
     });
 
     return { success: true, context: {
         count,
-        partmentList: docs,
+        partmentList: docs.map((item)=>{
+            item = item.toObject();
+            item.membersNum = item.members.length;
+            delete item.members;
+            item.suborsNum = item.subors.length;
+            delete item.subors;
+            return item;
+        }),
     } };
 };
