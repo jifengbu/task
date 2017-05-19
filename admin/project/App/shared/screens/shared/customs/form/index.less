@@ -15,3 +15,20 @@
 .iconButton {
     transform: scale(0.6);
 }
+.tableContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    :global(.ant-table) {
+        border: 1px solid #C4C4C4;
+    }
+    :global(.ant-table-thead) {
+        background-color: #B8B8B8;
+    }
+    :global(.ant-table-thead)>tr>th {
+        background-color: transparent;
+        color: #787878;
+        padding-left: 20px;
+        padding-left: 20px;
+    }
+}
