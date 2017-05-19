@@ -1,54 +1,54 @@
 import React from 'react';
 import { dataConnect } from 'relatejs';
 import { bindActionCreators } from 'redux';
-import * as partmentActions from 'actions/partments';
+import * as clientActions from 'actions/clients';
 import { notification } from 'ant-design';
-import PartmentDetail from './components';
+import ClientDetail from './components';
 
 @dataConnect(
     (state) => {
-        const { operType, partmentId, record, partments } = state.router.location.state || state.router.location.query;
-        return { operType: operType * 1, partmentId, record, partments, keepLastKeepData: true };
+        const { operType, clientId, record, clients } = state.router.location.state || state.router.location.query;
+        return { operType: operType * 1, clientId, record, clients, keepLastKeepData: true };
     },
     (dispatch) => ({
-        actions : bindActionCreators(partmentActions, dispatch),
+        actions : bindActionCreators(clientActions, dispatch),
     }),
     (props) => {
         return {
-            manualLoad: !!props.partment || !props.partmentId,
-            fragments: PartmentDetail.fragments,
+            manualLoad: !!props.client || !props.clientId,
+            fragments: ClientDetail.fragments,
             variablesTypes: {
-                partment: {
-                    partmentId: 'ID!',
+                client: {
+                    clientId: 'ID!',
                 },
             },
             initialVariables: {
-                partment: {
-                    partmentId: props.partmentId,
+                client: {
+                    clientId: props.clientId,
                 },
             },
             mutations: {
-                removePartment ({ state, data, _ }) {
+                removeClient ({ state, data, _ }) {
                     if (data.success) {
-                        props.partments.count--;
-                        _.remove(props.partments.partmentList, (item) => item.id === props.partmentId);
+                        props.clients.count--;
+                        _.remove(props.clients.clientList, (item) => item.id === props.clientId);
                     }
                 },
-                modifyPartment ({ state, data }) {
+                modifyClient ({ state, data }) {
                     if (data.success) {
-                        const { partment } = state;
+                        const { client } = state;
                         Object.assign(props.record, data.context);
-                        Object.assign(partment, data.context);
+                        Object.assign(client, data.context);
                     }
                 },
             },
         };
     }
 )
-export default class PartmentDetailContainer extends React.Component {
+export default class ClientDetailContainer extends React.Component {
     render () {
         return (
-            <PartmentDetail {...this.props} />
+            <ClientDetail {...this.props} />
         );
     }
 }

@@ -9,58 +9,50 @@ import _ from 'lodash';
 const Search = Input.Search;
 
 const columns = [{
-    title: '图片',
-    dataIndex: 'descriptList',
-    render: (data = []) => <img src={(data[0] || {}).img || '/img/common/default.png'} className={styles.image} />,
+    title: '头像',
+    width: 80,
+    dataIndex: 'head',
+    render: (data) => <img src={data || '/img/common/default_head.png'} className={styles.head} />,
 }, {
-    title: '名称',
+    title: '姓名',
+    width: 120,
     dataIndex: 'name',
+    render: (data) => data||'未知',
 }, {
-    title: '车牌号码',
-    dataIndex: 'plateNo',
+    title: '电话',
+    width: 150,
+    dataIndex: 'phone',
 }, {
-    title: '载重',
-    dataIndex: 'capacity',
+    title: '邮箱',
+    width: 250,
+    dataIndex: 'email',
+    render: (data) => data||'未知',
 }, {
-    title: '车长',
-    dataIndex: 'length',
-}, {
-    title: '车宽',
-    dataIndex: 'width',
-}, {
-    title: '车高',
-    dataIndex: 'height',
-}, {
-    title: '备注',
-    dataIndex: 'remark',
+    title: '预留电话',
+    dataIndex: 'reservePhone',
+    render: (data) => (data || {}).join('; ')||'无',
 }];
 
-export default class Partments extends React.Component {
+export default class Clients extends React.Component {
     static fragments = {
-        partments: {
+        clients: {
             count: 1,
-            partmentList: {
+            clientList: {
                 id: 1,
+                head: 1,
                 name: 1,
-                plateNo: 1,
-                descriptList: {
-                    img: 1,
-                    text: 1,
-                },
-                capacity: 1,
-                length: 1,
-                width: 1,
-                height: 1,
-                remark: 1,
+                phone: 1,
+                email: 1,
+                reservePhone: 1,
             },
         },
     };
     state = { current: this.props.lastCurrent || 1, keyword: '' }
     onRowClick (record, index) {
-        const { relate, history, partments } = this.props;
+        const { relate, history, clients } = this.props;
         const { current } = this.state;
         relate.setKeepData({ lastSelectIndex: index, lastCurrent: current });
-        history.push({ pathname: '/admin/partments/detail', state: { operType: 1, partmentId: record.id, record, partments } });
+        history.push({ pathname: '/admin/clients/detail', state: { operType: 1, clientId: record.id, record, clients } });
     }
     rowClassName (record, index) {
         const { lastCurrent, lastSelectIndex } = this.props;
@@ -68,21 +60,21 @@ export default class Partments extends React.Component {
         return current === lastCurrent && lastSelectIndex === index ? styles.selected : '';
     }
     onSearch (keyword) {
-        const { getPartments } = this.props;
+        const { getClients } = this.props;
         this.setState({ current: 1, keyword });
-        getPartments(keyword);
+        getClients(keyword);
     }
-    showCreatePartment () {
-        const { relate, history, partments } = this.props;
+    showCreateClient () {
+        const { relate, history, clients } = this.props;
         relate.setKeepData(true);
-        history.push({ pathname: '/admin/partments/detail', state: { operType: 0, partments } });
+        history.push({ pathname: '/admin/clients/detail', state: { operType: 0, clients } });
     }
     render () {
         const self = this;
         const { current, keyword } = this.state;
-        const { partments = {}, loadListPage, loading, loadingPage } = this.props;
+        const { clients = {}, loadListPage, loading, loadingPage } = this.props;
         const pagination = {
-            total: partments.count,
+            total: clients.count,
             showSizeChanger: false,
             current,
             pageSize: 3,
@@ -106,24 +98,26 @@ export default class Partments extends React.Component {
                     {
                         !loading &&
                         <div className={styles.iconAddContainer}>
-                            <FloatingActionButton secondary className={styles.iconAdd} onTouchTap={::this.showCreatePartment}>
+                            <FloatingActionButton secondary className={styles.iconAdd} onTouchTap={::this.showCreateClient}>
                                 <ContentAdd />
                             </FloatingActionButton>
                             <span className={styles.iconAddText}>
-                                添加货车
+                                添加成员
                             </span>
                         </div>
                     }
                 </div>
                 <div className={styles.tableContainer}>
                     <Table
+                        bordered
                         rowKey={(record, key) => key}
                         loading={loadingPage}
                         columns={columns}
-                        dataSource={partments.partmentList}
+                        dataSource={clients.clientList}
                         pagination={pagination}
                         rowClassName={::this.rowClassName}
-                        onRowClick={::this.onRowClick} />
+                        onRowClick={::this.onRowClick}
+                        />
                 </div>
             </div>
         );

@@ -37,8 +37,6 @@ body {
 }
 :global(.ant-table-thead) {
     background-color: #3AA0BB;
-    border-width: 1px !important;
-    border-color: red !important;
 }
 :global(.ant-table-thead)>tr>th {
     background-color: transparent;
@@ -52,6 +50,12 @@ body {
 }
 :global(.ant-table-pagination) {
     margin-right: 20px;
+}
+:global(.ant-table-bordered .ant-table-tbody>tr>td), :global(.ant-table-bordered .ant-table-thead>tr>th) {
+    border-right: 1px solid #C4C4C4;
+}
+:global(.ant-table-bordered .ant-table-body>table) {
+    border: 0px;
 }
 //tabs
 :global(.ant-tabs.ant-tabs-card>.ant-tabs-bar .ant-tabs-nav-container) {

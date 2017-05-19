@@ -5,6 +5,11 @@ export default [
     },
     '-',
     {
+        label: '人员',
+        link: '/admin/clients',
+    },
+    '-',
+    {
         label: '意见反馈',
         link: '/admin/feedback',
     },

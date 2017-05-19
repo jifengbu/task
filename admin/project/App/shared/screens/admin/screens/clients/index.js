@@ -1,28 +1,28 @@
 import React from 'react';
 import { dataConnect } from 'relatejs';
 import { bindActionCreators } from 'redux';
-import * as partmentActions from 'actions/partments';
+import * as clientActions from 'actions/clients';
 import { notification } from 'ant-design';
 import { needLoadPage } from 'helpers/utils';
 import _ from 'lodash';
-import Partments from './components';
+import Clients from './components';
 
 @dataConnect(
     (state) => ({ pageSize: 3 }),
     (dispatch) => ({
-        actions : bindActionCreators(partmentActions, dispatch),
+        actions : bindActionCreators(clientActions, dispatch),
     }),
     (props) => ({
-        fragments: Partments.fragments,
+        fragments: Clients.fragments,
         variablesTypes: {
-            partments: {
+            clients: {
                 pageNo: 'Int!',
                 pageSize: 'Int!',
                 keyword: 'String!',
             },
         },
         initialVariables: {
-            partments: {
+            clients: {
                 pageNo: 0,
                 pageSize: props.pageSize,
                 keyword: '',
@@ -30,31 +30,31 @@ import Partments from './components';
         },
     })
 )
-export default class PartmentsContainer extends React.Component {
-    getPartments (keyword) {
+export default class ClientsContainer extends React.Component {
+    getClients (keyword) {
         const { relate, pageSize } = this.props;
         relate.refresh({
             variables: {
-                partments: {
+                clients: {
                     pageNo: 0,
                     pageSize,
                     keyword,
                 },
             },
             callback (data) {
-                if (!data.partments) {
+                if (!data.clients) {
                     notification.error({ description: '没有相关货车信息' });
                 }
             },
         });
     }
     loadListPage (keyword, pageNo) {
-        const { relate, pageSize, partments } = this.props;
-        const property = 'partmentList';
-        if (needLoadPage(partments, property, pageNo, pageSize)) {
+        const { relate, pageSize, clients } = this.props;
+        const property = 'clientList';
+        if (needLoadPage(clients, property, pageNo, pageSize)) {
             relate.loadPage({
                 variables: {
-                    partments: {
+                    clients: {
                         pageNo,
                         pageSize,
                         keyword,
@@ -66,8 +66,8 @@ export default class PartmentsContainer extends React.Component {
     }
     render () {
         return (
-            <Partments {...this.props}
-                getPartments={::this.getPartments}
+            <Clients {...this.props}
+                getClients={::this.getClients}
                 loadListPage={::this.loadListPage} />
         );
     }

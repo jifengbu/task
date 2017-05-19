@@ -3,75 +3,193 @@ import antd_form_create from 'decorators/antd_form_create';
 import styles from './index.less';
 import _ from 'lodash';
 import verification from 'helpers/verification';
-import { Button, Modal, Form, Row, Col, Input, Icon, Spin, Select, InputNumber, Upload, notification } from 'ant-design';
+import { Table, Button, Modal, Form, Row, Col, Input, Icon, Spin, Select, InputNumber, Upload, Popconfirm, notification } from 'ant-design';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentDelete from 'material-ui/svg-icons/action/delete';
 import NavigationArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward';
 import NavigationArrowDownward from 'material-ui/svg-icons/navigation/arrow-downward';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
+import SelectClient from 'components/SelectClient';
+import SelectPartment from 'components/SelectPartment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Dragger = Upload.Dragger;
 
 @antd_form_create
-export default class PartmentDetail extends React.Component {
+export default class ClientDetail extends React.Component {
     static fragments = {
-        partment: {
+        client: {
             id: 1,
             name: 1,
-            plateNo: 1,
-            capacity: 1,
-            length: 1,
-            width: 1,
-            height: 1,
-            descriptList: {
-                img: 1,
-                text: 1,
+            descript: 1,
+            phoneList: 1,
+            chargeMan: {
+                id: 1,
+                name: 1,
+                phone: 1,
+                head: 1,
+                email: 1,
+                reservePhone: 1,
             },
-            remark: 1,
+            superior: {
+                id: 1,
+                name: 1,
+                descript: 1,
+                phoneList: 1,
+                chargeMan: {
+                    name: 1,
+                    phone: 1,
+                }
+            },
+            members: {
+                id: 1,
+                name: 1,
+                phone: 1,
+                head: 1,
+                email: 1,
+                reservePhone: 1,
+            },
+            subors: {
+                id: 1,
+                name: 1,
+                descript: 1,
+                phoneList: 1,
+                chargeMan: {
+                    name: 1,
+                    phone: 1,
+                },
+                superior: {
+                    name: 1,
+                },
+                membersNum: 1,
+                suborsNum: 1,
+            },
         },
     };
+    columns = [{
+        title: '头像',
+        width: 50,
+        dataIndex: 'head',
+        render: (data) => <img src={data || '/img/common/default_head.png'} className={styles.head} />,
+    }, {
+        title: '姓名',
+        width: 120,
+        dataIndex: 'name',
+        render: (data) => data||'未知',
+    }, {
+        title: '电话',
+        width: 150,
+        dataIndex: 'phone',
+    }, {
+        title: '邮箱',
+        width: 250,
+        dataIndex: 'email',
+        render: (data) => data||'无',
+    }, {
+        title: '预留电话',
+        width: 300,
+        dataIndex: 'reservePhone',
+        render: (data) => (data || []).join('; ')||'无',
+    },  {
+        title: '操作',
+        width: 100,
+        dataIndex: 'operation',
+        render: (text, record, index) => (
+            <Popconfirm title="确定要移除踢出成员吗?" onConfirm={this.handleDeleteMember.bind(this, index)}>
+                <a href="#">踢出</a>
+            </Popconfirm>
+        ),
+    }];
+    suborColumns = [{
+        title: '部门名称',
+        dataIndex: 'name',
+    }, {
+        title: '联系电话',
+        dataIndex: 'phoneList',
+        render: (data) => (data||[]).join(';'),
+    }, {
+        title: '负责人',
+        dataIndex: 'chargeMan',
+        render: (data) => data ? (data.name ? data.name + '(' + data.phone + ')' : data.phone) : '',
+    }, {
+        title: '部门人数',
+        dataIndex: 'membersNum',
+    }, {
+        title: '下属单位个数',
+        dataIndex: 'suborsNum',
+    }, {
+        title: '操作',
+        dataIndex: 'operation',
+        width: 100,
+        render: (text, record, index) => (
+            <Popconfirm title="确定要踢出这个下属单位吗?" onConfirm={this.handleDeleteSubor.bind(this, index)}>
+                <a href="#">踢出</a>
+            </Popconfirm>
+        ),
+    }];
     state = {
         waiting : false,
+        current: 1,
+        suborCurrent: 1,
+        clientModalVisible: false,
+        hasClientOkButton: false,
+        clientTitle: '',
+        partmentModalVisible: false,
+        hasPartmentOkButton: false,
+        partmentTitle: '',
         editing: this.props.operType === 0,
-        partment: _.cloneDeep(this.props.partment) || (this.props.operType === 0 ? {
-            capacity: 10,
-            length: 10,
-            height: 3,
-            width: 3,
-            descriptList: [],
+        client: _.cloneDeep(this.props.client) || (this.props.operType === 0 ? {
+            phoneList: [],
         } : {}),
     }
     componentWillReceiveProps (nextProps) {
         if (this.props.operType === 1) {
-            const { partment } = nextProps;
-            if (!_.isEqual(partment, this.props.partment)) {
-                this.setState({ partment: _.cloneDeep(partment) });
+            const { client } = nextProps;
+            if (!_.isEqual(client, this.props.client)) {
+                this.setState({ client: _.cloneDeep(client) });
             }
         }
     }
-    handleDelete (e) {
+    handleEditCancel(e) {
+        e.preventDefault();
         const self = this;
-        const { actions, history, partment, partmentId } = this.props;
+        const { client } = this.props;
         Modal.confirm({
             title: '提示',
             content: (
                 <div className={styles.confirmContainer}>
-                    确定删除货车 <span className={styles.confirmName}>{partment.name}</span> 吗？
+                    确定取消修改吗？
+                </div>
+            ),
+            okText: '确定',
+            cancelText: '取消',
+            onOk () {
+                self.setState({client: _.cloneDeep(client), editing: false});
+            },
+        });
+    }
+    handleDelete (e) {
+        const self = this;
+        const { actions, history, client, clientId } = this.props;
+        Modal.confirm({
+            title: '提示',
+            content: (
+                <div className={styles.confirmContainer}>
+                    确定删除部门 <span className={styles.confirmName}>{client.name}</span> 吗？
                 </div>
             ),
             okText: '确定',
             cancelText: '取消',
             onOk () {
                 self.setState({ waiting: true });
-                actions.removePartment(partmentId, (data) => {
+                actions.removeClient(clientId, (data) => {
                     self.setState({ waiting: false });
                     if (data.success) {
                         Modal.success({
                             content: '删除成功',
                             onOk () {
-                                history.replace({ pathname: '/admin/partments' });
+                                history.replace({ pathname: '/admin/clients' });
                             },
                         });
                     } else {
@@ -83,11 +201,11 @@ export default class PartmentDetail extends React.Component {
     }
     handleSubmit (e) {
         e.preventDefault();
-        const { partment, editing } = this.state;
+        const { client, editing } = this.state;
         if (editing) {
             const self = this;
-            const { actions, form, history, operType, partmentId, partments, partment: originPartment } = this.props;
-            const sumbit = operType === 0 ? actions.createPartment : actions.modifyPartment;
+            const { actions, form, history, operType, clientId, clients } = this.props;
+            const sumbit = operType === 0 ? actions.createClient : actions.modifyClient;
             form.validateFields((errors, value) => {
                 if (errors) {
                     _.mapValues(errors, (item) => {
@@ -95,25 +213,36 @@ export default class PartmentDetail extends React.Component {
                     });
                     return;
                 }
-
-                const descriptList = [];
-                for (const index in partment.descriptList) {
-                    const item = partment.descriptList[index];
-                    if (!item.removed) {
-                        const img = item.url || item.img;
-                        if (!img) {
-                            notification.error({ description: '请上传第' + (index * 1 + 1) + '条描述的图片' });
-                            return;
-                        }
-                        descriptList.push({ img, text: value['descriptText' + index] });
-                        delete value['descriptText' + index];
-                    }
+                for (const index in client.phoneList) {
+                    delete value['phone' + index];
                 }
-                value.descriptList = descriptList;
+                value.phoneList = client.phoneList;
+                if (!value.phoneList.length) {
+                    notification.error({ description: '请至少填写一个电话号码' });
+                    return;
+                }
+
+                value.chargeMan = (client.chargeMan || {}).id;
+                if (!value.chargeMan) {
+                    notification.error({ description: '请选择部门负责人' });
+                    return;
+                }
+                value.superior = (client.superior || {}).id;
+                value.subors = (client.subors||[]).map((o)=>o.id);
+                value.members = (client.members||[]).map((o)=>o.id);
 
                 if (operType === 1) {
+                    const temp = this.props.client;
+                    const origin = {
+                        ...temp,
+                        superior: (temp.superior || {}).id,
+                        chargeMan: (temp.chargeMan || {}).id,
+                        subors:  (temp.subors||[]).map((o)=>o.id),
+                        members: (temp.members||[]).map((o)=>o.id),
+                    };
+
                     _.forIn(value, (v, k) => {
-                        if (_.isEqual(originPartment[k], v)) {
+                        if (_.isEqual(origin[k], v)) {
                             delete value[k];
                         }
                     });
@@ -122,20 +251,34 @@ export default class PartmentDetail extends React.Component {
                         self.setState({ editing: false });
                         return;
                     }
-                    value.partmentId = partmentId;
+                    value.clientId = clientId;
                 }
 
                 self.setState({ waiting: true });
-                sumbit(value, PartmentDetail.fragments.partment, (data) => {
+                sumbit(value, {
+                    id: 1,
+                    name: 1,
+                    descript: 1,
+                    phoneList: 1,
+                    chargeMan: {
+                        name: 1,
+                        phone: 1,
+                    },
+                    superior: {
+                        name: 1,
+                    },
+                    membersNum: 1,
+                    suborsNum: 1,
+                }, (data) => {
                     self.setState({ waiting: false });
                     if (data.success) {
                         if (operType === 0) {
-                            partments.partmentList.unshift(data.context);
-                            partments.count++;
+                            clients.clientList.unshift(data.context);
+                            clients.count++;
                         }
                         notification.success({ description:  (operType === 0 ? '创建' : '修改') + '成功' });
                         self.setState({ editing: false });
-                        history.replace({ pathname: '/admin/partments' });
+                        history.replace({ pathname: '/admin/clients' });
                     } else {
                         notification.error({ description: data.msg });
                     }
@@ -145,306 +288,336 @@ export default class PartmentDetail extends React.Component {
             this.setState({ editing: true });
         }
     }
-    getBase64 (img, callback) {
-        const reader = new FileReader();
-        reader.addEventListener('load', () => callback(reader.result));
-        reader.readAsDataURL(img);
+    handleDeleteSubor(index) {
+        const { client } = this.state;
+        client.subors.splice(index, 1);
+        this.setState({ client });
     }
-    onItemImageChange (index, info) {
-        const { status, originFileObj, response } = info.file;
-        const { partment, partment: { descriptList } } = this.state;
-        if (status === 'uploading') {
-            if (!descriptList[index].base64Code) {
-                this.getBase64(originFileObj, base64Code => {
-                    descriptList[index].base64Code = base64Code;
-                });
-            }
-        } else if (status === 'done') {
-            descriptList[index].url = response.context.url;
-        }
-        descriptList[index].fileList = info.fileList.slice(-1);
-
-        this.setState({ partment });
+    handleDeleteMember(index) {
+        const { client } = this.state;
+        client.members.splice(index, 1);
+        this.setState({ client });
     }
-    onItemImageRemove (index, file) {
-        const { partment, partment: { descriptList } } = this.state;
-        descriptList[index].base64Code = undefined;
-        descriptList[index].url = undefined;
-        descriptList[index].fileList = undefined;
-        this.setState({ partment });
-    }
-    addDescriptItem (index) {
+    addPhoneItem (index) {
         const { form } = this.props;
-        const { partment, partment: { descriptList } } = this.state;
-
+        const { client, client: { phoneList } } = this.state;
         if (index === undefined) {
-            descriptList.push({});
+            phoneList.push('');
         } else {
-            descriptList.splice(index, 0, {});
+            phoneList.splice(index, 0, '');
         }
-        for (const i in descriptList) {
-            !descriptList[i].removed && form.setFieldsValue({ ['descriptText' + i]:  descriptList[i].text || '' });
+        for (const i in phoneList) {
+            form.setFieldsValue({ ['descriptText' + i]:  phoneList[i].text || '' });
         }
-        this.setState({ partment });
+        this.setState({ client });
     }
-    removeDescriptItem (index) {
-        const { partment } = this.state;
-        partment.descriptList[index].removed = true;
-        this.setState({ partment });
-    }
-    upDescriptItem (index) {
-        const { form } = this.props;
-        const { partment, partment: { descriptList } } = this.state;
-        const repIndex = _.findLastIndex(descriptList, (obj, i) => !obj.removed && i < index);
-        const tmp = descriptList[repIndex];
-        descriptList[repIndex] = descriptList[index];
-        descriptList[index] = tmp;
-        for (const i in descriptList) {
-            !descriptList[i].removed && form.setFieldsValue({ ['descriptText' + i]:  descriptList[i].text || '' });
-        }
-        this.setState({ partment });
-    }
-    downDescriptItem (index) {
-        const { form } = this.props;
-        const { partment, partment: { descriptList } } = this.state;
-        const repIndex = _.findIndex(descriptList, (obj, i) => !obj.removed && i > index);
-        const tmp = descriptList[repIndex];
-        descriptList[repIndex] = descriptList[index];
-        descriptList[index] = tmp;
-        for (const i in descriptList) {
-            !descriptList[i].removed && form.setFieldsValue({ ['descriptText' + i]:  descriptList[i].text || '' });
-        }
-        this.setState({ partment });
+    removePhoneItem (index) {
+        const { client } = this.state;
+        client.phoneList.splice(index, 1);
+        this.setState({ client });
     }
     handleTextChange (index, event) {
-        const { partment } = this.state;
-        partment.descriptList[index].text = event.target.value;
-        this.setState({ partment });
+        const { client } = this.state;
+        client.phoneList[index] = event.target.value;
+        this.setState({ client });
+    }
+    rowClassName (record, index) {
+        const { lastCurrent, lastSelectIndex } = this.selectd||{};
+        const { current } = this.state;
+        return current === lastCurrent && lastSelectIndex === index ? styles.selected : '';
+    }
+    onRowClick (record, index) {
+        const { current } = this.state;
+        this.selectd = { lastSelectIndex: index, lastCurrent: current };
+    }
+    suborRowClassName (record, index) {
+        const { lastCurrent, lastSelectIndex } = this.suborSelectd||{};
+        const { suborCurrent } = this.state;
+        return suborCurrent === lastCurrent && lastSelectIndex === index ? styles.selected : '';
+    }
+    onSuborRowClick (record, index) {
+        const { suborCurrent } = this.state;
+        this.suborSelectd = { lastSelectIndex: index, lastCurrent: suborCurrent };
+    }
+    showSelectClient(type) {
+        this.clientType = type;
+        const { chargeMan = {} } = this.state.client||{};
+        this.setState({
+            hasClientOkButton: false,
+            clientModalVisible: true,
+            clientTitle: type === 0 ? '负责人' : '部门成员',
+            selectedClientId: type === 0 ? chargeMan.id : '',
+        });
+    }
+    handleSelectClientCancel () {
+        this.setState({ clientModalVisible: false });
+    }
+    onSelectClient(client) {
+        const { selectedClientId, hasClientOkButton } = this.state;
+        this.tempClient = client;
+        if (!hasClientOkButton && selectedClientId !== client.id) {
+            this.setState({hasClientOkButton : true});
+        }
+    }
+    handleSelectClientOk () {
+        const { client } = this.state;
+        if (this.clientType === 0) {
+            client.chargeMan = this.tempClient;
+        } else {
+            client.members.push(this.tempClient);
+        }
+        this.setState({ client, clientModalVisible: false });
+    }
+    showSelectPartment(type) {
+        this.partmentType = type;
+        const { superior = {} } = this.state.partment||{};
+        this.setState({
+            hasPartmentOkButton: false,
+            partmentModalVisible: true,
+            partmentTitle: type === 0 ? '上级部门' : '下属部门',
+            selectedPartmentId: type === 0 ? superior.id : '',
+        });
+    }
+    handleSelectPartmentCancel () {
+        this.setState({ partmentModalVisible: false });
+    }
+    onSelectPartment(partment) {
+        const { selectedPartmentId, hasPartmentOkButton } = this.state;
+        this.tempPartment = partment;
+        if (!hasPartmentOkButton && selectedPartmentId !== partment.id) {
+            this.setState({hasPartmentOkButton : true});
+        }
+    }
+    handleSelectPartmentOk () {
+        const { client } = this.state;
+        if (this.partmentType === 0) {
+            client.superior = this.tempPartment;
+        } else {
+            client.subors.push(this.tempPartment);
+        }
+        this.setState({ client, partmentModalVisible: false });
     }
     render () {
+        const self = this;
         const { form, operType } = this.props;
-        const { waiting, editing, partment } = this.state;
-        const { name, plateNo, capacity, length, width, height, descriptList = [], remark } = partment;
-        let textIndex = 0;
-        const descriptListLength = _.reject(descriptList, (o) => o.removed).length;
-
+        const { current, waiting, editing, client, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
+        const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan = {} } = client;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
             initialValue: name,
             rules: [
-                { required: true, message: '请填写货车名称' },
+                { required: true, message: '请填写部门名称' },
             ],
         });
-        const plateNoDecorator = getFieldDecorator('plateNo', {
-            initialValue: plateNo,
-            rules: [
-                { required: true, message: '请填写车牌号码' },
-            ],
+        const descriptDecorator = getFieldDecorator('descript', {
+            initialValue: descript,
         });
-        const capacityDecorator = getFieldDecorator('capacity', {
-            initialValue: capacity,
-            rules: [
-                { required: true, message: '请填写载重' },
-            ],
-        });
-        const lengthDecorator = getFieldDecorator('length', {
-            initialValue: length,
-            rules: [
-                { required: true, message: '请填写货物载重' },
-            ],
-        });
-        const widthDecorator = getFieldDecorator('width', {
-            initialValue: width,
-            rules: [
-                { required: true, message: '请填写货物宽度' },
-            ],
-        });
-        const heightDecorator = getFieldDecorator('height', {
-            initialValue: height,
-            rules: [
-                { required: true, message: '请填写货物高度' },
-            ],
-        });
-        const remarkDecorator = getFieldDecorator('remark', {
-            initialValue: remark,
-        });
-        const uploadProps = {
-            name: 'file',
-            action: '/uploadFile',
-            supportServerRender: true,
-        };
         const formItemLayout = {
-            labelCol: { span: 5 },
+            labelCol: { span: 3 },
             wrapperCol: { span: 12 },
+        };
+        const formItemTableLayout = {
+            labelCol: { span: 3 },
+            wrapperCol: { span: 18 },
+        };
+        const pagination = {
+            total: members.length,
+            showSizeChanger: false,
+            current,
+            pageSize: 3,
+            onChange (current) {
+                self.setState({ current });
+            },
+        };
+        const suborPagination = {
+            total: subors.length,
+            showSizeChanger: false,
+            current,
+            pageSize: 3,
+            onChange (current) {
+                self.setState({ current });
+            },
         };
         return (
             <div className={styles.container}>
                 <div className={styles.titleContainer}>
-                    <div className={styles.cell}>货车信息</div>
-                    <Button style={{ zIndex: 1000 }} type='ghost' onClick={::this.handleSubmit} loading={waiting}>{operType === 0 ? '发布' : !editing ? '修改' : '确认修改'}</Button>
+                    <div className={styles.cell}>部门信息</div>
+                    <div style={{ zIndex: 1000}}>
+                        { operType === 1 && editing &&  <Button style={{ marginRight: 10 }} type='ghost' onClick={::this.handleEditCancel} loading={waiting}>取消修改</Button>}
+                        <Button type='ghost' onClick={::this.handleSubmit} loading={waiting}>{operType === 0 ? '发布' : !editing ? '修改' : '确认修改'}</Button>
+                    </div>
                 </div>
                 <Form className={!editing ? styles.editForm : ''}>
                     <FormItem
                         {...formItemLayout}
-                        label='货车名称:'
+                        label='部门名称'
                         hasFeedback
                         >
-                        {nameDecorator(
-                            <Input disabled={!editing} placeholder='请输入货车名称' />
-                        )}
+                        {editing ? nameDecorator(
+                            <Input placeholder='请输入部门名称' />
+                        ) : <span className={styles.value}>{name}</span>}
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
-                        label='车牌号码:'
+                        label='描述'
                         hasFeedback
                         >
-                        {plateNoDecorator(
-                            <Input disabled={!editing} placeholder='请输入车牌号码' />
-                        )}
+                        {editing ? descriptDecorator(
+                            <Input type='textarea' rows={4} />
+                        ): <span className={styles.value}>{descript}</span>}
                     </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label='载重:'
-                        hasFeedback
-                        >
-                        {capacityDecorator(
-                            <InputNumber disabled={!editing} min={1} step={1} />
-                        )}
-                        <span className={styles.unit}>吨</span>
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label='车长:'
-                        hasFeedback
-                        >
-                        {lengthDecorator(
-                            <InputNumber disabled={!editing} min={1} step={0.1} />
-                        )}
-                        <span className={styles.unit}>米</span>
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label='车宽:'
-                        hasFeedback
-                        >
-                        {widthDecorator(
-                            <InputNumber disabled={!editing} min={1} step={0.1} />
-                        )}
-                        <span className={styles.unit}>米</span>
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label='车高:'
-                        hasFeedback
-                        >
-                        {heightDecorator(
-                            <InputNumber disabled={!editing} min={1} step={0.1} />
-                        )}
-                        <span className={styles.unit}>米</span>
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label='备注:'
-                        hasFeedback
-                        >
-                        {remarkDecorator(
-                            <Input disabled={!editing} type='textarea' rows={4} />
-                        )}
-                    </FormItem>
-                    <div className={styles.descriptContainer}>
-                        {
-                            descriptList.map((item, i) => {
-                                !item.removed && (textIndex++);
-                                return item.removed ? null : (
-                                    <div key={i} className={styles.descriptItem}>
-                                        <FormItem
-                                            {...formItemLayout}
-                                            label={descriptListLength > 1 ? '第' + textIndex + '条描述:' : '描述:'}
-                                            >
-                                            <div className={styles.iconButtonContainer}>
-                                                {
-                                                    editing &&
-                                                    <FloatingActionButton secondary className={styles.iconButton} onTouchTap={this.removeDescriptItem.bind(this, i)}>
-                                                        <ContentDelete />
-                                                    </FloatingActionButton>
-                                                }
-                                                {
-                                                    editing && textIndex !== 1 &&
-                                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.upDescriptItem.bind(this, i)}>
-                                                        <NavigationArrowUpward />
-                                                    </FloatingActionButton>
-                                                }
-                                                {
-                                                    editing && textIndex !== descriptListLength &&
-                                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.downDescriptItem.bind(this, i)}>
-                                                        <NavigationArrowDownward />
-                                                    </FloatingActionButton>
-                                                }
-                                                {
-                                                    editing && descriptListLength < 3 &&
-                                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.addDescriptItem.bind(this, i)}>
-                                                        <ContentAdd />
-                                                    </FloatingActionButton>
-                                                }
-                                            </div>
-                                        </FormItem>
-                                        <FormItem
-                                            {...formItemLayout}
-                                            label='文字描述:'
-                                            hasFeedback
-                                            >
-                                            {getFieldDecorator('descriptText' + i, {
-                                                initialValue: item.text || '',
-                                                rules: [
-                                                    { required: true, message: '请填写文字描述' },
-                                                ],
-                                            })(
-                                                <Input disabled={!editing} placeholder='请输入文字描述' onChange={this.handleTextChange.bind(this, i)} />
-                                            )}
-                                        </FormItem>
-                                        <FormItem
-                                            {...formItemLayout}
-                                            label={'货物图片:'}
-                                            >
-                                            <div className={styles.draggerItemImgContainer}>
-                                                <Dragger disabled={!editing} {...uploadProps} accept='.jpg,.png'
-                                                    onChange={this.onItemImageChange.bind(this, i)}
-                                                    onRemove={this.onItemImageRemove.bind(this, i)}
-                                                    fileList={item.fileList}>
-                                                    {
-                                                        item.base64Code || item.img ?
-                                                            <img src={item.base64Code || item.img} role='presentation' className={styles.draggerItemImgContainer} />
-                                                        :
-                                                            <Icon type='plus' />
-                                                    }
-                                                </Dragger>
-                                            </div>
-                                        </FormItem>
-                                    </div>
-                                );
-                            })
-                        }
-                        {
-                            editing && descriptListLength < 3 &&
+                    {
+                        !phoneList.length &&
+                        <FormItem
+                            {...formItemLayout}
+                            label='联系电话'
+                            >
+                            <div className={styles.iconButtonContainer}>
+                            {
+                                editing ?
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={::this.addPhoneItem}>
+                                    <ContentAdd />
+                                </FloatingActionButton>
+                                :
+                                <span className={styles.value}>无</span>
+                            }
+                            </div>
+                        </FormItem>
+                    }
+                    {
+                        phoneList.map((item, i)=>(
                             <FormItem
+                                key={i}
                                 {...formItemLayout}
-                                label='追加描述:'
+                                label={`联系电话${i+1}`}
                                 hasFeedback
                                 >
                                 <div className={styles.iconButtonContainer}>
-                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.addDescriptItem.bind(this, undefined)}>
+                                    {
+                                        editing && phoneList.length < 4 &&
+                                        <FloatingActionButton className={styles.iconButton} onTouchTap={this.addPhoneItem.bind(this, i)}>
+                                            <ContentAdd />
+                                        </FloatingActionButton>
+                                    }
+                                    {
+                                        editing &&
+                                        <FloatingActionButton secondary className={styles.iconButton} onTouchTap={this.removePhoneItem.bind(this, i)}>
+                                            <ContentDelete />
+                                        </FloatingActionButton>
+                                    }
+                                    {editing ? getFieldDecorator('phone' + i, {
+                                        initialValue: item || '',
+                                        rules: [
+                                            { required: true, message: '请填写电话号码' },
+                                        ],
+                                    })(
+                                        <Input placeholder='请输入电话号码' onChange={this.handleTextChange.bind(this, i)} />
+                                    ) : <span className={styles.value}>{item}</span>}
+                                </div>
+                            </FormItem>
+                        ))
+                    }
+                    <FormItem
+                        {...formItemLayout}
+                        label='负责人'
+                        >
+                        <div className={styles.iconButtonContainer}>
+                        {
+                            editing &&
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 0)}>
+                                    <EditorModeEdit />
+                                </FloatingActionButton>
+                        }
+                        <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
+                        <span className={styles.value}>{`${chargeMan.name} ( ${chargeMan.phone} )`}</span>
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='成员'
+                        >
+                        <div className={styles.tableContainer}>
+                            {
+                                editing &&
+                                <div className={styles.iconButtonInnerContainer}>
+                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 1)}>
                                         <ContentAdd />
                                     </FloatingActionButton>
                                 </div>
-                            </FormItem>
+                            }
+                            <Table
+                                rowKey={(record, key) => key}
+                                columns={editing ? this.columns : _.reject(this.columns, (o)=>o.dataIndex === 'operation')}
+                                dataSource={members}
+                                pagination={pagination}
+                                rowClassName={::this.rowClassName}
+                                onRowClick={::this.onRowClick}
+                                />
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='上级单位'
+                        >
+                        <div className={styles.iconButtonContainer}>
+                        {
+                            editing &&
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 0)}>
+                                    <EditorModeEdit />
+                                </FloatingActionButton>
                         }
-                    </div>
+                        {
+                            !!superior  && (
+                                <span className={styles.value}>
+                                    <span>{superior.name}</span>
+                                    <span style={{marginLeft: 20}}>{`联系电话：${superior.phoneList.join(';')}`}</span>
+                                    <span style={{marginLeft: 20}}>{`负责人：${superior.chargeMan ? (superior.chargeMan.name ? superior.chargeMan.name + '(' + superior.chargeMan.phone + ')' : superior.chargeMan.phone) : ''}`}</span>
+                                </span>
+                            )
+                        }
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='下属单位'
+                        >
+                        <div className={styles.tableContainer}>
+                            {
+                                editing &&
+                                <div className={styles.iconButtonInnerContainer}>
+                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 1)}>
+                                        <ContentAdd />
+                                    </FloatingActionButton>
+                                </div>
+                            }
+                            <Table
+                                rowKey={(record, key) => key}
+                                columns={editing ? this.suborColumns : _.reject(this.suborColumns, (o)=>o.dataIndex === 'operation')}
+                                dataSource={subors}
+                                pagination={suborPagination}
+                                rowClassName={::this.suborRowClassName}
+                                onRowClick={::this.onSuborRowClick}
+                                />
+                        </div>
+                    </FormItem>
                 </Form>
                 {
                     editing && operType === 1 &&
                     <div className={styles.buttonContainer}>
                         <Button className={styles.button} type='primary' onClick={::this.handleDelete}>删 除</Button>
                     </div>
+                }
+                {
+                    clientModalVisible &&
+                    <Modal title={'选择' + clientTitle} visible={true} className={hasClientOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectClientCancel} onOk={::this.handleSelectClientOk}>
+                        <SelectClient onSelect={::this.onSelectClient} selectedId={selectedClientId}/>
+                    </Modal>
+                }
+                {
+                    partmentModalVisible &&
+                    <Modal title={'选择' + partmentTitle} visible={true} className={hasPartmentOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectPartmentCancel} onOk={::this.handleSelectPartmentOk}>
+                        <SelectPartment onSelect={::this.onSelectPartment} selectedId={selectedPartmentId}/>
+                    </Modal>
                 }
             </div>
         );

@@ -16,4 +16,8 @@ module.exports = {
 
     //用户
     clients: server + 'getClientList', // 获取用户列表
+    client: server + 'getClientDetail', // 获取人员详情
+    createClient: server + 'createClient', // 创建人员
+    modifyClient: server + 'modifyClient', // 修改人员信息
+    removeClient: server + 'removeClient', // 删除人员
 };
