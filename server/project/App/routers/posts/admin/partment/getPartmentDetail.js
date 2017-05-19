@@ -8,12 +8,13 @@ export default async ({
     .populate({
         path: 'chargeMan',
         select: { name: 1, phone: 1, head: 1, email: 1, reservePhone: 1 },
-    }).populate({
+    })
+    .populate({
         path: 'superior',
         select: { name: 1, descript: 1, phoneList: 1, chargeMan: 1, members: 1, superior: 1, subors: 1 },
         populate: [{
             path: 'chargeMan',
-            select: { name: 1, phone: 1 },
+            select: { head: 1, name: 1, phone: 1 },
         }],
     }).populate({
         path: 'members',
@@ -23,7 +24,7 @@ export default async ({
         select: { name: 1, descript: 1, phoneList: 1, chargeMan: 1, members: 1, superior: 1, subors: 1 },
         populate: [{
             path: 'chargeMan',
-            select: { name: 1, phone: 1 },
+            select: { head: 1, name: 1, phone: 1 },
         }],
     });
     if (!doc) {

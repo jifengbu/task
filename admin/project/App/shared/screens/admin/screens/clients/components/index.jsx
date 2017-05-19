@@ -17,7 +17,7 @@ const columns = [{
     title: '姓名',
     width: 120,
     dataIndex: 'name',
-    render: (data) => data||'未知',
+    render: (data = '未知') => data,
 }, {
     title: '电话',
     width: 150,
@@ -26,7 +26,12 @@ const columns = [{
     title: '邮箱',
     width: 250,
     dataIndex: 'email',
-    render: (data) => data||'未知',
+    render: (data = '无') => data,
+}, {
+    title: '部门',
+    width: 250,
+    dataIndex: 'partment',
+    render: (data = {}) => data.name||'无',
 }, {
     title: '预留电话',
     dataIndex: 'reservePhone',
@@ -44,6 +49,9 @@ export default class Clients extends React.Component {
                 phone: 1,
                 email: 1,
                 reservePhone: 1,
+                partment: {
+                    name: 1,
+                },
             },
         },
     };

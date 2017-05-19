@@ -16,7 +16,7 @@ export default async ({ userId, keyword, pageNo, pageSize }) => {
         subors: 1,
     }).populate({
         path: 'chargeMan',
-        select: { name: 1, phone: 1 },
+        select: { head: 1, name: 1, phone: 1 },
     }).populate({
         path: 'superior',
         select: { name: 1 },

@@ -14,9 +14,7 @@ const clientSchema = new mongoose.Schema({
     reservePhone: [{ type: String }], // 预备电话
     salary: { type: Number, default: 0 }, // 工资
     post: { type: String }, // 职位
-    partment: { type: String }, // 部门
-    superior: { type: Schema.Types.ObjectId, ref: 'Client' }, // 上级
-    subors: [{ type: Schema.Types.ObjectId, ref: 'Client' }], // 下属
+    partment: { type: Schema.Types.ObjectId, ref: 'Partment' }, // 部门
     registerTime: { type: Date, default: Date.now }, // 注册时间
 });
 clientSchema.plugin(passportLocalMongoose, { usernameField: 'phone' });
