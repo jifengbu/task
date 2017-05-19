@@ -39,5 +39,12 @@ export default async ({
     if (!doc) {
         return { success: false, msg: '修改失败' };
     }
-    return { success: true, context: doc  };
+
+    const context = doc.toObject();
+    context.membersNum = context.members.length;
+    delete context.members;
+    context.suborsNum = context.subors.length;
+    delete context.subors;
+
+    return { success: true, context  };
 };

@@ -11,6 +11,7 @@ import NavigationArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward
 import NavigationArrowDownward from 'material-ui/svg-icons/navigation/arrow-downward';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import SelectClient from 'components/SelectClient';
+import SelectPartment from 'components/SelectPartment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Dragger = Upload.Dragger;
@@ -40,6 +41,24 @@ const columns = [{
     dataIndex: 'reservePhone',
     render: (data) => (data || []).join('; ')||'无',
 }];
+const suborColumns = [{
+    title: '部门名称',
+    dataIndex: 'name',
+}, {
+    title: '联系电话',
+    dataIndex: 'phoneList',
+    render: (data) => (data||[]).join(';'),
+}, {
+    title: '负责人',
+    dataIndex: 'chargeMan',
+    render: (data) => data ? (data.name ? data.name + '(' + data.phone + ')' : data.phone) : '',
+}, {
+    title: '部门人数',
+    dataIndex: 'membersNum',
+}, {
+    title: '下属单位个数',
+    dataIndex: 'suborsNum',
+}];
 
 @antd_form_create
 export default class PartmentDetail extends React.Component {
@@ -60,6 +79,12 @@ export default class PartmentDetail extends React.Component {
             superior: {
                 id: 1,
                 name: 1,
+                descript: 1,
+                phoneList: 1,
+                chargeMan: {
+                    name: 1,
+                    phone: 1,
+                }
             },
             members: {
                 id: 1,
@@ -72,15 +97,30 @@ export default class PartmentDetail extends React.Component {
             subors: {
                 id: 1,
                 name: 1,
+                descript: 1,
+                phoneList: 1,
+                chargeMan: {
+                    name: 1,
+                    phone: 1,
+                },
+                superior: {
+                    name: 1,
+                },
+                membersNum: 1,
+                suborsNum: 1,
             },
         },
     };
     state = {
         waiting : false,
         current: 1,
+        suborCurrent: 1,
         clientModalVisible: false,
         hasClientOkButton: false,
         clientTitle: '',
+        partmentModalVisible: false,
+        hasPartmentOkButton: false,
+        partmentTitle: '',
         editing: this.props.operType === 0,
         partment: _.cloneDeep(this.props.partment) || (this.props.operType === 0 ? {
             phoneList: [],
@@ -93,6 +133,37 @@ export default class PartmentDetail extends React.Component {
                 this.setState({ partment: _.cloneDeep(partment) });
             }
         }
+    }
+    handleEditCancel(e) {
+        e.preventDefault();
+        const self = this;
+        const { partment, form } = this.props;
+        const { name, plateNo, capacity, length, width, height, descriptList = [], remark } = partment;
+        Modal.confirm({
+            title: '提示',
+            content: (
+                <div className={styles.confirmContainer}>
+                    确定取消修改吗？
+                </div>
+            ),
+            okText: '确定',
+            cancelText: '取消',
+            onOk () {
+                self.setState({partment: _.cloneDeep(partment), editing: false});
+                const descriptTexts = {};
+                descriptList.forEach((item, i)=>{ descriptTexts['descriptText'+i] = item.text })
+                form.setFieldsValue({
+                    name,
+                    plateNo,
+                    capacity,
+                    length,
+                    width,
+                    height,
+                    remark,
+                    ...descriptTexts,
+                });
+            },
+        });
     }
     handleDelete (e) {
         const self = this;
@@ -142,12 +213,32 @@ export default class PartmentDetail extends React.Component {
                     delete value['phone' + index];
                 }
                 value.phoneList = partment.phoneList;
+                if (!value.phoneList.length) {
+                    notification.error({ description: '请至少填写一个电话号码' });
+                    return;
+                }
 
+                value.chargeMan = (partment.chargeMan || {}).id;
+                if (!value.chargeMan) {
+                    notification.error({ description: '请选择部门负责人' });
+                    return;
+                }
+                value.superior = (partment.superior || {}).id;
+                value.subors = (partment.subors||[]).map((o)=>o.id);
+                value.members = (partment.members||[]).map((o)=>o.id);
 
                 if (operType === 1) {
-                    const originPartment = this.props.partment;
+                    const temp = this.props.partment;
+                    const origin = {
+                        ...temp,
+                        superior: (temp.superior || {}).id,
+                        chargeMan: (temp.chargeMan || {}).id,
+                        subors:  (temp.subors||[]).map((o)=>o.id),
+                        members: (temp.members||[]).map((o)=>o.id),
+                    };
+
                     _.forIn(value, (v, k) => {
-                        if (_.isEqual(originPartment[k], v)) {
+                        if (_.isEqual(origin[k], v)) {
                             delete value[k];
                         }
                     });
@@ -160,7 +251,21 @@ export default class PartmentDetail extends React.Component {
                 }
 
                 self.setState({ waiting: true });
-                sumbit(value, PartmentDetail.fragments.partment, (data) => {
+                sumbit(value, {
+                    id: 1,
+                    name: 1,
+                    descript: 1,
+                    phoneList: 1,
+                    chargeMan: {
+                        name: 1,
+                        phone: 1,
+                    },
+                    superior: {
+                        name: 1,
+                    },
+                    membersNum: 1,
+                    suborsNum: 1,
+                }, (data) => {
                     self.setState({ waiting: false });
                     if (data.success) {
                         if (operType === 0) {
@@ -199,15 +304,23 @@ export default class PartmentDetail extends React.Component {
         partment.phoneList[index] = event.target.value;
         this.setState({ partment });
     }
-    onRowClick (record, index) {
-        const { current } = this.state;
-        this.selectd = { lastSelectIndex: index, lastCurrent: current };
-        this.setState({ selectedCargoId: record.id, cargoModalVisible: true });
-    }
     rowClassName (record, index) {
         const { lastCurrent, lastSelectIndex } = this.selectd||{};
         const { current } = this.state;
         return current === lastCurrent && lastSelectIndex === index ? styles.selected : '';
+    }
+    onRowClick (record, index) {
+        const { current } = this.state;
+        this.selectd = { lastSelectIndex: index, lastCurrent: current };
+    }
+    suborRowClassName (record, index) {
+        const { lastCurrent, lastSelectIndex } = this.suborSelectd||{};
+        const { suborCurrent } = this.state;
+        return suborCurrent === lastCurrent && lastSelectIndex === index ? styles.selected : '';
+    }
+    onSuborRowClick (record, index) {
+        const { suborCurrent } = this.state;
+        this.suborSelectd = { lastSelectIndex: index, lastCurrent: suborCurrent };
     }
     showSelectClient(type) {
         this.clientType = type;
@@ -238,11 +351,40 @@ export default class PartmentDetail extends React.Component {
         }
         this.setState({ partment, clientModalVisible: false });
     }
+    showSelectPartment(type) {
+        this.partmentType = type;
+        const { superior = {} } = this.state.partment||{};
+        this.setState({
+            hasPartmentOkButton: false,
+            partmentModalVisible: true,
+            partmentTitle: type === 0 ? '上级部门' : '下属部门',
+            selectedPartmentId: type === 0 ? superior.id : '',
+        });
+    }
+    handleSelectPartmentCancel () {
+        this.setState({ partmentModalVisible: false });
+    }
+    onSelectPartment(partment) {
+        const { selectedPartmentId, hasPartmentOkButton } = this.state;
+        this.tempPartment = partment;
+        if (!hasPartmentOkButton && selectedPartmentId !== partment.id) {
+            this.setState({hasPartmentOkButton : true});
+        }
+    }
+    handleSelectPartmentOk () {
+        const { partment } = this.state;
+        if (this.partmentType === 0) {
+            partment.superior = this.tempPartment;
+        } else {
+            partment.subors.push(this.tempPartment);
+        }
+        this.setState({ partment, partmentModalVisible: false });
+    }
     render () {
         const self = this;
         const { form, operType } = this.props;
-        const { current, waiting, editing, partment, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId } = this.state;
-        const { name, descript, phoneList = [], subors = [], members = [], chargeMan = {} } = partment;
+        const { current, waiting, editing, partment, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
+        const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan = {} } = partment;
 
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
@@ -275,11 +417,23 @@ export default class PartmentDetail extends React.Component {
                 self.setState({ current });
             },
         };
+        const suborPagination = {
+            total: subors.length,
+            showSizeChanger: false,
+            current,
+            pageSize: 3,
+            onChange (current) {
+                self.setState({ current });
+            },
+        };
         return (
             <div className={styles.container}>
                 <div className={styles.titleContainer}>
                     <div className={styles.cell}>部门信息</div>
-                    <Button style={{ zIndex: 1000 }} type='ghost' onClick={::this.handleSubmit} loading={waiting}>{operType === 0 ? '发布' : !editing ? '修改' : '确认修改'}</Button>
+                    <div style={{ zIndex: 1000}}>
+                        { operType === 1 && editing &&  <Button style={{ marginRight: 10 }} type='ghost' onClick={::this.handleEditCancel} loading={waiting}>取消修改</Button>}
+                        <Button type='ghost' onClick={::this.handleSubmit} loading={waiting}>{operType === 0 ? '发布' : !editing ? '修改' : '确认修改'}</Button>
+                    </div>
                 </div>
                 <Form className={!editing ? styles.editForm : ''}>
                     <FormItem
@@ -376,7 +530,53 @@ export default class PartmentDetail extends React.Component {
                                 dataSource={members}
                                 pagination={pagination}
                                 rowClassName={::this.rowClassName}
-                                onRowClick={::this.onRowClick} />
+                                onRowClick={::this.onRowClick}
+                                />
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='上级单位'
+                        >
+                        <div className={styles.iconButtonContainer}>
+                        {
+                            editing &&
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 0)}>
+                                    <EditorModeEdit />
+                                </FloatingActionButton>
+                        }
+                        {
+                            !!superior  && (
+                                <span>
+                                    <span>{superior.name}</span>
+                                    <span style={{marginLeft: 20}}>{`联系电话：${superior.phoneList.join(';')}`}</span>
+                                    <span style={{marginLeft: 20}}>{`负责人：${superior.chargeMan ? (superior.chargeMan.name ? superior.chargeMan.name + '(' + superior.chargeMan.phone + ')' : superior.chargeMan.phone) : ''}`}</span>
+                                </span>
+                            )
+                        }
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='下属单位'
+                        >
+                        <div className={styles.tableContainer}>
+                            {
+                                editing &&
+                                <div className={styles.iconButtonInnerContainer}>
+                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 1)}>
+                                        <ContentAdd />
+                                    </FloatingActionButton>
+                                </div>
+                            }
+                            <Table
+                                rowKey={(record, key) => key}
+                                columns={suborColumns}
+                                dataSource={subors}
+                                pagination={suborPagination}
+                                rowClassName={::this.suborRowClassName}
+                                onRowClick={::this.onSuborRowClick}
+                                />
                         </div>
                     </FormItem>
                 </Form>
@@ -390,6 +590,12 @@ export default class PartmentDetail extends React.Component {
                     clientModalVisible &&
                     <Modal title={'选择' + clientTitle} visible={true} className={hasClientOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectClientCancel} onOk={::this.handleSelectClientOk}>
                         <SelectClient onSelect={::this.onSelectClient} selectedId={selectedClientId}/>
+                    </Modal>
+                }
+                {
+                    partmentModalVisible &&
+                    <Modal title={'选择' + partmentTitle} visible={true} className={hasPartmentOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectPartmentCancel} onOk={::this.handleSelectPartmentOk}>
+                        <SelectPartment onSelect={::this.onSelectPartment} selectedId={selectedPartmentId}/>
                     </Modal>
                 }
             </div>

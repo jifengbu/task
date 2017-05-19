@@ -18,8 +18,8 @@ const simplePartmentType = new GraphQLObjectType({
     },
 });
 
-export const partmentType = new GraphQLObjectType({
-    name: 'partmentType',
+const innerPartmentType = new GraphQLObjectType({
+    name: 'innerPartmentType',
     fields: {
         id: { type: GraphQLID },
         name:  { type: GraphQLString },
@@ -34,6 +34,22 @@ export const partmentType = new GraphQLObjectType({
     },
 });
 
+export const partmentType = new GraphQLObjectType({
+    name: 'partmentType',
+    fields: {
+        id: { type: GraphQLID },
+        name:  { type: GraphQLString },
+        descript: { type: GraphQLString },
+        phoneList: { type: new GraphQLList(GraphQLString) },
+        chargeMan: { type: clientType },
+        members: { type: new GraphQLList(clientType) },
+        membersNum: { type: GraphQLInt },
+        superior: { type: innerPartmentType },
+        subors: { type: new GraphQLList(innerPartmentType) },
+        suborsNum: { type: GraphQLInt },
+    },
+});
+
 export const partmentInputType = new GraphQLInputObjectType({
     name: 'partmentInputType',
     fields: {
@@ -41,5 +57,9 @@ export const partmentInputType = new GraphQLInputObjectType({
         name:  { type: GraphQLString },
         descript: { type: GraphQLString },
         phoneList: { type: new GraphQLList(GraphQLString) },
+        chargeMan: { type: GraphQLID },
+        superior: { type: GraphQLID },
+        members: { type: new GraphQLList(GraphQLID) },
+        subors: { type: new GraphQLList(GraphQLID) },
     },
 });

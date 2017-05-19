@@ -21,7 +21,7 @@ export default async ({
         subors,
     });
     await doc.save();
-    const context = await PartmentModel.findById(doc.id)
+    let context = await PartmentModel.findById(doc.id)
     .select({
         id: 1,
         name: 1,
@@ -38,5 +38,12 @@ export default async ({
         path: 'superior',
         select: { name: 1 },
     });
+
+    context = context.toObject();
+    context.membersNum = context.members.length;
+    delete context.members;
+    context.suborsNum = context.subors.length;
+    delete context.subors;
+
     return { success: true, context };
 };

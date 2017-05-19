@@ -3,8 +3,6 @@ import { findDOMNode } from 'react-dom';
 import { Table, Input, Button, Spin, Modal, InputNumber, notification } from 'ant-design';
 import styles from './index.less';
 import verification from 'helpers/verification';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import _ from 'lodash';
 const Search = Input.Search;
 
@@ -31,7 +29,7 @@ const columns = [{
     dataIndex: 'suborsNum',
 }];
 
-export default class Partments extends React.Component {
+export default class SelectPartment extends React.Component {
     static fragments = {
         partments: {
             count: 1,
@@ -52,32 +50,21 @@ export default class Partments extends React.Component {
             },
         },
     };
-    state = { current: this.props.lastCurrent || 1, keyword: '' }
-    onRowClick (record, index) {
-        const { relate, history, partments } = this.props;
-        const { current } = this.state;
-        relate.setKeepData({ lastSelectIndex: index, lastCurrent: current });
-        history.push({ pathname: '/admin/partments/detail', state: { operType: 1, partmentId: record.id, record, partments } });
-    }
-    rowClassName (record, index) {
-        const { lastCurrent, lastSelectIndex } = this.props;
-        const { current } = this.state;
-        return current === lastCurrent && lastSelectIndex === index ? styles.selected : '';
+    state = { keyword: '', selectedId: this.props.selectedId }
+    componentWillReceiveProps (nextProps) {
+        if (this.props.selectedId != nextProps.selectedId) {
+            this.setState({ selectedId:  nextProps.selectedId });
+        }
     }
     onSearch (keyword) {
-        const { getPartments } = this.props;
+        const { refresh } = this.props;
         this.setState({ current: 1, keyword });
-        getPartments(keyword);
-    }
-    showCreatePartment () {
-        const { relate, history, partments } = this.props;
-        relate.setKeepData(true);
-        history.push({ pathname: '/admin/partments/detail', state: { operType: 0, partments } });
+        refresh(keyword);
     }
     render () {
         const self = this;
-        const { current, keyword } = this.state;
-        const { partments = {}, loadListPage, loading, loadingPage } = this.props;
+        const { current, keyword, selectedId } = this.state;
+        const { partments = {}, loadListPage, loading, loadingPage, onSelect } = this.props;
         const pagination = {
             total: partments.count,
             showSizeChanger: false,
@@ -86,6 +73,14 @@ export default class Partments extends React.Component {
             onChange (current) {
                 self.setState({ current });
                 loadListPage(keyword, current - 1);
+            },
+        };
+        const rowSelection = {
+            type: 'radio',
+            selectedRowKeys: selectedId ? [ selectedId ] : [],
+            onSelect (record) {
+                self.setState({ selectedId: record.id });
+                onSelect(record);
             },
         };
         return (
@@ -98,31 +93,17 @@ export default class Partments extends React.Component {
                                 <div>正在查找...</div>
                             </div>
                         :
-                            <Search placeholder='输入关键字查找' onSearch={::this.onSearch} />
-                    }
-                    {
-                        !loading &&
-                        <div className={styles.iconAddContainer}>
-                            <FloatingActionButton secondary className={styles.iconAdd} onTouchTap={::this.showCreatePartment}>
-                                <ContentAdd />
-                            </FloatingActionButton>
-                            <span className={styles.iconAddText}>
-                                新增部门
-                            </span>
-                        </div>
+                            <Search className={styles.search} placeholder='输入关键字查找' onSearch={::this.onSearch} />
                     }
                 </div>
                 <div className={styles.tableContainer}>
                     <Table
-                        rowKey={(record, key) => key}
+                        rowKey={(record) => record.id}
                         loading={loadingPage}
                         columns={columns}
-                        expandedRowRender={record => <p>{record.descript}</p>}
                         dataSource={partments.partmentList}
                         pagination={pagination}
-                        rowClassName={::this.rowClassName}
-                        onRowClick={::this.onRowClick}
-                        />
+                        rowSelection={rowSelection} />
                 </div>
             </div>
         );
