@@ -154,8 +154,7 @@ export default class PartmentDetail extends React.Component {
     handleEditCancel(e) {
         e.preventDefault();
         const self = this;
-        const { partment, form } = this.props;
-        const { name, plateNo, capacity, length, width, height, descriptList = [], remark } = partment;
+        const { partment } = this.props;
         Modal.confirm({
             title: '提示',
             content: (
@@ -167,18 +166,6 @@ export default class PartmentDetail extends React.Component {
             cancelText: '取消',
             onOk () {
                 self.setState({partment: _.cloneDeep(partment), editing: false});
-                const descriptTexts = {};
-                descriptList.forEach((item, i)=>{ descriptTexts['descriptText'+i] = item.text })
-                form.setFieldsValue({
-                    name,
-                    plateNo,
-                    capacity,
-                    length,
-                    width,
-                    height,
-                    remark,
-                    ...descriptTexts,
-                });
             },
         });
     }
@@ -311,11 +298,14 @@ export default class PartmentDetail extends React.Component {
         partment.members.splice(index, 1);
         this.setState({ partment });
     }
-    addPhoneItem () {
+    addPhoneItem (index) {
         const { form } = this.props;
         const { partment, partment: { phoneList } } = this.state;
-
-        phoneList.push('');
+        if (index === undefined) {
+            phoneList.push('');
+        } else {
+            phoneList.splice(index, 0, '');
+        }
         for (const i in phoneList) {
             form.setFieldsValue({ ['descriptText' + i]:  phoneList[i].text || '' });
         }
@@ -412,7 +402,6 @@ export default class PartmentDetail extends React.Component {
         const { form, operType } = this.props;
         const { current, waiting, editing, partment, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
         const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan = {} } = partment;
-
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
             initialValue: name,
@@ -426,10 +415,6 @@ export default class PartmentDetail extends React.Component {
         const formItemLayout = {
             labelCol: { span: 3 },
             wrapperCol: { span: 12 },
-        };
-        const formItemInnerLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 10 },
         };
         const formItemTableLayout = {
             labelCol: { span: 3 },
@@ -468,56 +453,66 @@ export default class PartmentDetail extends React.Component {
                         label='部门名称'
                         hasFeedback
                         >
-                        {nameDecorator(
-                            <Input disabled={!editing} placeholder='请输入部门名称' />
-                        )}
+                        {editing ? nameDecorator(
+                            <Input placeholder='请输入部门名称' />
+                        ) : <span className={styles.value}>{name}</span>}
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
                         label='描述'
                         hasFeedback
                         >
-                        {descriptDecorator(
-                            <Input disabled={!editing} type='textarea' rows={4} />
-                        )}
+                        {editing ? descriptDecorator(
+                            <Input type='textarea' rows={4} />
+                        ): <span className={styles.value}>{descript}</span>}
                     </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label='联系电话'
-                        hasFeedback
-                        >
-                        <div className={styles.iconButtonContainer}>
-                        {
-                            editing && phoneList.length < 3 &&
-                            <FloatingActionButton className={styles.iconButton} onTouchTap={::this.addPhoneItem}>
-                                <ContentAdd />
-                            </FloatingActionButton>
-                        }
-                        </div>
-                    </FormItem>
+                    {
+                        !phoneList.length &&
+                        <FormItem
+                            {...formItemLayout}
+                            label='联系电话'
+                            >
+                            <div className={styles.iconButtonContainer}>
+                            {
+                                editing ?
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={::this.addPhoneItem}>
+                                    <ContentAdd />
+                                </FloatingActionButton>
+                                :
+                                <span className={styles.value}>无</span>
+                            }
+                            </div>
+                        </FormItem>
+                    }
                     {
                         phoneList.map((item, i)=>(
                             <FormItem
                                 key={i}
-                                {...formItemInnerLayout}
-                                label={`电话号码${i+1}`}
+                                {...formItemLayout}
+                                label={`联系电话${i+1}`}
                                 hasFeedback
                                 >
                                 <div className={styles.iconButtonContainer}>
+                                    {
+                                        editing && phoneList.length < 4 &&
+                                        <FloatingActionButton className={styles.iconButton} onTouchTap={this.addPhoneItem.bind(this, i)}>
+                                            <ContentAdd />
+                                        </FloatingActionButton>
+                                    }
                                     {
                                         editing &&
                                         <FloatingActionButton secondary className={styles.iconButton} onTouchTap={this.removePhoneItem.bind(this, i)}>
                                             <ContentDelete />
                                         </FloatingActionButton>
                                     }
-                                    {getFieldDecorator('phone' + i, {
+                                    {editing ? getFieldDecorator('phone' + i, {
                                         initialValue: item || '',
                                         rules: [
                                             { required: true, message: '请填写电话号码' },
                                         ],
                                     })(
                                         <Input placeholder='请输入电话号码' onChange={this.handleTextChange.bind(this, i)} />
-                                    )}
+                                    ) : <span className={styles.value}>{item}</span>}
                                 </div>
                             </FormItem>
                         ))
@@ -534,7 +529,7 @@ export default class PartmentDetail extends React.Component {
                                 </FloatingActionButton>
                         }
                         <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
-                        {`${chargeMan.name} ( ${chargeMan.phone} )`}
+                        <span className={styles.value}>{`${chargeMan.name} ( ${chargeMan.phone} )`}</span>
                         </div>
                     </FormItem>
                     <FormItem
@@ -544,7 +539,6 @@ export default class PartmentDetail extends React.Component {
                         <div className={styles.tableContainer}>
                             {
                                 editing &&
-
                                 <div className={styles.iconButtonInnerContainer}>
                                     <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 1)}>
                                         <ContentAdd />
@@ -574,7 +568,7 @@ export default class PartmentDetail extends React.Component {
                         }
                         {
                             !!superior  && (
-                                <span>
+                                <span className={styles.value}>
                                     <span>{superior.name}</span>
                                     <span style={{marginLeft: 20}}>{`联系电话：${superior.phoneList.join(';')}`}</span>
                                     <span style={{marginLeft: 20}}>{`负责人：${superior.chargeMan ? (superior.chargeMan.name ? superior.chargeMan.name + '(' + superior.chargeMan.phone + ')' : superior.chargeMan.phone) : ''}`}</span>
