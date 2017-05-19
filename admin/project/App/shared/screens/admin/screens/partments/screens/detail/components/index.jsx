@@ -3,7 +3,7 @@ import antd_form_create from 'decorators/antd_form_create';
 import styles from './index.less';
 import _ from 'lodash';
 import verification from 'helpers/verification';
-import { Table, Button, Modal, Form, Row, Col, Input, Icon, Spin, Select, InputNumber, Upload, notification } from 'ant-design';
+import { Table, Button, Modal, Form, Row, Col, Input, Icon, Spin, Select, InputNumber, Upload, Popconfirm, notification } from 'ant-design';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentDelete from 'material-ui/svg-icons/action/delete';
@@ -15,50 +15,6 @@ import SelectPartment from 'components/SelectPartment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Dragger = Upload.Dragger;
-
-const columns = [{
-    title: '头像',
-    width: 50,
-    dataIndex: 'head',
-    render: (data) => <img src={data || '/img/common/default_head.png'} className={styles.head} />,
-}, {
-    title: '姓名',
-    width: 120,
-    dataIndex: 'name',
-    render: (data) => data||'未知',
-}, {
-    title: '电话',
-    width: 150,
-    dataIndex: 'phone',
-}, {
-    title: '邮箱',
-    width: 250,
-    dataIndex: 'email',
-    render: (data) => data||'无',
-}, {
-    title: '预留电话',
-    width: 300,
-    dataIndex: 'reservePhone',
-    render: (data) => (data || []).join('; ')||'无',
-}];
-const suborColumns = [{
-    title: '部门名称',
-    dataIndex: 'name',
-}, {
-    title: '联系电话',
-    dataIndex: 'phoneList',
-    render: (data) => (data||[]).join(';'),
-}, {
-    title: '负责人',
-    dataIndex: 'chargeMan',
-    render: (data) => data ? (data.name ? data.name + '(' + data.phone + ')' : data.phone) : '',
-}, {
-    title: '部门人数',
-    dataIndex: 'membersNum',
-}, {
-    title: '下属单位个数',
-    dataIndex: 'suborsNum',
-}];
 
 @antd_form_create
 export default class PartmentDetail extends React.Component {
@@ -111,6 +67,67 @@ export default class PartmentDetail extends React.Component {
             },
         },
     };
+    columns = [{
+        title: '头像',
+        width: 50,
+        dataIndex: 'head',
+        render: (data) => <img src={data || '/img/common/default_head.png'} className={styles.head} />,
+    }, {
+        title: '姓名',
+        width: 120,
+        dataIndex: 'name',
+        render: (data) => data||'未知',
+    }, {
+        title: '电话',
+        width: 150,
+        dataIndex: 'phone',
+    }, {
+        title: '邮箱',
+        width: 250,
+        dataIndex: 'email',
+        render: (data) => data||'无',
+    }, {
+        title: '预留电话',
+        width: 300,
+        dataIndex: 'reservePhone',
+        render: (data) => (data || []).join('; ')||'无',
+    },  {
+        title: '操作',
+        width: 100,
+        dataIndex: 'operation',
+        render: (text, record, index) => (
+            <Popconfirm title="确定要移除踢出成员吗?" onConfirm={this.handleDeleteMember.bind(this, index)}>
+                <a href="#">踢出</a>
+            </Popconfirm>
+        ),
+    }];
+    suborColumns = [{
+        title: '部门名称',
+        dataIndex: 'name',
+    }, {
+        title: '联系电话',
+        dataIndex: 'phoneList',
+        render: (data) => (data||[]).join(';'),
+    }, {
+        title: '负责人',
+        dataIndex: 'chargeMan',
+        render: (data) => data ? (data.name ? data.name + '(' + data.phone + ')' : data.phone) : '',
+    }, {
+        title: '部门人数',
+        dataIndex: 'membersNum',
+    }, {
+        title: '下属单位个数',
+        dataIndex: 'suborsNum',
+    }, {
+        title: '操作',
+        dataIndex: 'operation',
+        width: 100,
+        render: (text, record, index) => (
+            <Popconfirm title="确定要踢出这个下属单位吗?" onConfirm={this.handleDeleteSubor.bind(this, index)}>
+                <a href="#">踢出</a>
+            </Popconfirm>
+        ),
+    }];
     state = {
         waiting : false,
         current: 1,
@@ -283,6 +300,16 @@ export default class PartmentDetail extends React.Component {
         } else {
             this.setState({ editing: true });
         }
+    }
+    handleDeleteSubor(index) {
+        const { partment } = this.state;
+        partment.subors.splice(index, 1);
+        this.setState({ partment });
+    }
+    handleDeleteMember(index) {
+        const { partment } = this.state;
+        partment.members.splice(index, 1);
+        this.setState({ partment });
     }
     addPhoneItem () {
         const { form } = this.props;
@@ -526,7 +553,7 @@ export default class PartmentDetail extends React.Component {
                             }
                             <Table
                                 rowKey={(record, key) => key}
-                                columns={columns}
+                                columns={editing ? this.columns : _.reject(this.columns, (o)=>o.dataIndex === 'operation')}
                                 dataSource={members}
                                 pagination={pagination}
                                 rowClassName={::this.rowClassName}
@@ -571,7 +598,7 @@ export default class PartmentDetail extends React.Component {
                             }
                             <Table
                                 rowKey={(record, key) => key}
-                                columns={suborColumns}
+                                columns={editing ? this.suborColumns : _.reject(this.suborColumns, (o)=>o.dataIndex === 'operation')}
                                 dataSource={subors}
                                 pagination={suborPagination}
                                 rowClassName={::this.suborRowClassName}
