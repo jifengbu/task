@@ -21,127 +21,39 @@ export default class ClientDetail extends React.Component {
     static fragments = {
         client: {
             id: 1,
+            head: 1,
             name: 1,
-            descript: 1,
-            phoneList: 1,
-            chargeMan: {
-                id: 1,
-                name: 1,
-                phone: 1,
-                head: 1,
-                email: 1,
-                reservePhone: 1,
-            },
-            superior: {
+            phone: 1,
+            email: 1,
+            reservePhone: 1,
+            age: 1,
+            sex: 1,
+            birthday: 1,
+            partment: {
                 id: 1,
                 name: 1,
                 descript: 1,
-                phoneList: 1,
                 chargeMan: {
-                    name: 1,
                     phone: 1,
-                }
-            },
-            members: {
-                id: 1,
-                name: 1,
-                phone: 1,
-                head: 1,
-                email: 1,
-                reservePhone: 1,
-            },
-            subors: {
-                id: 1,
-                name: 1,
-                descript: 1,
-                phoneList: 1,
-                chargeMan: {
                     name: 1,
-                    phone: 1,
+                    head: 1,
                 },
                 superior: {
                     name: 1,
                 },
+                phoneList: 1,
                 membersNum: 1,
                 suborsNum: 1,
             },
         },
     };
-    columns = [{
-        title: '头像',
-        width: 50,
-        dataIndex: 'head',
-        render: (data) => <img src={data || '/img/common/default_head.png'} className={styles.head} />,
-    }, {
-        title: '姓名',
-        width: 120,
-        dataIndex: 'name',
-        render: (data) => data||'未知',
-    }, {
-        title: '电话',
-        width: 150,
-        dataIndex: 'phone',
-    }, {
-        title: '邮箱',
-        width: 250,
-        dataIndex: 'email',
-        render: (data) => data||'无',
-    }, {
-        title: '预留电话',
-        width: 300,
-        dataIndex: 'reservePhone',
-        render: (data) => (data || []).join('; ')||'无',
-    },  {
-        title: '操作',
-        width: 100,
-        dataIndex: 'operation',
-        render: (text, record, index) => (
-            <Popconfirm title="确定要移除踢出成员吗?" onConfirm={this.handleDeleteMember.bind(this, index)}>
-                <a href="#">踢出</a>
-            </Popconfirm>
-        ),
-    }];
-    suborColumns = [{
-        title: '部门名称',
-        dataIndex: 'name',
-    }, {
-        title: '联系电话',
-        dataIndex: 'phoneList',
-        render: (data) => (data||[]).join(';'),
-    }, {
-        title: '负责人',
-        dataIndex: 'chargeMan',
-        render: (data) => data ? (data.name ? data.name + '(' + data.phone + ')' : data.phone) : '',
-    }, {
-        title: '部门人数',
-        dataIndex: 'membersNum',
-    }, {
-        title: '下属单位个数',
-        dataIndex: 'suborsNum',
-    }, {
-        title: '操作',
-        dataIndex: 'operation',
-        width: 100,
-        render: (text, record, index) => (
-            <Popconfirm title="确定要踢出这个下属单位吗?" onConfirm={this.handleDeleteSubor.bind(this, index)}>
-                <a href="#">踢出</a>
-            </Popconfirm>
-        ),
-    }];
     state = {
         waiting : false,
-        current: 1,
-        suborCurrent: 1,
-        clientModalVisible: false,
-        hasClientOkButton: false,
-        clientTitle: '',
         partmentModalVisible: false,
         hasPartmentOkButton: false,
         partmentTitle: '',
         editing: this.props.operType === 0,
-        client: _.cloneDeep(this.props.client) || (this.props.operType === 0 ? {
-            phoneList: [],
-        } : {}),
+        client: _.cloneDeep(this.props.client || {}),
     }
     componentWillReceiveProps (nextProps) {
         if (this.props.operType === 1) {
@@ -213,34 +125,14 @@ export default class ClientDetail extends React.Component {
                     });
                     return;
                 }
-                for (const index in client.phoneList) {
-                    delete value['phone' + index];
-                }
-                value.phoneList = client.phoneList;
-                if (!value.phoneList.length) {
-                    notification.error({ description: '请至少填写一个电话号码' });
-                    return;
-                }
 
-                value.chargeMan = (client.chargeMan || {}).id;
-                if (!value.chargeMan) {
-                    notification.error({ description: '请选择部门负责人' });
-                    return;
-                }
-                value.superior = (client.superior || {}).id;
-                value.subors = (client.subors||[]).map((o)=>o.id);
-                value.members = (client.members||[]).map((o)=>o.id);
-
+                value.partment = (client.partment || {}).id;
                 if (operType === 1) {
                     const temp = this.props.client;
                     const origin = {
                         ...temp,
-                        superior: (temp.superior || {}).id,
-                        chargeMan: (temp.chargeMan || {}).id,
-                        subors:  (temp.subors||[]).map((o)=>o.id),
-                        members: (temp.members||[]).map((o)=>o.id),
+                        partment: (temp.partment || {}).id,
                     };
-
                     _.forIn(value, (v, k) => {
                         if (_.isEqual(origin[k], v)) {
                             delete value[k];
@@ -257,18 +149,14 @@ export default class ClientDetail extends React.Component {
                 self.setState({ waiting: true });
                 sumbit(value, {
                     id: 1,
+                    head: 1,
                     name: 1,
-                    descript: 1,
-                    phoneList: 1,
-                    chargeMan: {
-                        name: 1,
-                        phone: 1,
-                    },
-                    superior: {
+                    phone: 1,
+                    email: 1,
+                    reservePhone: 1,
+                    partment: {
                         name: 1,
                     },
-                    membersNum: 1,
-                    suborsNum: 1,
                 }, (data) => {
                     self.setState({ waiting: false });
                     if (data.success) {
@@ -288,94 +176,13 @@ export default class ClientDetail extends React.Component {
             this.setState({ editing: true });
         }
     }
-    handleDeleteSubor(index) {
-        const { client } = this.state;
-        client.subors.splice(index, 1);
-        this.setState({ client });
-    }
-    handleDeleteMember(index) {
-        const { client } = this.state;
-        client.members.splice(index, 1);
-        this.setState({ client });
-    }
-    addPhoneItem (index) {
-        const { form } = this.props;
-        const { client, client: { phoneList } } = this.state;
-        if (index === undefined) {
-            phoneList.push('');
-        } else {
-            phoneList.splice(index, 0, '');
-        }
-        for (const i in phoneList) {
-            form.setFieldsValue({ ['descriptText' + i]:  phoneList[i].text || '' });
-        }
-        this.setState({ client });
-    }
-    removePhoneItem (index) {
-        const { client } = this.state;
-        client.phoneList.splice(index, 1);
-        this.setState({ client });
-    }
-    handleTextChange (index, event) {
-        const { client } = this.state;
-        client.phoneList[index] = event.target.value;
-        this.setState({ client });
-    }
-    rowClassName (record, index) {
-        const { lastCurrent, lastSelectIndex } = this.selectd||{};
-        const { current } = this.state;
-        return current === lastCurrent && lastSelectIndex === index ? styles.selected : '';
-    }
-    onRowClick (record, index) {
-        const { current } = this.state;
-        this.selectd = { lastSelectIndex: index, lastCurrent: current };
-    }
-    suborRowClassName (record, index) {
-        const { lastCurrent, lastSelectIndex } = this.suborSelectd||{};
-        const { suborCurrent } = this.state;
-        return suborCurrent === lastCurrent && lastSelectIndex === index ? styles.selected : '';
-    }
-    onSuborRowClick (record, index) {
-        const { suborCurrent } = this.state;
-        this.suborSelectd = { lastSelectIndex: index, lastCurrent: suborCurrent };
-    }
-    showSelectClient(type) {
-        this.clientType = type;
-        const { chargeMan = {} } = this.state.client||{};
-        this.setState({
-            hasClientOkButton: false,
-            clientModalVisible: true,
-            clientTitle: type === 0 ? '负责人' : '部门成员',
-            selectedClientId: type === 0 ? chargeMan.id : '',
-        });
-    }
-    handleSelectClientCancel () {
-        this.setState({ clientModalVisible: false });
-    }
-    onSelectClient(client) {
-        const { selectedClientId, hasClientOkButton } = this.state;
-        this.tempClient = client;
-        if (!hasClientOkButton && selectedClientId !== client.id) {
-            this.setState({hasClientOkButton : true});
-        }
-    }
-    handleSelectClientOk () {
-        const { client } = this.state;
-        if (this.clientType === 0) {
-            client.chargeMan = this.tempClient;
-        } else {
-            client.members.push(this.tempClient);
-        }
-        this.setState({ client, clientModalVisible: false });
-    }
     showSelectPartment(type) {
-        this.partmentType = type;
-        const { superior = {} } = this.state.partment||{};
+        const { partment = {} } = this.state.client||{};
         this.setState({
             hasPartmentOkButton: false,
             partmentModalVisible: true,
-            partmentTitle: type === 0 ? '上级部门' : '下属部门',
-            selectedPartmentId: type === 0 ? superior.id : '',
+            partmentTitle: '部门',
+            selectedPartmentId: partment.id,
         });
     }
     handleSelectPartmentCancel () {
@@ -390,27 +197,26 @@ export default class ClientDetail extends React.Component {
     }
     handleSelectPartmentOk () {
         const { client } = this.state;
-        if (this.partmentType === 0) {
-            client.superior = this.tempPartment;
-        } else {
-            client.subors.push(this.tempPartment);
-        }
+        client.partment = this.tempPartment;
         this.setState({ client, partmentModalVisible: false });
     }
     render () {
         const self = this;
         const { form, operType } = this.props;
-        const { current, waiting, editing, client, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
-        const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan = {} } = client;
+        const { waiting, editing, client, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
+        const { name, phone, partment, birthday, head, email, age, sex, reservePhone } = client;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
             initialValue: name,
             rules: [
-                { required: true, message: '请填写部门名称' },
+                { required: true, message: '请填写姓名' },
             ],
         });
-        const descriptDecorator = getFieldDecorator('descript', {
-            initialValue: descript,
+        const phoneDecorator = getFieldDecorator('phone', {
+            initialValue: phone,
+            rules: [
+                { required: true, message: '请填写电话' },
+            ],
         });
         const formItemLayout = {
             labelCol: { span: 3 },
@@ -419,24 +225,6 @@ export default class ClientDetail extends React.Component {
         const formItemTableLayout = {
             labelCol: { span: 3 },
             wrapperCol: { span: 18 },
-        };
-        const pagination = {
-            total: members.length,
-            showSizeChanger: false,
-            current,
-            pageSize: 3,
-            onChange (current) {
-                self.setState({ current });
-            },
-        };
-        const suborPagination = {
-            total: subors.length,
-            showSizeChanger: false,
-            current,
-            pageSize: 3,
-            onChange (current) {
-                self.setState({ current });
-            },
         };
         return (
             <div className={styles.container}>
@@ -450,154 +238,85 @@ export default class ClientDetail extends React.Component {
                 <Form className={!editing ? styles.editForm : ''}>
                     <FormItem
                         {...formItemLayout}
-                        label='部门名称'
+                        label='头像'
+                        >
+                        <img src={head ? head : '/img/common/default_head.png'} className={styles.head} />
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='姓名'
                         hasFeedback
                         >
                         {editing ? nameDecorator(
-                            <Input placeholder='请输入部门名称' />
+                            <Input placeholder='请输入姓名' />
                         ) : <span className={styles.value}>{name}</span>}
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
-                        label='描述'
+                        label='电话'
                         hasFeedback
                         >
-                        {editing ? descriptDecorator(
-                            <Input type='textarea' rows={4} />
-                        ): <span className={styles.value}>{descript}</span>}
+                        {editing ? phoneDecorator(
+                            <Input placeholder='请输入电话' />
+                        ) : <span className={styles.value}>{phone}</span>}
                     </FormItem>
-                    {
-                        !phoneList.length &&
-                        <FormItem
-                            {...formItemLayout}
-                            label='联系电话'
-                            >
-                            <div className={styles.iconButtonContainer}>
-                            {
-                                editing ?
-                                <FloatingActionButton className={styles.iconButton} onTouchTap={::this.addPhoneItem}>
-                                    <ContentAdd />
-                                </FloatingActionButton>
-                                :
-                                <span className={styles.value}>无</span>
-                            }
-                            </div>
-                        </FormItem>
-                    }
-                    {
-                        phoneList.map((item, i)=>(
-                            <FormItem
-                                key={i}
-                                {...formItemLayout}
-                                label={`联系电话${i+1}`}
-                                hasFeedback
-                                >
-                                <div className={styles.iconButtonContainer}>
-                                    {
-                                        editing && phoneList.length < 4 &&
-                                        <FloatingActionButton className={styles.iconButton} onTouchTap={this.addPhoneItem.bind(this, i)}>
-                                            <ContentAdd />
-                                        </FloatingActionButton>
-                                    }
-                                    {
-                                        editing &&
-                                        <FloatingActionButton secondary className={styles.iconButton} onTouchTap={this.removePhoneItem.bind(this, i)}>
-                                            <ContentDelete />
-                                        </FloatingActionButton>
-                                    }
-                                    {editing ? getFieldDecorator('phone' + i, {
-                                        initialValue: item || '',
-                                        rules: [
-                                            { required: true, message: '请填写电话号码' },
-                                        ],
-                                    })(
-                                        <Input placeholder='请输入电话号码' onChange={this.handleTextChange.bind(this, i)} />
-                                    ) : <span className={styles.value}>{item}</span>}
-                                </div>
-                            </FormItem>
-                        ))
-                    }
                     <FormItem
                         {...formItemLayout}
-                        label='负责人'
+                        label='邮箱'
+                        >
+                        <span className={styles.value}>{email}</span>
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='年龄'
+                        >
+                        <span className={styles.value}>{age}</span>
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='生日'
+                        >
+                        <span className={styles.value}>{birthday}</span>
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='性别'
+                        >
+                        <span className={styles.value}>{sex===0 ? '男' : '女'}</span>
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='领导'
+                        >
+                        {
+                            !!partment  && (
+                                <div className={styles.iconButtonContainer}>
+                                    <img src={partment.chargeMan.head ? partment.chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
+                                    <span className={styles.value}>{`${partment.chargeMan.name} ( ${partment.chargeMan.phone} )`}</span>
+                                </div>
+                            ) ||  '无'
+                        }
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='所在部门'
                         >
                         <div className={styles.iconButtonContainer}>
-                        {
-                            editing &&
-                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 0)}>
-                                    <EditorModeEdit />
-                                </FloatingActionButton>
-                        }
-                        <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
-                        <span className={styles.value}>{`${chargeMan.name} ( ${chargeMan.phone} )`}</span>
-                        </div>
-                    </FormItem>
-                    <FormItem
-                        {...formItemTableLayout}
-                        label='成员'
-                        >
-                        <div className={styles.tableContainer}>
                             {
                                 editing &&
-                                <div className={styles.iconButtonInnerContainer}>
-                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 1)}>
-                                        <ContentAdd />
-                                    </FloatingActionButton>
-                                </div>
-                            }
-                            <Table
-                                rowKey={(record, key) => key}
-                                columns={editing ? this.columns : _.reject(this.columns, (o)=>o.dataIndex === 'operation')}
-                                dataSource={members}
-                                pagination={pagination}
-                                rowClassName={::this.rowClassName}
-                                onRowClick={::this.onRowClick}
-                                />
-                        </div>
-                    </FormItem>
-                    <FormItem
-                        {...formItemTableLayout}
-                        label='上级单位'
-                        >
-                        <div className={styles.iconButtonContainer}>
-                        {
-                            editing &&
-                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 0)}>
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={::this.showSelectPartment}>
                                     <EditorModeEdit />
                                 </FloatingActionButton>
-                        }
-                        {
-                            !!superior  && (
-                                <span className={styles.value}>
-                                    <span>{superior.name}</span>
-                                    <span style={{marginLeft: 20}}>{`联系电话：${superior.phoneList.join(';')}`}</span>
-                                    <span style={{marginLeft: 20}}>{`负责人：${superior.chargeMan ? (superior.chargeMan.name ? superior.chargeMan.name + '(' + superior.chargeMan.phone + ')' : superior.chargeMan.phone) : ''}`}</span>
-                                </span>
-                            )
-                        }
-                        </div>
-                    </FormItem>
-                    <FormItem
-                        {...formItemTableLayout}
-                        label='下属单位'
-                        >
-                        <div className={styles.tableContainer}>
-                            {
-                                editing &&
-                                <div className={styles.iconButtonInnerContainer}>
-                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 1)}>
-                                        <ContentAdd />
-                                    </FloatingActionButton>
-                                </div>
                             }
-                            <Table
-                                rowKey={(record, key) => key}
-                                columns={editing ? this.suborColumns : _.reject(this.suborColumns, (o)=>o.dataIndex === 'operation')}
-                                dataSource={subors}
-                                pagination={suborPagination}
-                                rowClassName={::this.suborRowClassName}
-                                onRowClick={::this.onSuborRowClick}
-                                />
+                            {
+                                !!partment  && (
+                                    <span className={styles.value}>
+                                        <span>{partment.name}</span>
+                                        <span style={{marginLeft: 20}}>{`联系电话：${partment.phoneList.join(';')}`}</span>
+                                        <span style={{marginLeft: 20}}>{`负责人：${partment.chargeMan ? (partment.chargeMan.name ? partment.chargeMan.name + '(' + partment.chargeMan.phone + ')' : partment.chargeMan.phone) : ''}`}</span>
+                                    </span>
+                                ) || '无'
+                            }
                         </div>
                     </FormItem>
                 </Form>
@@ -606,12 +325,6 @@ export default class ClientDetail extends React.Component {
                     <div className={styles.buttonContainer}>
                         <Button className={styles.button} type='primary' onClick={::this.handleDelete}>删 除</Button>
                     </div>
-                }
-                {
-                    clientModalVisible &&
-                    <Modal title={'选择' + clientTitle} visible={true} className={hasClientOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectClientCancel} onOk={::this.handleSelectClientOk}>
-                        <SelectClient onSelect={::this.onSelectClient} selectedId={selectedClientId}/>
-                    </Modal>
                 }
                 {
                     partmentModalVisible &&

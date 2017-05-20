@@ -13,7 +13,6 @@ export default async ({
     subors,
 }) => {
     const doc = await PartmentModel.findByIdAndUpdate(partmentId, omitNil({
-        userId,
         name,
         descript,
         phoneList,

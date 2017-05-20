@@ -12,6 +12,7 @@ const simpleClientType = new GraphQLObjectType({
     name: 'simpleClientType',
     fields: {
         id: { type: GraphQLID },
+        phone: { type: GraphQLString },
         name: { type: GraphQLString },
         email: { type: GraphQLString },
         head: { type: GraphQLString },
@@ -48,6 +49,9 @@ export const clientType = new GraphQLObjectType({
         phone: { type: GraphQLString },
         email: { type: GraphQLString },
         head: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        sex: { type: GraphQLInt },
+        birthday: { type: GraphQLString },
         reservePhone: { type: new GraphQLList(GraphQLString) },
         partment: { type: partmentType},
     },
@@ -56,12 +60,9 @@ export const clientType = new GraphQLObjectType({
 export const clientInputType = new GraphQLInputObjectType({
     name: 'clientInputType',
     fields: {
-        id: { type: GraphQLID },
+        clientId: { type: GraphQLID },
         name: { type: GraphQLString },
         phone: { type: GraphQLString },
-        email: { type: GraphQLString },
-        head: { type: GraphQLString },
-        reservePhone: { type: new GraphQLList(GraphQLString) },
         partment: { type: GraphQLID },
     },
 });

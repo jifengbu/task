@@ -141,6 +141,8 @@ export default class PartmentDetail extends React.Component {
         editing: this.props.operType === 0,
         partment: _.cloneDeep(this.props.partment) || (this.props.operType === 0 ? {
             phoneList: [],
+            subors: [],
+            members: [],
         } : {}),
     }
     componentWillReceiveProps (nextProps) {
@@ -401,7 +403,7 @@ export default class PartmentDetail extends React.Component {
         const self = this;
         const { form, operType } = this.props;
         const { current, waiting, editing, partment, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
-        const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan = {} } = partment;
+        const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan } = partment;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
             initialValue: name,
@@ -522,14 +524,14 @@ export default class PartmentDetail extends React.Component {
                         label='负责人'
                         >
                         <div className={styles.iconButtonContainer}>
-                        {
-                            editing &&
+                            {
+                                editing &&
                                 <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 0)}>
                                     <EditorModeEdit />
                                 </FloatingActionButton>
-                        }
-                        <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
-                        <span className={styles.value}>{`${chargeMan.name} ( ${chargeMan.phone} )`}</span>
+                            }
+                            { !!chargeMan && <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />}
+                            { !!chargeMan && <span className={styles.value}>{`${chargeMan.name} ( ${chargeMan.phone} )`}</span>}
                         </div>
                     </FormItem>
                     <FormItem
