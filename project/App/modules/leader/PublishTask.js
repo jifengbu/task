@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     },
     pageContainer: {
         flex: 1,
-        marginBottom: 60,
+        marginBottom: 55,
     },
     tabContainer: {
         width:sr.w,

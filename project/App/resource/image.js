@@ -54,6 +54,8 @@ module.exports = {
     leader_item_add:require('./image/leader/item_add.png'),
     leader_item_notOver:require('./image/leader/item_notOver.png'),
     leader_item_over:require('./image/leader/item_over.png'),
+    leader_title_background:require('./image/leader/title_background.png'),
+    leader_title_label:require('./image/leader/title_label.png'),
     login_alipay_button:require('./image/login/alipay_button.png'),
     login_background:require('./image/login/background.png'),
     login_check:require('./image/login/check.png'),

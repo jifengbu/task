@@ -11,6 +11,7 @@ const {
 } = ReactNative;
 
 const Settings = require('./Settings');
+const EditPersonInfo = require('./EditPersonInfo.js');
 
 const { Button } = COMPONENTS;
 
@@ -23,16 +24,23 @@ module.exports = React.createClass({
             component: require('../login/Login.js'),
         }, 0);
     },
+    doEditPersonInfo () {
+        app.navigator.push({
+            component: EditPersonInfo,
+        });
+    },
     render () {
         const {phone} = app.personal.info;
         return (
             <View style={styles.container}>
                 <View style={styles.headImgBg}>
-                    <Image
-                        resizeMode='stretch'
-                        source={app.img.common_head}
-                        style={styles.headStyle}
-                        />
+                    <TouchableOpacity onPress={this.doEditPersonInfo}>
+                        <Image
+                            resizeMode='stretch'
+                            source={app.img.common_head}
+                            style={styles.headStyle}
+                            />
+                    </TouchableOpacity>
                     <Text style={styles.nameText}>
                         {phone}
                     </Text>

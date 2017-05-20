@@ -15,13 +15,15 @@ import Badge from 'react-native-smart-badge'
 
 const PublishTask = require('./PublishTask.js');
 const TaskList = require('./TaskList.js');
+const MyTask = require('./MyTask.js');
 const Person = require('../person');
 
 const INIT_ROUTE_INDEX = 0;
 const ROUTE_STACK = [
-    { index: 0, component: TaskList },
-    { index: 1, component: PublishTask },
-    { index: 2, component: Person },
+    { index: 0, component: MyTask },
+    { index: 1, component: TaskList },
+    { index: 2, component: PublishTask },
+    { index: 3, component: Person },
 ];
 
 const TaskListBadge = React.createClass({
@@ -78,6 +80,7 @@ const HomeTabBar = React.createClass({
             { index: 0, title: '我的任务', icon: app.img.home_my_task_norm, selected: app.img.home_my_task_pressed },
             { index: 1, title: '任务列表', icon: app.img.home_task_list_norm, selected: app.img.home_task_list_pressed },
             { index: 2, title: '新建任务', icon: app.img.home_add_task_norm, selected: app.img.home_add_task_pressed },
+            { index: 3, title: '个人信息', icon: app.img.home_add_task_norm, selected: app.img.home_add_task_pressed },
         ];
         const TabNavigatorItems = menus.map((item) => {
             return (
