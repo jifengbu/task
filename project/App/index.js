@@ -158,12 +158,13 @@ const NavigationBarRouteMapper = {
     },
     Title (route, navigator, index, navState) {
         const title = route.title || route.component.title;
+        const color = route.color || route.component.color || '#fddd34';
         if (typeof title === 'string') {
             return (
                 <View style={styles.titleContainer}>
                     <Text
                         numberOfLines={1}
-                        style={styles.navBarTitleText}>
+                        style={[styles.navBarTitleText, { color }]}>
                         {title}
                     </Text>
                 </View>

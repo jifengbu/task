@@ -104,6 +104,53 @@
 }
 ```
 
+### [创建提醒](#目录)
+- `createRemind`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| defaultRemindRule | string | 默认提醒规则 |
+| customRemindTime | Date | 自定义提醒时间 |
+
+```js
+{
+    "success": true,
+}
+```
+
+### [更新提醒](#目录)
+- `updateRemind`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| remindId | string | 提醒Id |
+| defaultRemindRule | string | 默认提醒规则 |
+| customRemindTime | Date | 自定义提醒时间 |
+
+```js
+{
+    "success": true,
+}
+```
+
+### [推送提醒通知](#目录)
+- `pushRemindNotice`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| receiveUserId | string | 接受者用户Id |
+| remindId | string | 提醒Id |
+
+
+```js
+{
+    "success": true,
+}
+```
+
 ### [添加日程](#目录)
 - `addSchedule`
 - 请求方式：`POST`
