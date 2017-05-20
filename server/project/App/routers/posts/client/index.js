@@ -13,3 +13,7 @@ export modifyTask from './task/modifyTask'; // 修改任务
 export removeTask from './task/removeTask'; // 删除任务
 export getTaskList from './task/getTaskList'; // 获取任务列表
 export getTaskDetail from './task/getTaskDetail'; // 获取任务详情
+
+//client
+export getClientList from './client/getClientList'; // 获取用户列表
+export getClientDetail from './client/getClientDetail'; // 获取用户详情
