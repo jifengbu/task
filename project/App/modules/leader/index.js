@@ -14,14 +14,14 @@ import TabNavigator from 'react-native-tab-navigator';
 import Badge from 'react-native-smart-badge'
 
 const PublishTask = require('./PublishTask.js');
-const TaskList = require('./TaskList.js');
+const RepulseTackList = require('./RepulseTackList.js');
 const MyTask = require('./MyTask.js');
 const Person = require('../person');
 
 const INIT_ROUTE_INDEX = 0;
 const ROUTE_STACK = [
     { index: 0, component: MyTask },
-    { index: 1, component: TaskList },
+    { index: 1, component: RepulseTackList },
     { index: 2, component: PublishTask },
     { index: 3, component: Person },
 ];

@@ -3,6 +3,23 @@
 2. [注册(register)](#注册)
 3. [获取个人信息(getPersonalInfo)](#获取个人信息)
 4. [修改个人信息(modifyPersonalInfo)](#修改个人信息)
+5. [修改密码(modifyPassword)](#修改密码)
+6. [创建提醒(createRemind)](#创建提醒)
+7. [更新提醒(updateRemind)](#更新提醒)
+8. [推送提醒通知(pushRemindNotice)](#推送提醒通知)
+9. [添加日程(addSchedule)](#添加日程)
+10. [更新日程(updateSchedule)](#更新日程)
+11. [删除日程(deleteSchedule)](#删除日程)
+12. [获取日程列表(getScheduleList)](#获取日程列表)
+13. [更新进度(updateProgress)](#更新进度)
+14. [获取进度列表(getProgressList)](#获取进度列表)
+15. [创建任务(createTask)](#创建任务)
+16. [修改任务(modifyTask)](#修改任务)
+17. [删除任务(removeTask)](#删除任务)
+18. [获取任务列表(getTaskList)](#获取任务列表)
+19. [获取任务详情(getTaskDetail)](#获取任务详情)
+20. [打回任务(rejectTask)](#打回任务)
+21. [通过任务(passTask)](#通过任务)
 
 ---
 

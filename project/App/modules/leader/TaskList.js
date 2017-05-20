@@ -21,7 +21,7 @@ module.exports = React.createClass({
         title: '任务列表',
     },
     getInitialState () {
-        this.taskList = [];
+        this.taskList = [1,2,3,4,5,6,7];
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
             dataSource: this.ds.cloneWithRows(this.taskList),
@@ -78,41 +78,43 @@ module.exports = React.createClass({
             app.setTaskBadge(_.sum(_.map(this.taskList, (o)=>_.includes(o.readed, app.personal.info.phone)?0:1)));
         }, true);
     },
-    renderSeparator (sectionID, rowID) {
-        return (
-            <View
-                style={styles.separator}
-                key={rowID} />
-        );
-    },
     renderRow (obj, sectionID, rowID) {
         const states = ['待审核', '审核未通过', '进行中', '已完成'];
         const colors = ['blue', 'red', 'darkorange', 'green'];
         return (
             <TouchableOpacity onPress={this.onPress.bind(null, obj)} style={styles.rowItem}>
-                {
-                    !_.includes(obj.readed, app.personal.info.phone) &&
-                    <Badge style={{position:'absolute', left:10, top: 2}}>
-                        新
-                    </Badge>
-                }
-                <Text style={styles.numStyle}>{parseInt(rowID)+1}</Text>
                 <View style={styles.rightStyle}>
-                    <Text style={styles.title}>{obj.title}</Text>
-                    <Text style={styles.description}>{obj.description}</Text>
+                    <Image
+                        resizeMode='stretch'
+                        source={app.img.leader_title_background}
+                        style={styles.title_background} >
+                        <Text style={styles.title}>{obj.title}</Text>
+                    </Image>
+                    <View style={styles.midView}>
+                        <Text numberOfLines={3} style={styles.description}>{obj.description+'哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'}</Text>
+                    </View>
                     <View style={styles.statusBar}>
-                            <Text style={styles.childTasks}>
-                                {obj.taskList  ? obj.taskList.length + '个子任务' : ''}
-                            </Text>
-                        <Text style={[styles.childState,{color: colors[obj.state]}]}>
-                            {states[obj.state]}
+                        <Text style={styles.childTasks}>
+                            {'结束时间：2017-06-05'}
                         </Text>
+                        <View style={styles.childStyle}>
+                            <Text style={styles.childTasks}>
+                                {'距离结束还有：'}
+                            </Text>
+                            <Text style={styles.childState}>
+                                {'10天'}
+                            </Text>
+                        </View>
+
                     </View>
                 </View>
-                <Image
-                    resizeMode='stretch'
-                    source={obj.urgent == 1? app.img.common_urgent: app.img.common_no_urgent}
-                    style={styles.icon} />
+                {
+                    !_.includes(obj.readed, app.personal.info.phone) &&
+                    <Image
+                        resizeMode='stretch'
+                        source={app.img.leader_title_label}
+                        style={styles.icon} />
+                }
             </TouchableOpacity>
         );
     },
@@ -129,7 +131,6 @@ module.exports = React.createClass({
                     style={styles.listStyle}
                     dataSource={dataSource}
                     renderRow={this.renderRow}
-                    renderSeparator={this.renderSeparator}
                     renderFooter={this.renderFooter}
                     />
             </View>
@@ -143,61 +144,74 @@ const styles = StyleSheet.create({
         marginBottom: 55,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#EEEEEE',
+        backgroundColor: '#FFFFFF',
     },
     listStyle: {
         alignSelf:'stretch',
-        backgroundColor: '#EEEEEE',
-    },
-    rowItem: {
-        width: sr.w-20,
-        marginLeft: 10,
-        marginTop: 10,
-        borderRadius: 4,
-        flexDirection: 'row',
-        alignItems: 'center',
         backgroundColor: '#FFFFFF',
     },
+    rowItem: {
+        width: sr.w,
+        height: 123,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     statusBar: {
-        paddingVertical: 10,
-        paddingRight: 10,
+        width: sr.w,
+        height: 21,
+        alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',
+        backgroundColor: '#c7c7c7',
     },
     childTasks: {
-        fontSize: 12,
+        marginLeft: 20,
+        fontSize: 9,
+        backgroundColor: '#9e9e9e',
+        backgroundColor: 'transparent',
+    },
+    childStyle: {
+        marginRight: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     childState: {
-        fontSize: 12,
-        color:'red',
-    },
-    numStyle: {
-        marginHorizontal: 20,
+        fontSize: 9,
+        color:'#f64136',
     },
     rightStyle: {
-        width: sr.w - 90,
+        width: sr.w,
+        marginTop: 14,
+        height: 109,
+        backgroundColor :'#FFFFFF'
+    },
+    title_background: {
+        width: sr.w,
+        height: 27,
+        justifyContent: 'center',
     },
     title: {
-        marginTop: 10,
-        fontSize: 14,
-        color: '#333333',
+        fontSize: 12,
+        marginLeft: 20,
+        color: '#FFFFFF',
+        backgroundColor: 'transparent'
+    },
+    midView: {
+        height: 61,
+        width: sr.w,
     },
     description: {
-        fontSize: 12,
-        marginTop: 10,
-        color: '#555555',
-    },
-    separator: {
-        height: 1,
-        width: sr.w - 28,
-        alignSelf: 'center',
-        backgroundColor: 'gray',
+        fontSize: 10,
+        marginHorizontal: 20,
+        marginTop: 5,
+        lineHeight: 16,
+        color: '#666666',
     },
     icon: {
         position: 'absolute',
-        right: 2,
-        top: 2,
+        right: 0,
+        top: 4,
         width: 32,
-        height: 33,
+        height: 47,
     },
 });

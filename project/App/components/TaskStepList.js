@@ -9,6 +9,9 @@ const {
     View,
     TouchableOpacity,
 } = ReactNative;
+
+const DImage = require('./DImage.js');
+
 var arr = [
     {content: '主任下发任务', time: '2017-04-14'},
     {content: '李红接收任务，监督人：李白', time: '2017-04-14'},
@@ -31,35 +34,35 @@ module.exports = React.createClass({
         };
     },
     renderRow (obj, sectionID, rowID) {
-        let lastNum = this.list - 1;
+        let lastNum = this.list.length - 1;
         return (
             <View style={styles.rowItem}>
                 {
                   rowID%2 === 0&&
                   <View style={styles.leftStyle}>
-                      <Text style={{fontSize: 12,color: rowID == lastNum? 'red': 'gray'}}>{obj.title}</Text>
-                      {!!obj.content && <Text style={{fontSize: 12,color: rowID == lastNum? 'red': 'gray'}}>{obj.content}</Text>}
                       <View style={styles.titleStyle}>
-                          <Text style={[styles.textFont,{color: rowID == lastNum? 'red': 'gray'}]}>{'更新时间：'+obj.time}</Text>
+                          <Text style={[styles.timeText,{color: rowID == lastNum? 'red': '#1b1b1b'}]}>{obj.time}</Text>
                       </View>
+                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.title}</Text>
+                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{'上课大家福利就是对方'}</Text>
                   </View>
                 }
-                <View style={[styles.itemStyle,{marginLeft: rowID%2 !== 0?sr.w/2-15:0}]}>
-                    <View style={[styles.lineStyle,{backgroundColor: rowID == 0?'#FFFFFF':'gray'}]}/>
-                    <View style={styles.viewStyle}>
-                        <View style={styles.cicleStyle}>
-                        </View>
-                    </View>
-                    <View style={[styles.lineStyle,{backgroundColor: rowID == lastNum?'#FFFFFF':'gray'}]}/>
+                <View style={[styles.itemStyle,{marginLeft: rowID%2 !== 0?sr.w/2-25:0}]}>
+                    <View style={[styles.lineStyle,{backgroundColor: '#cacaca'}]}/>
+                    <DImage
+                        resizeMode='cover'
+                        source={app.img.home_dot}
+                        style={styles.dotImage}/>
+                    <View style={[styles.lineStyle,{backgroundColor: '#cacaca'}]}/>
                 </View>
                 {
                   rowID%2 !== 0&&
                   <View style={styles.rightStyle}>
-                      <Text style={{fontSize: 12,color: rowID == lastNum? 'red': 'gray'}}>{obj.title}</Text>
-                      {!!obj.content && <Text style={{fontSize: 12,color: rowID == lastNum? 'red': 'gray'}}>{obj.content}</Text>}
                       <View style={styles.titleStyle}>
-                          <Text style={[styles.textFont,{color: rowID == lastNum? 'red': 'gray'}]}>{'更新时间：'+obj.time}</Text>
+                          <Text style={[styles.timeText,{color: rowID == lastNum? 'red': '#1b1b1b'}]}>{obj.time}</Text>
                       </View>
+                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.title}</Text>
+                      {!!obj.content && <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.content}</Text>}
                   </View>
                 }
             </View>
@@ -68,6 +71,9 @@ module.exports = React.createClass({
     render () {
         return (
             <View style={styles.container}>
+                <View style={styles.titleView}>
+                    <Text style={styles.titleText}>{'任务进度'}</Text>
+                </View>
                 <ListView
                     ref={listView => { this.listView = listView; }}
                     initialListSize={1}
@@ -88,46 +94,50 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+    },
+    titleView: {
+        width: 80,
+        height: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ea372f',
+        borderRadius: 6,
+
+    },
+    titleText: {
+        fontSize: 13,
+        color: '#FFFFFF',
+        fontFamily: 'STHeitiSC-Medium',
     },
     listStyle: {
         alignSelf:'stretch',
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
     },
     rowItem: {
         flexDirection: 'row',
         height: 60,
-        alignItems: 'center',
     },
     leftStyle: {
-        width: sr.w/2-15,
+        width: sr.w/2-25,
         alignItems: 'flex-end',
+        justifyContent: 'center',
     },
     itemStyle: {
         width: 30,
-        height: 60,
         alignItems: 'center',
     },
-    viewStyle: {
+    dotImage: {
         width: 20,
         height: 20,
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'gray'
-    },
-    cicleStyle: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: 'white',
     },
     lineStyle: {
         width: 2,
-        height: 20,
+        height: 25,
         backgroundColor: 'gray'
     },
     rightStyle: {
         width: sr.w/2-15,
+        justifyContent: 'center',
     },
     titleStyle: {
         marginTop: 5,
@@ -138,8 +148,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         backgroundColor: 'gray',
     },
-    textFont: {
-        fontSize: 10,
-        color: 'gray'
+    timeText: {
+        fontSize: 13,
+    },
+    textContent: {
+        fontSize: 12,
+        marginTop: 5,
     },
 });

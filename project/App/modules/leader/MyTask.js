@@ -10,6 +10,7 @@ const {
     WebView,
 } = ReactNative;
 
+const TaskList = require('./TaskList.js');
 const { DImage } = COMPONENTS;
 
 module.exports = React.createClass({
@@ -71,6 +72,11 @@ module.exports = React.createClass({
                                 </TouchableOpacity>
                             );
                         })
+                    }
+                </View>
+                <View style={styles.listStyle}>
+                    {
+                        <TaskList />
                     }
                 </View>
             </View>
@@ -151,5 +157,10 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems:'center',
         justifyContent:'center',
+    },
+    listStyle: {
+        width: sr.w,
+        marginTop: 47,
+        height: 356,
     },
 });

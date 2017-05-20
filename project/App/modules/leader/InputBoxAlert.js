@@ -13,33 +13,14 @@ const {
     TouchableHighlight,
 } = ReactNative;
 
-const Button = require('./Button.js');
+const { Button } = COMPONENTS;
 const dismissKeyboard = require('dismissKeyboard');
 
 module.exports = React.createClass({
     getInitialState () {
         return {
             inputText: '',
-            title: '',
         };
-    },
-    doConfirm () {
-        const context = this.fomatString(this.state.inputText);
-        const contitle = this.fomatString(this.state.title);
-        if (this.props.haveTitle && !contitle) {
-            Toast('标题不能为空');
-            return;
-        } else if (context === '') {
-            Toast('内容为空');
-            return;
-        }
-
-        if (contitle) {
-            this.props.doConfirm(contitle, context, this.props.textID, this.props.textTitleID);
-        } else {
-            this.props.doConfirm(context, this.props.textID);
-        }
-        app.closeModal();
     },
     fomatString (oldStr) {
         let newStr = '';
@@ -50,16 +31,27 @@ module.exports = React.createClass({
         }
         return context;
     },
+    doConfirm () {
+        const context = this.fomatString(this.state.inputText);
+        if (context === '') {
+            Toast('内容为空');
+            return;
+        }
+        this.props.doConfirm(contitle, context);
+        app.closeModal();
+    },
     doDelete () {
         this.props.doDelete();
         app.closeModal();
+    },
+    setAlert () {
+        this.props.setAlert();
     },
     doHideDismissKeyboard () {
         dismissKeyboard();
     },
     componentDidMount () {
         this.setState({ inputText:this.props.inputText });
-        this.setState({ title:this.props.title });
     },
     calculateStrLength (oldStr) {
         let height = 0;
@@ -78,81 +70,44 @@ module.exports = React.createClass({
                     linesHeight = Math.ceil(newStr / 30);
                 }
                 // 计算高度，每行18
-                height += linesHeight * sr.ws(22);
+                height += linesHeight * sr.s(22);
             }
-            return height + 1 * sr.ws(30);
+            return height + 1 * sr.s(30);
         } else {
             return 0;
         }
     },
     render () {
-        const tempHeight = this.calculateStrLength(this.state.title);
         let textHeight = 50;
-        if (tempHeight <= 50) {
-            textHeight = 50;
-        } else if (tempHeight > 50 && tempHeight <= 96) {
-            textHeight = tempHeight;
-        } else {
-            textHeight = 96;
-        }
+        //textHeight = 96;
         return (
             <Modal transparent>
                 <TouchableOpacity
                     activeOpacity={1}
                     onPress={this.doHideDismissKeyboard}
                     style={styles.overlayContainer}>
-                    <View style={[styles.background, { height:this.props.haveTitle ? sr.ws(332) : sr.ws(282) }]}>
-                        <View style={[styles.container, { height:this.props.haveTitle ? sr.ws(312) : sr.ws(262) }]}>
-                            {
-                            this.props.haveTitle &&
+                    <View style={[styles.background, { height:sr.s(332)}]}>
+                        <View style={[styles.container, { height:sr.s(312)}]}>
                             <View>
-                                <View style={[styles.topViewNoSide, { height: textHeight }]}>
-                                    {
-                                        !this.props.modifyTitle && this.props.index &&
-                                        <TextInput
-                                            editable={false}
-                                            style={[styles.topStyle, { height: textHeight - 10 }]}
-                                            onChangeText={(text) => {
-                                                this.setState({ title: text });
-                                            }
-                                          }
-                                            multiline
-                                            placeholder={''}
-                                            autoCapitalize={'none'}
-                                            underlineColorAndroid={'transparent'}
-                                            defaultValue={this.props.index + '、' + this.props.title}
-                                          />
-                                    }
-                                    {
-                                        this.props.modifyTitle &&
-                                        <TextInput
-                                            editable={this.props.modifyTitle}
-                                            style={[styles.topStyle, { height: textHeight - 10 }]}
-                                            onChangeText={(text) => {
-                                                this.setState({ title: text });
-                                            }
-                                          }
-                                            multiline
-                                            placeholder={'请输入标题'}
-                                            autoCapitalize={'none'}
-                                            underlineColorAndroid={'transparent'}
-                                            defaultValue={this.props.title}
-                                          />
-                                    }
-                                </View>
+                                <TouchableOpacity onPress={this.setAlert} style={[styles.topViewNoSide, { height: textHeight }]}>
+                                    <Image
+                                        resizeMode='contain'
+                                        source={app.img.leader_inputBox_alert}
+                                        style={styles.alertIcon} />
+                                    <Text style={styles.alertButtonStyle} >点击提醒设置</Text>
+                                </TouchableOpacity>
                                 <View style={styles.lineView} />
                             </View>
-                        }
-                            <View style={[styles.textStyleViewNoSide, { height: sr.ws(250 - textHeight) }]}>
+                            <View style={[styles.textStyleViewNoSide, { height: sr.s(250 - textHeight) }]}>
                                 <TextInput
                                     ref={(ref) => { this.contentInput = ref; }}
                                     style={styles.textStyle}
                                     onChangeText={(text) => {
                                         this.setState({ inputText: text });
+                                        }
                                     }
-                              }
                                     multiline
-                                    placeholder={this.props.haveTitle ? '输入备注内容' : '轻触开始填写'}
+                                    placeholder={'请输入提醒内容'}
                                     autoCapitalize={'none'}
                                     underlineColorAndroid={'transparent'}
                                     defaultValue={this.props.inputText}
@@ -162,17 +117,14 @@ module.exports = React.createClass({
                             <View style={styles.buttonViewStyle}>
                                 <TouchableOpacity
                                     onPress={this.doConfirm}
-                                    style={[styles.buttonStyleContain, !this.props.haveDelete ? { borderBottomRightRadius: 2 } : null]}>
-                                    <Text style={styles.buttonStyle} >保存</Text>
+                                    style={[styles.buttonStyleContain,{ borderBottomRightRadius: 2 }]}>
+                                    <Text style={styles.buttonStyle} >保  存</Text>
                                 </TouchableOpacity>
-                                {
-                                this.props.haveDelete &&
                                 <TouchableOpacity
                                     onPress={this.doDelete}
                                     style={styles.buttonStyleContainCancel}>
-                                    <Text style={styles.buttonStyle} >删除</Text>
+                                    <Text style={styles.buttonStyle} >删  除</Text>
                                 </TouchableOpacity>
-                            }
                             </View>
                         </View>
                         <TouchableHighlight
@@ -181,7 +133,7 @@ module.exports = React.createClass({
                             style={styles.touchableHighlight}>
                             <Image
                                 resizeMode='contain'
-                                source={app.img.draw_back}
+                                source={app.img.leader_inpubBox_close}
                                 style={styles.closeIcon} />
                         </TouchableHighlight>
                     </View>
@@ -222,9 +174,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 2,
     },
     textStyle: {
-        fontSize: 18,
-        paddingVertical: 2,
-        margin: 5,
+        fontSize: 16,
         width: sr.w - 60,
         flex: 1,
         fontFamily: 'STHeitiSC-Medium',
@@ -236,13 +186,17 @@ const styles = StyleSheet.create({
         width: sr.w - 50,
     },
     buttonStyle: {
-        fontSize: 20,
+        fontSize: 18,
         color: '#FFFFFF',
         fontFamily: 'STHeitiSC-Medium',
     },
+    alertButtonStyle: {
+        fontSize: 14,
+        color: '#f64136',
+    },
     background: {
         width: sr.w,
-        marginTop: 150,
+        marginTop: 120,
         alignItems: 'center',
         backgroundColor: 'transparent',
     },
@@ -254,8 +208,8 @@ const styles = StyleSheet.create({
     },
     topViewNoSide: {
         width: sr.w - 45,
+        paddingLeft: 20,
         alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: 'white',
         flexDirection: 'row',
     },
@@ -303,5 +257,9 @@ const styles = StyleSheet.create({
     closeIcon: {
         width: 30,
         height: 30,
+    },
+    alertIcon: {
+        width: 20,
+        height: 20,
     },
 });
