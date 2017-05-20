@@ -12,7 +12,6 @@ import NavigationArrowDownward from 'material-ui/svg-icons/navigation/arrow-down
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import SelectClient from 'components/SelectClient';
 import SelectPartment from 'components/SelectPartment';
-import { TextFormItem, NumberFormItem, SelectFormItem, EditFormItem, TableFormItem } from 'customs';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Dragger = Upload.Dragger;
@@ -404,6 +403,15 @@ export default class PartmentDetail extends React.Component {
         const { current, waiting, editing, partment, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
         const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan = {} } = partment;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
+        const nameDecorator = getFieldDecorator('name', {
+            initialValue: name,
+            rules: [
+                { required: true, message: '请填写部门名称' },
+            ],
+        });
+        const descriptDecorator = getFieldDecorator('descript', {
+            initialValue: descript,
+        });
         const formItemLayout = {
             labelCol: { span: 3 },
             wrapperCol: { span: 12 },
@@ -440,8 +448,24 @@ export default class PartmentDetail extends React.Component {
                     </div>
                 </div>
                 <Form className={!editing ? styles.editForm : ''}>
-                    <TextFormItem form={form} label='部门名称' value={{name}} editing={editing} />
-                    <TextFormItem form={form} label='描述' value={{descript}} rows={4} editing={editing} required={false}/>
+                    <FormItem
+                        {...formItemLayout}
+                        label='部门名称'
+                        hasFeedback
+                        >
+                        {editing ? nameDecorator(
+                            <Input placeholder='请输入部门名称' />
+                        ) : <span className={styles.value}>{name}</span>}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='描述'
+                        hasFeedback
+                        >
+                        {editing ? descriptDecorator(
+                            <Input type='textarea' rows={4} />
+                        ): <span className={styles.value}>{descript}</span>}
+                    </FormItem>
                     {
                         !phoneList.length &&
                         <FormItem
@@ -493,20 +517,55 @@ export default class PartmentDetail extends React.Component {
                             </FormItem>
                         ))
                     }
-                    <EditFormItem label='负责人' editing={editing} onEdit={this.showSelectClient.bind(this, 0)} value={`${chargeMan.name} ( ${chargeMan.phone} )`}>
+                    <FormItem
+                        {...formItemLayout}
+                        label='负责人'
+                        >
+                        <div className={styles.iconButtonContainer}>
+                        {
+                            editing &&
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 0)}>
+                                    <EditorModeEdit />
+                                </FloatingActionButton>
+                        }
                         <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
-                    </EditFormItem>
-                    <TableFormItem label='成员' editing={editing} onAdd={this.showSelectClient.bind(this, 1)}>
-                        <Table
-                            rowKey={(record, key) => key}
-                            columns={editing ? this.columns : _.reject(this.columns, (o)=>o.dataIndex === 'operation')}
-                            dataSource={members}
-                            pagination={pagination}
-                            rowClassName={::this.rowClassName}
-                            onRowClick={::this.onRowClick}
-                            />
-                    </TableFormItem>
-                    <EditFormItem label='上级单位' editing={editing} onEdit={this.showSelectPartment.bind(this, 0)} formItemLayout={formItemTableLayout}>
+                        <span className={styles.value}>{`${chargeMan.name} ( ${chargeMan.phone} )`}</span>
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='成员'
+                        >
+                        <div className={styles.tableContainer}>
+                            {
+                                editing &&
+                                <div className={styles.iconButtonInnerContainer}>
+                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 1)}>
+                                        <ContentAdd />
+                                    </FloatingActionButton>
+                                </div>
+                            }
+                            <Table
+                                rowKey={(record, key) => key}
+                                columns={editing ? this.columns : _.reject(this.columns, (o)=>o.dataIndex === 'operation')}
+                                dataSource={members}
+                                pagination={pagination}
+                                rowClassName={::this.rowClassName}
+                                onRowClick={::this.onRowClick}
+                                />
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='上级单位'
+                        >
+                        <div className={styles.iconButtonContainer}>
+                        {
+                            editing &&
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 0)}>
+                                    <EditorModeEdit />
+                                </FloatingActionButton>
+                        }
                         {
                             !!superior  && (
                                 <span className={styles.value}>
@@ -516,17 +575,31 @@ export default class PartmentDetail extends React.Component {
                                 </span>
                             )
                         }
-                    </EditFormItem>
-                    <TableFormItem label='下属单位' editing={editing} onAdd={this.showSelectPartment.bind(this, 1)}>
-                        <Table
-                            rowKey={(record, key) => key}
-                            columns={editing ? this.suborColumns : _.reject(this.suborColumns, (o)=>o.dataIndex === 'operation')}
-                            dataSource={subors}
-                            pagination={suborPagination}
-                            rowClassName={::this.suborRowClassName}
-                            onRowClick={::this.onSuborRowClick}
-                            />
-                    </TableFormItem>
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='下属单位'
+                        >
+                        <div className={styles.tableContainer}>
+                            {
+                                editing &&
+                                <div className={styles.iconButtonInnerContainer}>
+                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 1)}>
+                                        <ContentAdd />
+                                    </FloatingActionButton>
+                                </div>
+                            }
+                            <Table
+                                rowKey={(record, key) => key}
+                                columns={editing ? this.suborColumns : _.reject(this.suborColumns, (o)=>o.dataIndex === 'operation')}
+                                dataSource={subors}
+                                pagination={suborPagination}
+                                rowClassName={::this.suborRowClassName}
+                                onRowClick={::this.onSuborRowClick}
+                                />
+                        </div>
+                    </FormItem>
                 </Form>
                 {
                     editing && operType === 1 &&

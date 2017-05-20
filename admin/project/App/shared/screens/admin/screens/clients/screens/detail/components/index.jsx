@@ -12,7 +12,6 @@ import NavigationArrowDownward from 'material-ui/svg-icons/navigation/arrow-down
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import SelectClient from 'components/SelectClient';
 import SelectPartment from 'components/SelectPartment';
-import { TextFormItem, NumberFormItem, SelectFormItem } from 'customs';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Dragger = Upload.Dragger;
@@ -22,13 +21,113 @@ export default class ClientDetail extends React.Component {
     static fragments = {
         client: {
             id: 1,
-            head: 1,
             name: 1,
-            phone: 1,
-            email: 1,
-            reservePhone: 1,
-        }
+            descript: 1,
+            phoneList: 1,
+            chargeMan: {
+                id: 1,
+                name: 1,
+                phone: 1,
+                head: 1,
+                email: 1,
+                reservePhone: 1,
+            },
+            superior: {
+                id: 1,
+                name: 1,
+                descript: 1,
+                phoneList: 1,
+                chargeMan: {
+                    name: 1,
+                    phone: 1,
+                }
+            },
+            members: {
+                id: 1,
+                name: 1,
+                phone: 1,
+                head: 1,
+                email: 1,
+                reservePhone: 1,
+            },
+            subors: {
+                id: 1,
+                name: 1,
+                descript: 1,
+                phoneList: 1,
+                chargeMan: {
+                    name: 1,
+                    phone: 1,
+                },
+                superior: {
+                    name: 1,
+                },
+                membersNum: 1,
+                suborsNum: 1,
+            },
+        },
     };
+    columns = [{
+        title: '头像',
+        width: 50,
+        dataIndex: 'head',
+        render: (data) => <img src={data || '/img/common/default_head.png'} className={styles.head} />,
+    }, {
+        title: '姓名',
+        width: 120,
+        dataIndex: 'name',
+        render: (data) => data||'未知',
+    }, {
+        title: '电话',
+        width: 150,
+        dataIndex: 'phone',
+    }, {
+        title: '邮箱',
+        width: 250,
+        dataIndex: 'email',
+        render: (data) => data||'无',
+    }, {
+        title: '预留电话',
+        width: 300,
+        dataIndex: 'reservePhone',
+        render: (data) => (data || []).join('; ')||'无',
+    },  {
+        title: '操作',
+        width: 100,
+        dataIndex: 'operation',
+        render: (text, record, index) => (
+            <Popconfirm title="确定要移除踢出成员吗?" onConfirm={this.handleDeleteMember.bind(this, index)}>
+                <a href="#">踢出</a>
+            </Popconfirm>
+        ),
+    }];
+    suborColumns = [{
+        title: '部门名称',
+        dataIndex: 'name',
+    }, {
+        title: '联系电话',
+        dataIndex: 'phoneList',
+        render: (data) => (data||[]).join(';'),
+    }, {
+        title: '负责人',
+        dataIndex: 'chargeMan',
+        render: (data) => data ? (data.name ? data.name + '(' + data.phone + ')' : data.phone) : '',
+    }, {
+        title: '部门人数',
+        dataIndex: 'membersNum',
+    }, {
+        title: '下属单位个数',
+        dataIndex: 'suborsNum',
+    }, {
+        title: '操作',
+        dataIndex: 'operation',
+        width: 100,
+        render: (text, record, index) => (
+            <Popconfirm title="确定要踢出这个下属单位吗?" onConfirm={this.handleDeleteSubor.bind(this, index)}>
+                <a href="#">踢出</a>
+            </Popconfirm>
+        ),
+    }];
     state = {
         waiting : false,
         current: 1,
@@ -41,7 +140,7 @@ export default class ClientDetail extends React.Component {
         partmentTitle: '',
         editing: this.props.operType === 0,
         client: _.cloneDeep(this.props.client) || (this.props.operType === 0 ? {
-            reservePhone: [],
+            phoneList: [],
         } : {}),
     }
     componentWillReceiveProps (nextProps) {
@@ -114,13 +213,11 @@ export default class ClientDetail extends React.Component {
                     });
                     return;
                 }
-                console.log("============", value);
-                return;
-                for (const index in client.reservePhone) {
+                for (const index in client.phoneList) {
                     delete value['phone' + index];
                 }
-                value.reservePhone = client.reservePhone;
-                if (!value.reservePhone.length) {
+                value.phoneList = client.phoneList;
+                if (!value.phoneList.length) {
                     notification.error({ description: '请至少填写一个电话号码' });
                     return;
                 }
@@ -130,7 +227,7 @@ export default class ClientDetail extends React.Component {
                     notification.error({ description: '请选择部门负责人' });
                     return;
                 }
-                value.partment = (client.partment || {}).id;
+                value.superior = (client.superior || {}).id;
                 value.subors = (client.subors||[]).map((o)=>o.id);
                 value.members = (client.members||[]).map((o)=>o.id);
 
@@ -138,7 +235,7 @@ export default class ClientDetail extends React.Component {
                     const temp = this.props.client;
                     const origin = {
                         ...temp,
-                        partment: (temp.partment || {}).id,
+                        superior: (temp.superior || {}).id,
                         chargeMan: (temp.chargeMan || {}).id,
                         subors:  (temp.subors||[]).map((o)=>o.id),
                         members: (temp.members||[]).map((o)=>o.id),
@@ -162,12 +259,12 @@ export default class ClientDetail extends React.Component {
                     id: 1,
                     name: 1,
                     descript: 1,
-                    reservePhone: 1,
+                    phoneList: 1,
                     chargeMan: {
                         name: 1,
                         phone: 1,
                     },
-                    partment: {
+                    superior: {
                         name: 1,
                     },
                     membersNum: 1,
@@ -203,25 +300,25 @@ export default class ClientDetail extends React.Component {
     }
     addPhoneItem (index) {
         const { form } = this.props;
-        const { client, client: { reservePhone } } = this.state;
+        const { client, client: { phoneList } } = this.state;
         if (index === undefined) {
-            reservePhone.push('');
+            phoneList.push('');
         } else {
-            reservePhone.splice(index, 0, '');
+            phoneList.splice(index, 0, '');
         }
-        for (const i in reservePhone) {
-            form.setFieldsValue({ ['descriptText' + i]:  reservePhone[i].text || '' });
+        for (const i in phoneList) {
+            form.setFieldsValue({ ['descriptText' + i]:  phoneList[i].text || '' });
         }
         this.setState({ client });
     }
     removePhoneItem (index) {
         const { client } = this.state;
-        client.reservePhone.splice(index, 1);
+        client.phoneList.splice(index, 1);
         this.setState({ client });
     }
     handleTextChange (index, event) {
         const { client } = this.state;
-        client.reservePhone[index] = event.target.value;
+        client.phoneList[index] = event.target.value;
         this.setState({ client });
     }
     rowClassName (record, index) {
@@ -273,12 +370,12 @@ export default class ClientDetail extends React.Component {
     }
     showSelectPartment(type) {
         this.partmentType = type;
-        const { partment = {} } = this.state.partment||{};
+        const { superior = {} } = this.state.partment||{};
         this.setState({
             hasPartmentOkButton: false,
             partmentModalVisible: true,
             partmentTitle: type === 0 ? '上级部门' : '下属部门',
-            selectedPartmentId: type === 0 ? partment.id : '',
+            selectedPartmentId: type === 0 ? superior.id : '',
         });
     }
     handleSelectPartmentCancel () {
@@ -294,7 +391,7 @@ export default class ClientDetail extends React.Component {
     handleSelectPartmentOk () {
         const { client } = this.state;
         if (this.partmentType === 0) {
-            client.partment = this.tempPartment;
+            client.superior = this.tempPartment;
         } else {
             client.subors.push(this.tempPartment);
         }
@@ -304,8 +401,17 @@ export default class ClientDetail extends React.Component {
         const self = this;
         const { form, operType } = this.props;
         const { current, waiting, editing, client, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
-        const { name, phone, email, sex, age, head, birthday, reservePhone = [], salary, post, partment } = client;
+        const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan = {} } = client;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
+        const nameDecorator = getFieldDecorator('name', {
+            initialValue: name,
+            rules: [
+                { required: true, message: '请填写部门名称' },
+            ],
+        });
+        const descriptDecorator = getFieldDecorator('descript', {
+            initialValue: descript,
+        });
         const formItemLayout = {
             labelCol: { span: 3 },
             wrapperCol: { span: 12 },
@@ -313,6 +419,24 @@ export default class ClientDetail extends React.Component {
         const formItemTableLayout = {
             labelCol: { span: 3 },
             wrapperCol: { span: 18 },
+        };
+        const pagination = {
+            total: members.length,
+            showSizeChanger: false,
+            current,
+            pageSize: 3,
+            onChange (current) {
+                self.setState({ current });
+            },
+        };
+        const suborPagination = {
+            total: subors.length,
+            showSizeChanger: false,
+            current,
+            pageSize: 3,
+            onChange (current) {
+                self.setState({ current });
+            },
         };
         return (
             <div className={styles.container}>
@@ -324,19 +448,29 @@ export default class ClientDetail extends React.Component {
                     </div>
                 </div>
                 <Form className={!editing ? styles.editForm : ''}>
-                    <TextFormItem form={form} label='姓名' value={{name}} editing={editing} />
-                    <TextFormItem form={form} label='手机号码' value={{phone}} editing={editing} />
-                    <TextFormItem form={form} label='邮箱' value={{email}} editing={editing} />
-                    <TextFormItem form={form} label='职位' value={{post}} editing={editing} />
-                    <TextFormItem form={form} label='备注' rows={[2, 4]} value={{remark: ''}} editing={editing} required={false}/>
-                    <NumberFormItem form={form} label='工资' value={{salary: 0}} unit='元' editing={editing} />
-                    <TextFormItem form={form} label='年龄' value={{age: 60}} editing={editing} disabled/>
-                    <SelectFormItem form={form} label='性别' value={{sex: 1}} options={{0: '男', 1: '女'}} editing={editing} />
+                    <FormItem
+                        {...formItemLayout}
+                        label='部门名称'
+                        hasFeedback
+                        >
+                        {editing ? nameDecorator(
+                            <Input placeholder='请输入部门名称' />
+                        ) : <span className={styles.value}>{name}</span>}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='描述'
+                        hasFeedback
+                        >
+                        {editing ? descriptDecorator(
+                            <Input type='textarea' rows={4} />
+                        ): <span className={styles.value}>{descript}</span>}
+                    </FormItem>
                     {
-                        !reservePhone.length &&
+                        !phoneList.length &&
                         <FormItem
                             {...formItemLayout}
-                            label='预留电话'
+                            label='联系电话'
                             >
                             <div className={styles.iconButtonContainer}>
                             {
@@ -351,16 +485,16 @@ export default class ClientDetail extends React.Component {
                         </FormItem>
                     }
                     {
-                        reservePhone.map((item, i)=>(
+                        phoneList.map((item, i)=>(
                             <FormItem
                                 key={i}
                                 {...formItemLayout}
-                                label={`预留电话${i+1}`}
+                                label={`联系电话${i+1}`}
                                 hasFeedback
                                 >
                                 <div className={styles.iconButtonContainer}>
                                     {
-                                        editing && reservePhone.length < 4 &&
+                                        editing && phoneList.length < 4 &&
                                         <FloatingActionButton className={styles.iconButton} onTouchTap={this.addPhoneItem.bind(this, i)}>
                                             <ContentAdd />
                                         </FloatingActionButton>
@@ -384,8 +518,46 @@ export default class ClientDetail extends React.Component {
                         ))
                     }
                     <FormItem
+                        {...formItemLayout}
+                        label='负责人'
+                        >
+                        <div className={styles.iconButtonContainer}>
+                        {
+                            editing &&
+                                <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 0)}>
+                                    <EditorModeEdit />
+                                </FloatingActionButton>
+                        }
+                        <img src={chargeMan.head ? chargeMan.head : '/img/common/default_head.png'} className={styles.head} />
+                        <span className={styles.value}>{`${chargeMan.name} ( ${chargeMan.phone} )`}</span>
+                        </div>
+                    </FormItem>
+                    <FormItem
                         {...formItemTableLayout}
-                        label='部门'
+                        label='成员'
+                        >
+                        <div className={styles.tableContainer}>
+                            {
+                                editing &&
+                                <div className={styles.iconButtonInnerContainer}>
+                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 1)}>
+                                        <ContentAdd />
+                                    </FloatingActionButton>
+                                </div>
+                            }
+                            <Table
+                                rowKey={(record, key) => key}
+                                columns={editing ? this.columns : _.reject(this.columns, (o)=>o.dataIndex === 'operation')}
+                                dataSource={members}
+                                pagination={pagination}
+                                rowClassName={::this.rowClassName}
+                                onRowClick={::this.onRowClick}
+                                />
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='上级单位'
                         >
                         <div className={styles.iconButtonContainer}>
                         {
@@ -395,16 +567,37 @@ export default class ClientDetail extends React.Component {
                                 </FloatingActionButton>
                         }
                         {
-                            !!partment  && (
+                            !!superior  && (
                                 <span className={styles.value}>
-                                    <span>{partment.name}</span>
-                                    <span style={{marginLeft: 20}}>{`联系电话：${partment.phoneList.join(';')}`}</span>
-                                    <span style={{marginLeft: 20}}>{`负责人：${partment.chargeMan ? (partment.chargeMan.name ? partment.chargeMan.name + '(' + partment.chargeMan.phone + ')' : partment.chargeMan.phone) : ''}`}</span>
+                                    <span>{superior.name}</span>
+                                    <span style={{marginLeft: 20}}>{`联系电话：${superior.phoneList.join(';')}`}</span>
+                                    <span style={{marginLeft: 20}}>{`负责人：${superior.chargeMan ? (superior.chargeMan.name ? superior.chargeMan.name + '(' + superior.chargeMan.phone + ')' : superior.chargeMan.phone) : ''}`}</span>
                                 </span>
-                            ) || (
-                                <span className={styles.value}>未设置</span>
                             )
                         }
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        {...formItemTableLayout}
+                        label='下属单位'
+                        >
+                        <div className={styles.tableContainer}>
+                            {
+                                editing &&
+                                <div className={styles.iconButtonInnerContainer}>
+                                    <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 1)}>
+                                        <ContentAdd />
+                                    </FloatingActionButton>
+                                </div>
+                            }
+                            <Table
+                                rowKey={(record, key) => key}
+                                columns={editing ? this.suborColumns : _.reject(this.suborColumns, (o)=>o.dataIndex === 'operation')}
+                                dataSource={subors}
+                                pagination={suborPagination}
+                                rowClassName={::this.suborRowClassName}
+                                onRowClick={::this.onSuborRowClick}
+                                />
                         </div>
                     </FormItem>
                 </Form>
