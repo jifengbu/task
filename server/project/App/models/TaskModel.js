@@ -33,15 +33,23 @@ const taskSchema = new mongoose.Schema({
 taskSchema.virtual('id').get(function () {
     return this._id;
 });
+taskSchema.virtual('executor').get(function () {
+    return this.executorId;
+});
+taskSchema.virtual('supervisor').get(function () {
+    return this.supervisorId;
+});
 
 const transform = {
     virtuals: true,
     transform: function (doc, ret, options) {
         formatTime(ret, 'expectStartTime', 'expectFinishTime', 'publishTime', 'examineTime', 'startExecTime', 'modifyTime', 'applyFinishTime', 'examineFinishTime');
-        ret.audioList  && (ret.audioList = ret.audioList.map((o) => getMediaPath(o)));
+        ret.audioList  && (ret.audioList = ret.audioList.map((item) => { item.url = getMediaPath(item.url); delete item._id; return item; }));
         ret.imageList  && (ret.imageList = ret.imageList.map((o) => getMediaPath(o)));
         delete ret._id;
         delete ret.__v;
+        delete ret.supervisorId;
+        delete ret.executorId;
         return ret;
     },
 };

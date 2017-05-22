@@ -4,14 +4,14 @@ import { omitNil } from '../../../../utils';
 export default async ({
     userId,
     taskTypeId,
-    key,
+    type,
     name,
 }) => {
     const doc = await TaskTypeModel.findByIdAndUpdate(taskTypeId, omitNil({
-        key,
+        type,
         name,
     }), { new: true }).select({
-        key: 1,
+        type: 1,
         name: 1,
     });
     if (!doc) {

@@ -209,8 +209,53 @@
 }
 ```
 
+### 6. [获取任务类型列表](#目录)
+- `getTaskTypeList`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| userId | String | 用户Id |
+```js
+{
+    "success": true,
+    "context": {
+        "taskTypeList": [
+            {
+                "name": "类型1",
+                "id": "5922b03e9a24539774bc0eec"
+            }
+        ]
+    }
+}
+```
+
+### 6. [通过类型获取任务列表](#目录)
+- `getTaskListByType`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| userId | ID | 用户Id |
+| taskTypeId | ID | 任务类型Id |
+| pageNo | Number | 页号 |
+| pageSize | Number | 每页数量 |
+```js
+{
+    "success": true,
+    "context": {
+        "taskTypeList": [
+            {
+                "key": "1",
+                "name": "类型1",
+            }
+        ]
+    }
+}
+```
+
 ### 6. [创建单一任务](#目录)
-- `createSingleTask`
+- `leaderCreateTask`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
@@ -223,7 +268,7 @@
 | audioList | Array | 音频列表 |
 | imageList | Array | 图片列表 |
 | remindList | Array | 提醒列表 |
-| type | Number | 任务类型(0：一般任务， 1：紧急任务，2：加急任务) |
+| type | Number | 任务类型 |
 | expectStartTime | String | 期望开始时间 |
 | expectFinishTime | String | 期望结束时间 |
 ###### audioList 格式：
@@ -243,7 +288,7 @@
 ```
 
 ### 6. [创建综合任务](#目录)
-- `createGroupTask`
+- `secretaryCreateTask`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
@@ -282,54 +327,15 @@
 }
 ```
 
-### 7. [修改任务](#目录)
-- `modifyTask`
+### 7. [领导获取待审批的任务列表](#目录)
+- `getToExamineTaskList`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
-| supervisorId | String | 监督人Id |
-| executorId | String | 执行人Id |
-| title | String | 标题 |
-| content | String | 内容 |
-| audioList | Array | 音频列表 |
-| imageList | Array | 图片列表 |
-| type | Number | 任务类型(0：一般任务， 1：紧急任务，2：加急任务) |
-| startTime | String | 开始时间 |
-| endTime | String | 结束时间 |
-| remindId | String | 提醒Id |
-
-```js
-{
-    "success": true,
-}
-```
-
-
-### 8. [删除任务](#目录)
-- `removeTask`
-- 请求方式：`POST`
-
-| 参数名称 | 参数类型  | 描述 |
-| taskId | String | 任务Id |
-
-```js
-{
-    "success": true,
-}
-```
-
-
-### 11. [获取任务列表](#目录)
-- `getTaskList`
-- 请求方式：`POST`
-
-| 参数名称 | 参数类型  | 描述 |
-| :- |:-:| :-:|
-| userId | String | 用户Id |
-| userType | Number | 用户角色(0：执行， 1：监督，2：审批，3：发起) |
-| type | Number | 任务类型(0：一般任务， 1：紧急任务，2：加急任务) |
+| userId | ID | 用户Id |
+| pageNo | Number | 页号 |
+| pageSize | Number | 每页数量 |
 
 ```js
 {
@@ -337,51 +343,135 @@
     "context": {
         "taskList": [
             {
-                "id":"任务Id",
-                "title":"什么标题",
-                "endTime":"8:00",
-                "content":"内容",
+                "id": "5922b7726df4409ec01c425d",
+                "title": "总测试标题",
+                "content": "总测试内容",
+                "modifyTime": "2017-05-22 18:03:30",
+                "expectFinishTime": "2017-05-16 03:00:00",
+                "expectStartTime": "2017-05-15 03:00:00",
+                "taskNumbers": 1,
+                "isSingleTask": true //是否是单任务
             }
         ]
     }
 }
 ```
 
-
-### 12. [获取任务详情](#目录)
-- `getTaskDetail`
+### 7. [获取单一任务的详情](#目录)
+- `getSingleTaskDetail`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| taskId | String | 任务Id |
+| userId | ID | 用户Id |
+| taskId | ID | 任务Id |
 
 ```js
 {
     "success": true,
     "context": {
-        "supervisorId" : "监督人Id",
-        "executorId" : "执行人Id",
-        "title" : "标题",
-        "content" : "内容",
-        "audioList" : "音频列表",
-        "imageList" : "图片列表",
-        "type" : "任务类型",
-        "startTime" : "开始时间",
-        "endTime" : "结束时间",
-        "remindId" : "提醒Id"
+        "title": "测试标题",
+        "content": "测试内容",
+        "examineFinishTime": "2017-05-22 18:03:30",
+        "applyFinishTime": "2017-05-22 18:03:30",
+        "modifyTime": "2017-05-22 18:03:30",
+        "startExecTime": "2017-05-22 18:03:30",
+        "examineTime": "2017-05-22 18:03:30",
+        "publishTime": "2017-05-22 18:03:30",
+        "expectFinishTime": "2017-05-16 03:00:00",
+        "expectStartTime": "2017-05-15 03:00:00",
+        "state": 1,
+        "type": 1,
+        "imageList": [
+            "http://localhost:3000/api/image?id=5922b7726df4409ec01c425b"
+        ],
+        "audioList": [
+            {
+                "url": "http://localhost:3000/api/image?id=5922b7726df4409ec01c425c",
+                "duration": 10
+            }
+        ],
+        "supervisor": {
+            "phone": "18085192480",
+            "name": "方运江",
+            "id": "59117ddb5150c20e08b560ac"
+        },
+        "executor": {
+            "phone": "18085192480",
+            "name": "方运江",
+            "id": "59117ddb5150c20e08b560ac"
+        },
+        "id": "5922b7726df4409ec01c425e"
+    }
+}
+```
+
+
+### 7. [获取群组任务的详情](#目录)
+- `getGroupTaskDetail`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| userId | ID | 用户Id |
+| taskId | ID | 任务Id |
+
+```js
+{
+    "success": true,
+    "context": {
+        "title": "总测试标题",
+        "content": "总测试内容",
+        "taskList": [
+            {
+                "title": "测试标题",
+                "content": "测试内容",
+                "examineFinishTime": "2017-05-22 18:03:30",
+                "applyFinishTime": "2017-05-22 18:03:30",
+                "modifyTime": "2017-05-22 18:03:30",
+                "startExecTime": "2017-05-22 18:03:30",
+                "examineTime": "2017-05-22 18:03:30",
+                "publishTime": "2017-05-22 18:03:30",
+                "expectFinishTime": "2017-05-16 03:00:00",
+                "expectStartTime": "2017-05-15 03:00:00",
+                "state": 1,
+                "type": 1,
+                "imageList": [
+                    "http://localhost:3000/api/image?id=5922b7726df4409ec01c425b"
+                ],
+                "audioList": [
+                    {
+                        "url": "http://localhost:3000/api/image?id=5922b7726df4409ec01c425c",
+                        "duration": 10
+                    }
+                ],
+                "supervisor": {
+                    "phone": "18085192480",
+                    "name": "方运江",
+                    "id": "59117ddb5150c20e08b560ac"
+                },
+                "executor": {
+                    "phone": "18085192480",
+                    "name": "方运江",
+                    "id": "59117ddb5150c20e08b560ac"
+                },
+                "id": "5922b7726df4409ec01c425e"
+            }
+        ],
+        "id": "5922b7726df4409ec01c425d"
     }
 }
 ```
 
 ### 13. [打回任务](#目录)
-- `rejectTask`
+- `rejectPublishTask`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
+| userId | ID | 用户Id |
 | taskId | String | 任务Id |
-| content | String | 审批内容 |
+| reason | String | 被打回的原因 |
 
 ```js
 {
@@ -390,11 +480,12 @@
 ```
 
 ### 14. [通过任务](#目录)
-- `passTask`
+- `agreePublishTask`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
+| userId | ID | 用户Id |
 | taskId | String | 任务Id |
 
 ```js

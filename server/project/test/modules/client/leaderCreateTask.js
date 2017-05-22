@@ -42,6 +42,6 @@ until(
             expectFinishTime: '2017-05-16 03:00:00',
         };
 
-        post('/client/createSingleTask', param);
+        post('/client/leaderCreateTask', param);
     }
 );

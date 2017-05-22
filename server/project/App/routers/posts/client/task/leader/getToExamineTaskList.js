@@ -10,17 +10,22 @@ export default async ({ userId, pageNo, pageSize }) => {
         modifyTime: 1,
         expectStartTime: 1,
         expectFinishTime: 1,
+        isSingleTask: 1,
         taskList: 1,
     });
 
     const taskList = docs.map((item)=>{
-        item.taskNumbers = item.taskList.length;
+        item = item.toObject();
+        if (item.isSingleTask) {
+            item.id = item.taskList[0];
+        } else {
+            item.taskNumbers = item.taskList.length;
+        }
         delete item.taskList;
         return item;
     })
 
     return { success: true, context: {
-        count,
         taskList,
     } };
 };

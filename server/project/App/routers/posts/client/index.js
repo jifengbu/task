@@ -12,13 +12,17 @@ export getTaskTypeList from './task/getTaskTypeList'; // 获取任务类型列�
 export getTaskListByType from './task/getTaskListByType'; // 通过任务类型获取列表
 export searchTaskList from './task/searchTaskList'; // 搜索任务列表
 export getMostCaredTaskList from './task/getMostCaredTaskList'; // 获取最关心任务列表
+export getGroupTaskDetail from './task/getGroupTaskDetail'; // 获取群组任务的详情
+export getSingleTaskDetail from './task/getSingleTaskDetail'; // 获取单一任务的详情
 // 领导端
 export leaderCreateTask from './task/leader/leaderCreateTask'; // 领导创建任务
-export leaderGetToExamineTaskList from './task/leader/leaderGetToExamineTaskList'; // 获取待审核的任务列表
-export leaderGetDenyPublishTaskList from './task/leader/leaderGetDenyPublishTaskList'; // 获取打回任务列表
+export getToExamineTaskList from './task/leader/getToExamineTaskList'; // 获取待审核的任务列表
+export leaderGetRejectPublishTaskList from './task/leader/leaderGetRejectPublishTaskList'; // 获取打回任务列表
+export agreePublishTask from './task/leader/agreePublishTask'; // 同意发布任务
+export rejectPublishTask from './task/leader/rejectPublishTask'; // 不同意发布任务
 // 秘书端
 export secretaryCreateTask from './task/secretary/secretaryCreateTask'; // 秘书创建任务
-export secretaryGetDenyPublishTaskList from './task/secretary/secretaryGetDenyPublishTaskList'; // 获取打回任务列表
+export secretaryGetRejectPublishTaskList from './task/secretary/secretaryGetRejectPublishTaskList'; // 获取打回任务列表
 
 
 // schedule

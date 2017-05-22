@@ -2,7 +2,7 @@ var { post, admin: { userId } } = require('../../utils');
 
 var param = {
     userId,
-    key: 1,
+    type: 1,
     name: '类型1',
 };
 

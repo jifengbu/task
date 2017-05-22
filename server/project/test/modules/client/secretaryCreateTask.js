@@ -47,6 +47,6 @@ until(
             }]
         };
 
-        post('/client/createGroupTask', param);
+        post('/client/secretaryCreateTask', param);
     }
 );
