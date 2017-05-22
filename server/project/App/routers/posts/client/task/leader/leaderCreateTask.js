@@ -26,7 +26,7 @@ export default async ({
         publishTime,
     });
     const taskId = await createTask({
-        groupId: doc.id;
+        groupId: doc.id,
         publisherId: userId,
         examinerId: userId,
         executorId,

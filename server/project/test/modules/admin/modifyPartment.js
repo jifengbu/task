@@ -1,4 +1,4 @@
-var { post, admin: { userId, partmentId }, client } = require('../../utils');
+var { post, admin: { userId, partmentId } } = require('../../utils');
 
 var args = process.argv.splice(2);
 

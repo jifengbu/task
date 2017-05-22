@@ -15,10 +15,10 @@ export getMostCaredTaskList from './task/getMostCaredTaskList'; // 获取最关�
 // 领导端
 export leaderCreateTask from './task/leader/leaderCreateTask'; // 领导创建任务
 export leaderGetToExamineTaskList from './task/leader/leaderGetToExamineTaskList'; // 获取待审核的任务列表
-export leaderGetDeniedTaskList from './task/leader/leaderGetDeniedTaskList'; // 获取打回任务列表
+export leaderGetDenyPublishTaskList from './task/leader/leaderGetDenyPublishTaskList'; // 获取打回任务列表
 // 秘书端
 export secretaryCreateTask from './task/secretary/secretaryCreateTask'; // 秘书创建任务
-export secretaryGetDeniedTaskList from './task/secretary/secretaryGetDeniedTaskList'; // 获取打回任务列表
+export secretaryGetDenyPublishTaskList from './task/secretary/secretaryGetDenyPublishTaskList'; // 获取打回任务列表
 
 
 // schedule

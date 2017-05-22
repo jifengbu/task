@@ -1,4 +1,4 @@
-var { post, client: { userId, partmentId } } = require('../../utils');
+var { post, admin: { userId, partmentId } } = require('../../utils');
 
 var param = {
     userId,
