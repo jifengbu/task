@@ -1,7 +1,7 @@
-import { TaskGroupModel } from '../../../../../models';
+import { TaskModel } from '../../../../../models';
 
 export default async ({ userId, pageNo, pageSize }) => {
-    const criteria = {examinerId: userId, state: 2}
+    const criteria = {publisherId: userId, state: 2}
     const query = TaskGroupModel.find(criteria).sort({ publishTime: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
     const docs = await query
     .select({

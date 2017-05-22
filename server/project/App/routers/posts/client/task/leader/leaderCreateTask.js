@@ -15,11 +15,23 @@ export default async ({
     expectFinishTime,
 }) => {
     const publishTime = Date.now();
+    const doc = new TaskGroupModel({
+        publisherId: userId,
+        title,
+        content,
+        isSingleTask: true,
+        state: 8,
+        expectStartTime,
+        expectFinishTime,
+        publishTime,
+    });
     const taskId = await createTask({
+        groupId: doc.id;
         publisherId: userId,
         examinerId: userId,
         executorId,
         supervisorId,
+        state: 8,
         title,
         content,
         audioList,
@@ -30,13 +42,8 @@ export default async ({
         expectFinishTime,
         publishTime,
     });
-    const doc = new TaskGroupModel({
-        publisherId: userId,
-        taskList: [ taskId ],
-        expectStartTime,
-        expectFinishTime,
-        publishTime,
-    });
+
+    doc.taskList = [ taskId ];
     await doc.save();
 
     return { success: true };

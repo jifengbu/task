@@ -14,18 +14,21 @@ export default async ({
     const expectStartTime = _.minBy(taskList, (o)=>o.expectStartTime).expectStartTime;
     const expectFinishTime = _.maxBy(taskList, (o)=>o.expectFinishTime).expectFinishTime;
 
-    for (const item of taskList) {
-        let taskId = await createTask({...item, publishTime, publisherId: userId, examinerId});
-        taskIdList.push(taskId);
-    }
     const doc = new TaskGroupModel({
         publisherId: userId,
         examinerId,
-        taskList: taskIdList,
+        title,
+        content,
         expectStartTime,
         expectFinishTime,
         publishTime: publishTime,
     });
+
+    for (const item of taskList) {
+        let taskId = await createTask({...item, groupdId: doc.id, publishTime, publisherId: userId, examinerId});
+        taskIdList.push(taskId);
+    }
+    doc.taskList = taskIdList;
     await doc.save();
 
     return { success: true };

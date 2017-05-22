@@ -10,7 +10,8 @@ const taskGroupSchema = new mongoose.Schema({
     title: { type: String }, // 标题
     content: { type: String }, // 内容
 
-    state: { type: Number, default: 0 }, // 0：待审批，1：驳回审批，2：通过审批，
+    isSingleTask: { type: Boolean, default: false }, //是否是单一任务
+    state: { type: Number, default: 1 }, // 子任务的组合
 
     expectStartTime: { type: Date, default: Date.now }, // 需要任务开始时间（子任务的最小开始时间）
     expectFinishTime: { type: Date, default: Date.now }, // 需要任务结束时间（子任务的最大结束时间）
