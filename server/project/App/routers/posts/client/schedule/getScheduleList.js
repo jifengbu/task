@@ -9,7 +9,6 @@ export default async ({ userId, pageNo, pageSize }) => {
     })
 
     return { success: true, context: {
-        count,
         scheduleList: docs,
     } };
 };

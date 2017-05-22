@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import _ from 'lodash';
+import { formatTime, formatMedia } from '../utils';
 
 const scheduleSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'Client' }, //用户ID

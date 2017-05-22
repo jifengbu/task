@@ -14,12 +14,11 @@ export removeTask from './task/removeTask'; // 删除任务
 export getTaskList from './task/getTaskList'; // 获取任务列表
 export getTaskDetail from './task/getTaskDetail'; // 获取任务详情
 
-// task
-export createSchedule from './task/createSchedule'; // 创建日程
-export modifySchedule from './task/modifySchedule'; // 修改日程
-export removeSchedule from './task/removeSchedule'; // 删除日程
-export getScheduleList from './task/getScheduleList'; // 获取日程列表
-export getScheduleDetail from './task/getScheduleDetail'; // 获取日程详情
+// schedule
+export createSchedule from './schedule/createSchedule'; // 创建日程
+export modifySchedule from './schedule/modifySchedule'; // 修改日程
+export removeSchedule from './schedule/removeSchedule'; // 删除日程
+export getScheduleList from './schedule/getScheduleList'; // 获取日程列表
 
 //client
 export getClientList from './client/getClientList'; // 获取用户列表
