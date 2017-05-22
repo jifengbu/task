@@ -51,6 +51,7 @@ export function getMediaId (url) {
 export function getKeywordCriteriaForTask (keyword, criteria = {}) {
     if (keyword) {
         const regex = new RegExp('.*' + (keyword || '') + '.*', 'gim');
+        criteria = _.omitBy(criteria, _.isNil);
         criteria = { ...criteria, $or: [{ name: regex }, { phone: regex }] };
     }
     return criteria;
@@ -58,6 +59,7 @@ export function getKeywordCriteriaForTask (keyword, criteria = {}) {
 export function getKeywordCriteriaForClient (keyword, criteria = {}) {
     if (keyword) {
         const regex = new RegExp('.*' + (keyword || '') + '.*', 'gim');
+        criteria = _.omitBy(criteria, _.isNil);
         criteria = { ...criteria, $or: [{ name: regex }, { phone: regex }] };
     }
     return criteria;
@@ -65,6 +67,7 @@ export function getKeywordCriteriaForClient (keyword, criteria = {}) {
 export function getKeywordCriteriaForPartment (keyword, criteria = {}) {
     if (keyword) {
         const regex = new RegExp('.*' + (keyword || '') + '.*', 'gim');
+        criteria = _.omitBy(criteria, _.isNil);
         criteria = { ...criteria, $or: [{ name: regex }, { phone: regex }] };
     }
     return criteria;

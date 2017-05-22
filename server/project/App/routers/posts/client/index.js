@@ -7,14 +7,19 @@ export getPersonalInfo from './common/getPersonalInfo';// 获取个人信息
 export modifyPersonalInfo from './common/modifyPersonalInfo'; // 修改个人信息
 export submitFeedback from './common/submitFeedback'; // 提交反馈意见
 
-// task
-export createSingleTask from './task/createSingleTask'; // 创建单一任务
-export createGroupTask from './task/createGroupTask'; // 创建综合任务
 
-export modifyTask from './task/modifyTask'; // 修改任务
-export removeTask from './task/removeTask'; // 删除任务
-export getTaskList from './task/getTaskList'; // 获取任务列表
-export getTaskDetail from './task/getTaskDetail'; // 获取任务详情
+export getTaskTypeList from './task/getTaskTypeList'; // 获取任务类型列表
+export getTaskListByType from './task/getTaskListByType'; // 通过任务类型获取列表
+export searchTaskList from './task/searchTaskList'; // 搜索任务列表
+export getMostCaredTaskList from './task/getMostCaredTaskList'; // 获取最关心任务列表
+// 领导端
+export leaderCreateTask from './task/leader/leaderCreateTask'; // 领导创建任务
+export leaderGetToExamineTaskList from './task/leader/leaderGetToExamineTaskList'; // 获取待审核的任务列表
+export leaderGetDeniedTaskList from './task/leader/leaderGetDeniedTaskList'; // 获取打回任务列表
+// 秘书端
+export secretaryCreateTask from './task/secretary/secretaryCreateTask'; // 秘书创建任务
+export secretaryGetDeniedTaskList from './task/secretary/secretaryGetDeniedTaskList'; // 获取打回任务列表
+
 
 // schedule
 export createSchedule from './schedule/createSchedule'; // 创建日程

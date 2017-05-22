@@ -9,7 +9,7 @@ var param = {
     pageSize: 3,
 };
 
-post('/client/getTaskList', param).then((obj) => {
+post('/client/getGroupTaskList', param).then((obj) => {
     if (obj.context.taskList.length) {
         client.taskId = obj.context.taskList[0].id;
         saveClient(client);

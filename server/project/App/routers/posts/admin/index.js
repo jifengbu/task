@@ -18,3 +18,9 @@ export getPartmentDetail from './partment/getPartmentDetail'; // 获取部门详
 export createPartment from './partment/createPartment'; // 创建部门
 export modifyPartment from './partment/modifyPartment'; // 修改部门
 export removePartment from './partment/removePartment'; // 删除部门
+
+// taskType
+export getTaskTypeList from './taskType/getTaskTypeList'; // 获取任务类型列表
+export createTaskType from './taskType/createTaskType'; // 创建任务类型
+export modifyTaskType from './taskType/modifyTaskType'; // 修改任务类型
+export removeTaskType from './taskType/removeTaskType'; // 删除任务类型

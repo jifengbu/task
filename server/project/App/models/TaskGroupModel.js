@@ -10,10 +10,11 @@ const taskGroupSchema = new mongoose.Schema({
     title: { type: String }, // 标题
     content: { type: String }, // 内容
 
-    state: { type: Number, default: 1 }, // 任务状态，是子任务的状态组合
+    state: { type: Number, default: 0 }, // 0：待审批，1：驳回审批，2：通过审批，
 
     expectStartTime: { type: Date, default: Date.now }, // 需要任务开始时间（子任务的最小开始时间）
     expectFinishTime: { type: Date, default: Date.now }, // 需要任务结束时间（子任务的最大结束时间）
+    modifyTime: { type: Date, default: Date.now }, // 修改时间
     publishTime: { type: Date, default: Date.now }, // 任务发布时间
 });
 
@@ -24,7 +25,7 @@ taskGroupSchema.virtual('id').get(function () {
 const transform = {
     virtuals: true,
     transform: function (doc, ret, options) {
-        formatTime(ret, 'expectStartTime', 'expectFinishTime', 'publishTime');
+        formatTime(ret, 'expectStartTime', 'expectFinishTime', 'modifyTime', 'publishTime');
         delete ret._id;
         delete ret.__v;
         return ret;

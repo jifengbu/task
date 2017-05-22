@@ -1,7 +1,9 @@
-import { TaskModel, MediaModel } from '../../../../models';
-import { getMediaId } from '../../../../utils';
+import { TaskModel, MediaModel } from '../../../../../models';
+import { getMediaId } from '../../../../../utils';
 
 export default async ({
+    publisherId,
+    examinerId,
     executorId,
     supervisorId,
     title,
@@ -23,6 +25,8 @@ export default async ({
     }
 
     const doc = new TaskModel({
+        publisherId,
+        examinerId,
         executorId,
         supervisorId,
         title,

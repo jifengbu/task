@@ -1,6 +1,6 @@
-import { TaskGroupModel } from '../../../../models';
+import { TaskGroupModel } from '../../../../../models';
 import _ from 'lodash';
-import createTask from './createTask';
+import createTask from '../libs/createTask';
 
 export default async ({
     userId,
@@ -15,7 +15,7 @@ export default async ({
     const expectFinishTime = _.maxBy(taskList, (o)=>o.expectFinishTime).expectFinishTime;
 
     for (const item of taskList) {
-        let taskId = await createTask({...item, publishTime});
+        let taskId = await createTask({...item, publishTime, publisherId: userId, examinerId});
         taskIdList.push(taskId);
     }
     const doc = new TaskGroupModel({

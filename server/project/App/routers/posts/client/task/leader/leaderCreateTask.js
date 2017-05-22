@@ -1,5 +1,5 @@
-import { TaskGroupModel } from '../../../../models';
-import createTask from './createTask';
+import { TaskGroupModel } from '../../../../../models';
+import createTask from '../libs/createTask';
 
 export default async ({
     userId,
@@ -16,6 +16,8 @@ export default async ({
 }) => {
     const publishTime = Date.now();
     const taskId = await createTask({
+        publisherId: userId,
+        examinerId: userId,
         executorId,
         supervisorId,
         title,
