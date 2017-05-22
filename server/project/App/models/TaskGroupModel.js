@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const taskGroupSchema = new mongoose.Schema({
     publisherId: { type: Schema.Types.ObjectId, ref: 'Client' }, //发布人 Id（和各个子任务必须相同）
-    examinerId: { type: Schema.Types.ObjectId, ref: 'Client' }, //审批人 Id（和各个子任务必须相同）
+    examinerId: { type: Schema.Types.ObjectId, ref: 'Client' }, //审批人 Id（和各个子任务必须相同）(对单一任务无效)
     taskList: [{ type: Schema.Types.ObjectId, ref: 'Task' }], // 子任务列表
 
     title: { type: String }, // 标题

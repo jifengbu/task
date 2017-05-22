@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const taskSchema = new mongoose.Schema({
     publisherId: { type: Schema.Types.ObjectId, ref: 'Client' }, //发布人 Id
-    examinerId: { type: Schema.Types.ObjectId, ref: 'Client' }, //审批人 Id
+    examinerId: { type: Schema.Types.ObjectId, ref: 'Client' }, //审批人 Id (只对综合任务有效)
     executorId: { type: Schema.Types.ObjectId, ref: 'Client' }, //执行人 Id
     supervisorId: { type: Schema.Types.ObjectId, ref: 'Client' }, //监督人 Id
 
@@ -13,7 +13,7 @@ const taskSchema = new mongoose.Schema({
     audioList: [{media: { type: Schema.Types.ObjectId, ref: 'Media' }, timelong: { type: Number }}], // 音频列表
     imageList: [{ type: Schema.Types.ObjectId, ref: 'Media' }], // 图片列表
 
-    type:  { type: Number, default: 0 }, // 任务类型，0：一般任务， 1：紧急任务，2：加急任务
+    type:  { type: Number, default: 0 }, // 任务类型，0：一般任务， 1：紧急任务，2：加急任务 (只对单一任务有效)
     state: { type: Number, default: 1 }, // 任务状态，2^0：待审批，2^1：驳回审批，2^2：待重新审批，2^3：待执行， 2^4：进行中，2^5：待完成审核，2^6：驳回完成审核，2^7：待重新完成审核，2^8：完成
 
     needStartTime: { type: Date, default: Date.now }, // 需要开始时间

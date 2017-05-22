@@ -1,16 +1,19 @@
-import { TaskModel, ClientModel, MediaModel } from '../../../../models';
-import { getMediaId, testPhone } from '../../../../utils';
+import { TaskGroupModel, MediaModel } from '../../../../models';
+import { getMediaId } from '../../../../utils';
 
 export default async ({
-    userId,
+    publisherId,
+    supervisorId,
     executorId,
+    supervisorId,
     title,
     content,
     audioList,
     imageList,
+    remindList,
     type,
-    startTime,
-    endTime,
+    needStartTime,
+    needEndTime,
 }) => {
     let _audioList = [];
     if (audioList) {
@@ -21,20 +24,23 @@ export default async ({
         _imageList = audioList.map((item) => { return getMediaId(item) });
     }
     const doc = new TaskModel({
-        publisherId: userId,
+        publisherId,
+        supervisorId,
         executorId,
+        supervisorId,
         title,
         content,
         audioList: _audioList,
         imageList: _imageList,
+        remindList,
         type,
-        startTime,
-        endTime,
+        needStartTime,
+        needEndTime,
     });
     await doc.save();
     MediaModel._updateRef(
         ..._audioList.map((item) => ({ [item]: 1 })),
         ..._imageList.map((item) => ({ [item]: 1 })),
     );
-    return { success: true, context: doc };
+    return  doc.id;
 };
