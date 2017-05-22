@@ -10,7 +10,7 @@ const taskSchema = new mongoose.Schema({
 
     title: { type: String }, // 标题
     content: { type: String }, // 内容
-    audioList: [{ type: Schema.Types.ObjectId, ref: 'Media' }], // 音频列表
+    audioList: [{media: { type: Schema.Types.ObjectId, ref: 'Media' }, timelong: { type: Number }}], // 音频列表
     imageList: [{ type: Schema.Types.ObjectId, ref: 'Media' }], // 图片列表
 
     type:  { type: Number, default: 0 }, // 任务类型，0：一般任务， 1：紧急任务，2：加急任务
