@@ -1,27 +1,27 @@
 ## 目录
-1. [登录(login)](#登录)
-2. [注册(register)](#注册)
-3. [获取个人信息(getPersonalInfo)](#获取个人信息)
-4. [修改个人信息(modifyPersonalInfo)](#修改个人信息)
-5. [修改密码(modifyPassword)](#修改密码)
-6. [创建任务(createTask)](#创建任务)
-7. [修改任务(modifyTask)](#修改任务)
-8. [删除任务(removeTask)](#删除任务)
-9. [获取用户列表(getClientList)](#获取用户列表)
-10. [获取用户详情(getClientDetail)](#获取用户详情)
-11. [获取任务列表(getTaskList)](#获取任务列表)
-12. [获取任务详情(getTaskDetail)](#获取任务详情)
-13. [打回任务(rejectTask)](#打回任务)
-14. [通过任务(passTask)](#通过任务)
-15. [创建提醒(createRemind)](#创建提醒)
-16. [更新提醒(updateRemind)](#更新提醒)
-17. [推送提醒通知(pushRemindNotice)](#推送提醒通知)
-18. [添加日程(addSchedule)](#添加日程)
-19. [更新日程(updateSchedule)](#更新日程)
-20. [删除日程(deleteSchedule)](#删除日程)
-21. [获取日程列表(getScheduleList)](#获取日程列表)
-22. [更新进度(updateProgress)](#更新进度)
-23. [获取进度列表(getProgressList)](#获取进度列表)
+1. [登录(login)](#1-登录)
+2. [注册(register)](#2-注册)
+3. [获取个人信息(getPersonalInfo)](#3-获取个人信息)
+4. [修改个人信息(modifyPersonalInfo)](#4-修改个人信息)
+5. [修改密码(modifyPassword)](#5-修改密码)
+6. [创建任务(createTask)](#6-创建任务)
+7. [修改任务(modifyTask)](#7-修改任务)
+8. [删除任务(removeTask)](#8-删除任务)
+9. [获取用户列表(getClientList)](#9-获取用户列表)
+10. [获取用户详情(getClientDetail)](#10-获取用户详情)
+11. [获取任务列表(getTaskList)](#11-获取任务列表)
+12. [获取任务详情(getTaskDetail)](#12-获取任务详情)
+13. [打回任务(rejectTask)](#13-打回任务)
+14. [通过任务(passTask)](#14-通过任务)
+15. [创建提醒(createRemind)](#15-创建提醒)
+16. [修改提醒(modifyRemind)](#16-修改提醒)
+17. [推送提醒通知(pushRemindNotice)](#17-推送提醒通知)
+18. [创建日程(createSchedule)](#18-创建日程)
+19. [修改日程(modifySchedule)](#19-修改日程)
+20. [删除日程(removeSchedule)](#20-删除日程)
+21. [获取日程列表(getScheduleList)](#21-获取日程列表)
+22. [修改进度(modifyProgress)](#22-修改进度)
+23. [获取进度列表(getProgressList)](#23-获取进度列表)
 
 ---
 
@@ -367,8 +367,8 @@
 }
 ```
 
-### 16. [更新提醒](#目录)
-- `updateRemind`
+### 16. [修改提醒](#目录)
+- `modifyRemind`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
@@ -399,8 +399,8 @@
 }
 ```
 
-### 18. [添加日程](#目录)
-- `addSchedule`
+### 18. [创建日程](#目录)
+- `createSchedule`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
@@ -416,8 +416,8 @@
 }
 ```
 
-### 19. [更新日程](#目录)
-- `updateSchedule`
+### 19. [修改日程](#目录)
+- `modifySchedule`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
@@ -434,7 +434,7 @@
 ```
 
 ### 20. [删除日程](#目录)
-- `deleteSchedule`
+- `removeSchedule`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
@@ -474,15 +474,15 @@
 }
 ```
 
-### 22. [更新进度](#目录)
-- `updateProgress`
+### 22. [修改进度](#目录)
+- `modifyProgress`
 - 请求方式：`POST`
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
 | taskId | String | 任务Id |
-| time | String | 更新时间 |
-| content | String | 更新内容 |
+| time | String | 修改时间 |
+| content | String | 修改内容 |
 
 ```js
 {

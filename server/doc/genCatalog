@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cp api.md __tmp1.md
-vim -e -s -c "/###.*\|^- \`.*\`$" -c ":v//d" -c ":%s/.*\[\(.*\)\].*/\1/"  -c ":1,\$g/^/join" -c ":%s/ - \`\(.*\)\`/ \1/"  -c ":%s/\(.*\) \(.*\)/\=line('.').'. ['.submatch(1).'('.submatch(2).')](#'.submatch(1).')'/" -c ":wq" __tmp1.md
+vim -e -s -c "/###.*\|^- \`.*\`$" -c ":v//d" -c ":%s/.*\[\(.*\)\].*/\1/"  -c ":1,\$g/^/join" -c ":%s/ - \`\(.*\)\`/ \1/"  -c ":%s/\(.*\) \(.*\)/\=line('.').'. ['.submatch(1).'('.submatch(2).')](#'.line('.').'-'.submatch(1).')'/" -c ":wq" __tmp1.md
 echo >> __tmp1.md
 echo --- >> __tmp1.md
 echo >> __tmp1.md
