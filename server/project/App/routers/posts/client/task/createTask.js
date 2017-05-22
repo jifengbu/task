@@ -1,9 +1,9 @@
-import { TaskGroupModel, MediaModel } from '../../../../models';
+import { TaskModel, MediaModel } from '../../../../models';
 import { getMediaId } from '../../../../utils';
 
 export default async ({
     publisherId,
-    supervisorId,
+    examinerId,
     executorId,
     supervisorId,
     title,
@@ -17,15 +17,16 @@ export default async ({
 }) => {
     let _audioList = [];
     if (audioList) {
-        _audioList = audioList.map((item) => { return getMediaId(item) });
+        _audioList = audioList.map((item) => { item.url = getMediaId(item.url); return item; });
     }
     let _imageList= [];
     if (imageList) {
-        _imageList = audioList.map((item) => { return getMediaId(item) });
+        _imageList = imageList.map((item) => { return getMediaId(item) });
     }
+
     const doc = new TaskModel({
         publisherId,
-        supervisorId,
+        examinerId,
         executorId,
         supervisorId,
         title,
@@ -39,7 +40,7 @@ export default async ({
     });
     await doc.save();
     MediaModel._updateRef(
-        ..._audioList.map((item) => ({ [item]: 1 })),
+        ..._audioList.map((item) => ({ [item.url]: 1 })),
         ..._imageList.map((item) => ({ [item]: 1 })),
     );
     return  doc.id;

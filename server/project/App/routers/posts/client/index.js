@@ -8,7 +8,9 @@ export modifyPersonalInfo from './common/modifyPersonalInfo'; // 修改个人信
 export submitFeedback from './common/submitFeedback'; // 提交反馈意见
 
 // task
-export createTask from './task/createTask'; // 创建任务
+export createSingleTask from './task/createSingleTask'; // 创建单一任务
+export createGroupTask from './task/createGroupTask'; // 创建综合任务
+
 export modifyTask from './task/modifyTask'; // 修改任务
 export removeTask from './task/removeTask'; // 删除任务
 export getTaskList from './task/getTaskList'; // 获取任务列表

@@ -3,6 +3,7 @@ export ClientModel from './ClientModel';
 export FeedbackModel from './FeedbackModel';
 export MediaModel from './MediaModel';
 export TaskModel from './TaskModel';
+export TaskGroupModel from './TaskGroupModel';
 export ScheduleModel from './ScheduleModel';
 export ProgressModel from './ProgressModel';
 export PartmentModel from './PartmentModel';

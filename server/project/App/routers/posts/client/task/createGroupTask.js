@@ -4,17 +4,15 @@ import createTask from './createTask';
 
 export default async ({
     userId,
-    executorId,
     examinerId,
-    supervisorId,
     title,
     content,
     taskList,
 }) => {
     const publishTime = Date.now();
     const taskIdList = [];
-    const needStartTime = _.minBy(taskList, (o)=>o.needStartTime);
-    const needEndTime = _.maxBy(taskList, (o)=>o.needEndTime);
+    const needStartTime = _.minBy(taskList, (o)=>o.needStartTime).needStartTime;
+    const needEndTime = _.maxBy(taskList, (o)=>o.needEndTime).needEndTime;
 
     for (const item of taskList) {
         let taskId = await createTask({...item, publishTime});
@@ -22,7 +20,7 @@ export default async ({
     }
     const doc = new TaskGroupModel({
         publisherId: userId,
-        supervisorId,
+        examinerId,
         taskList: taskIdList,
         needStartTime,
         needEndTime,

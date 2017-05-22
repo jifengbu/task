@@ -16,7 +16,6 @@ export default async ({
 }) => {
     const publishTime = Date.now();
     const taskId = await createTask({
-        publisherId: userId,
         executorId,
         supervisorId,
         title,
@@ -31,7 +30,6 @@ export default async ({
     });
     const doc = new TaskGroupModel({
         publisherId: userId,
-        supervisorId,
         taskList: [ taskId ],
         needStartTime,
         needEndTime,
