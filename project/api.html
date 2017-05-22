@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/frameworks-81a59bf26d881d29286674f6deefe779c444382fff322085b50ba455460ccae5.css" integrity="sha256-gaWb8m2IHSkoZnT23u/necREOC//MiCFtQukVUYMyuU=" media="all" rel="stylesheet" />
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-8789d320be825216d799841dcb27bc201b0605572d4c8c07c30feb5bc27a66b7.css" integrity="sha256-h4nTIL6CUhbXmYQdyye8IBsGBVctTIwHww/rW8J6Zrc=" media="all" rel="stylesheet" />
+</head>
+<body class="logged-in env-production emoji-size-boost page-blob">
+<div class="container new-discussion-timeline experiment-repo-nav">
+<div id="readme" class="readme blob instapaper_body">
+
+
+    <article class="markdown-body entry-content" itemprop="text"><h2><a id="user-content-目录" class="anchor" href="#目录" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>目录</h2>
+<ol>
+<li><a href="#1-%E7%99%BB%E5%BD%95">登录(login)</a></li>
+<li><a href="#2-%E6%B3%A8%E5%86%8C">注册(register)</a></li>
+<li><a href="#3-%E8%8E%B7%E5%8F%96%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF">获取个人信息(getPersonalInfo)</a></li>
+<li><a href="#4-%E4%BF%AE%E6%94%B9%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF">修改个人信息(modifyPersonalInfo)</a></li>
+<li><a href="#5-%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81">修改密码(modifyPassword)</a></li>
+<li><a href="#6-%E8%8E%B7%E5%8F%96%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8">获取用户列表(getClientList)</a></li>
+<li><a href="#7-%E8%8E%B7%E5%8F%96%E7%94%A8%E6%88%B7%E8%AF%A6%E6%83%85">获取用户详情(getClientDetail)</a></li>
+<li><a href="#8-%E8%8E%B7%E5%8F%96%E4%BB%BB%E5%8A%A1%E7%B1%BB%E5%9E%8B%E5%88%97%E8%A1%A8">获取任务类型列表(getTaskTypeList)</a></li>
+<li><a href="#9-%E9%80%9A%E8%BF%87%E7%B1%BB%E5%9E%8B%E8%8E%B7%E5%8F%96%E4%BB%BB%E5%8A%A1%E5%88%97%E8%A1%A8">通过类型获取任务列表(getTaskListByType)</a></li>
+<li><a href="#10-%E5%88%9B%E5%BB%BA%E5%8D%95%E4%B8%80%E4%BB%BB%E5%8A%A1">创建单一任务(leaderCreateTask)</a></li>
+<li><a href="#11-%E5%88%9B%E5%BB%BA%E7%BB%BC%E5%90%88%E4%BB%BB%E5%8A%A1">创建综合任务(secretaryCreateTask)</a></li>
+<li><a href="#12-%E9%A2%86%E5%AF%BC%E8%8E%B7%E5%8F%96%E5%BE%85%E5%AE%A1%E6%89%B9%E7%9A%84%E4%BB%BB%E5%8A%A1%E5%88%97%E8%A1%A8">领导获取待审批的任务列表(getToExamineTaskList)</a></li>
+<li><a href="#13-%E8%8E%B7%E5%8F%96%E5%8D%95%E4%B8%80%E4%BB%BB%E5%8A%A1%E7%9A%84%E8%AF%A6%E6%83%85">获取单一任务的详情(getSingleTaskDetail)</a></li>
+<li><a href="#14-%E8%8E%B7%E5%8F%96%E7%BE%A4%E7%BB%84%E4%BB%BB%E5%8A%A1%E7%9A%84%E8%AF%A6%E6%83%85">获取群组任务的详情(getGroupTaskDetail)</a></li>
+<li><a href="#15-%E6%89%93%E5%9B%9E%E4%BB%BB%E5%8A%A1">打回任务(rejectPublishTask)</a></li>
+<li><a href="#16-%E9%80%9A%E8%BF%87%E4%BB%BB%E5%8A%A1">通过任务(agreePublishTask)</a></li>
+<li><a href="#17-%E5%88%9B%E5%BB%BA%E6%8F%90%E9%86%92">创建提醒(createRemind)</a></li>
+<li><a href="#18-%E4%BF%AE%E6%94%B9%E6%8F%90%E9%86%92">修改提醒(modifyRemind)</a></li>
+<li><a href="#19-%E6%8E%A8%E9%80%81%E6%8F%90%E9%86%92%E9%80%9A%E7%9F%A5">推送提醒通知(pushRemindNotice)</a></li>
+<li><a href="#20-%E5%88%9B%E5%BB%BA%E6%97%A5%E7%A8%8B">创建日程(createSchedule)</a></li>
+<li><a href="#21-%E4%BF%AE%E6%94%B9%E6%97%A5%E7%A8%8B">修改日程(modifySchedule)</a></li>
+<li><a href="#22-%E5%88%A0%E9%99%A4%E6%97%A5%E7%A8%8B">删除日程(removeSchedule)</a></li>
+<li><a href="#23-%E8%8E%B7%E5%8F%96%E6%97%A5%E7%A8%8B%E5%88%97%E8%A1%A8">获取日程列表(getScheduleList)</a></li>
+<li><a href="#24-%E4%BF%AE%E6%94%B9%E8%BF%9B%E5%BA%A6">修改进度(modifyProgress)</a></li>
+<li><a href="#25-%E8%8E%B7%E5%8F%96%E8%BF%9B%E5%BA%A6%E5%88%97%E8%A1%A8">获取进度列表(getProgressList)</a></li>
+</ol>
+<hr>
+<h3><a id="user-content-1-登录" class="anchor" href="#1-登录" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. <a href="#%E7%9B%AE%E5%BD%95">登录</a></h3>
+<ul>
+<li><code>login</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">phone</td>
+<td align="center">String</td>
+<td align="center">登录手机号码</td>
+</tr>
+<tr>
+<td align="left">password</td>
+<td align="center">String</td>
+<td align="center">登录密码</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>userId<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>10000<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr></tbody></table>
+<hr>
+<h3><a id="user-content-2-注册" class="anchor" href="#2-注册" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. <a href="#%E7%9B%AE%E5%BD%95">注册</a></h3>
+<ul>
+<li><code>register</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">phone</td>
+<td align="center">String</td>
+<td align="center">登录手机号码</td>
+</tr>
+<tr>
+<td align="left">email</td>
+<td align="center">String</td>
+<td align="center">找回密码的邮箱</td>
+</tr>
+<tr>
+<td align="left">password</td>
+<td align="center">String</td>
+<td align="center">登录密码</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>
+}</pre></div>
+<hr>
+<h3><a id="user-content-3-获取个人信息" class="anchor" href="#3-获取个人信息" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. <a href="#%E7%9B%AE%E5%BD%95">获取个人信息</a></h3>
+<ul>
+<li><code>getPersonalInfo</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>手机号码<span class="pl-pds">"</span></span>
+        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>用户名<span class="pl-pds">"</span></span>
+        <span class="pl-s"><span class="pl-pds">"</span>head<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>头像<span class="pl-pds">"</span></span>
+        <span class="pl-s"><span class="pl-pds">"</span>position<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>职位<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
+<h3><a id="user-content-4-修改个人信息" class="anchor" href="#4-修改个人信息" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. <a href="#%E7%9B%AE%E5%BD%95">修改个人信息</a></h3>
+<ul>
+<li><code>modifyPersonalInfo</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">phone</td>
+<td align="center">String</td>
+<td align="center">登录手机号码</td>
+</tr>
+<tr>
+<td align="left">name</td>
+<td align="center">String</td>
+<td align="center">用户名</td>
+</tr>
+<tr>
+<td align="left">head</td>
+<td align="center">String</td>
+<td align="center">头像</td>
+</tr>
+<tr>
+<td align="left">position</td>
+<td align="center">String</td>
+<td align="center">职位</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-5-修改密码" class="anchor" href="#5-修改密码" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. <a href="#%E7%9B%AE%E5%BD%95">修改密码</a></h3>
+<ul>
+<li><code>modifyPassword</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">oldPassword</td>
+<td align="center">String</td>
+<td align="center">旧密码</td>
+</tr>
+<tr>
+<td align="left">newPassword</td>
+<td align="center">String</td>
+<td align="center">新密码</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-6-获取用户列表" class="anchor" href="#6-获取用户列表" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>6. <a href="#%E7%9B%AE%E5%BD%95">获取用户列表</a></h3>
+<ul>
+<li><code>getClientList</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">keyword</td>
+<td align="center">String</td>
+<td align="center">搜索关键字</td>
+</tr>
+<tr>
+<td align="left">pageNo</td>
+<td align="center">Number</td>
+<td align="center">第几页</td>
+</tr>
+<tr>
+<td align="left">pageSize</td>
+<td align="center">Number</td>
+<td align="center">每页的数量</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>clientList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>42550564@qq.com<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>方运江<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>head<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://localhost:3000/api/image?id=59117df95150c20e08b560af<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>partment<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                    <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>123<span class="pl-pds">"</span></span>,
+                    <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>591fa902b526bebf009d92c3<span class="pl-pds">"</span></span>
+                },
+                <span class="pl-s"><span class="pl-pds">"</span>reservePhone<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+                    <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>
+                ],
+                <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>59117ddb5150c20e08b560ac<span class="pl-pds">"</span></span>
+            }
+        ]
+    }
+}</pre></div>
+<h3><a id="user-content-7-获取用户详情" class="anchor" href="#7-获取用户详情" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>7. <a href="#%E7%9B%AE%E5%BD%95">获取用户详情</a></h3>
+<ul>
+<li><code>getClientDetail</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">clientId</td>
+<td align="center">String</td>
+<td align="center">获取详情的用户Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>42550564@qq.com<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>方运江<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>head<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://localhost:3000/api/image?id=59117df95150c20e08b560af<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>birthday<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>1982-02-25<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>partment<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+            <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>123<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>descript<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>123<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>chargeMan<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>方运江<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>head<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://localhost:3000/api/image?id=59117df95150c20e08b560af<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>59117ddb5150c20e08b560ac<span class="pl-pds">"</span></span>
+            },
+            <span class="pl-s"><span class="pl-pds">"</span>superior<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>工信部<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>591cf488f6a0636b34d64985<span class="pl-pds">"</span></span>
+            },
+            <span class="pl-s"><span class="pl-pds">"</span>phoneList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+                <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>
+            ],
+            <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>591fa902b526bebf009d92c3<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>membersNum<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">1</span>,
+            <span class="pl-s"><span class="pl-pds">"</span>suborsNum<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">1</span>
+        },
+        <span class="pl-s"><span class="pl-pds">"</span>registerTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-09 16:29:15<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>salary<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">0</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>reservePhone<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>
+        ],
+        <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">35</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>sex<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">0</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>59117ddb5150c20e08b560ac<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
+<h3><a id="user-content-8-获取任务类型列表" class="anchor" href="#8-获取任务类型列表" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>8. <a href="#%E7%9B%AE%E5%BD%95">获取任务类型列表</a></h3>
+<ul>
+<li><code>getTaskTypeList</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>taskTypeList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>类型1<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>5922b03e9a24539774bc0eec<span class="pl-pds">"</span></span>
+            }
+        ]
+    }
+}</pre></div>
+<h3><a id="user-content-9-通过类型获取任务列表" class="anchor" href="#9-通过类型获取任务列表" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>9. <a href="#%E7%9B%AE%E5%BD%95">通过类型获取任务列表</a></h3>
+<ul>
+<li><code>getTaskListByType</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">ID</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">taskTypeId</td>
+<td align="center">ID</td>
+<td align="center">任务类型Id</td>
+</tr>
+<tr>
+<td align="left">pageNo</td>
+<td align="center">Number</td>
+<td align="center">页号</td>
+</tr>
+<tr>
+<td align="left">pageSize</td>
+<td align="center">Number</td>
+<td align="center">每页数量</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>taskTypeList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>key<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>类型1<span class="pl-pds">"</span></span>,
+            }
+        ]
+    }
+}</pre></div>
+<h3><a id="user-content-10-创建单一任务" class="anchor" href="#10-创建单一任务" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>10. <a href="#%E7%9B%AE%E5%BD%95">创建单一任务</a></h3>
+<ul>
+<li><code>leaderCreateTask</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">executorId</td>
+<td align="center">String</td>
+<td align="center">执行人Id</td>
+</tr>
+<tr>
+<td align="left">supervisorId</td>
+<td align="center">String</td>
+<td align="center">监督人Id</td>
+</tr>
+<tr>
+<td align="left">title</td>
+<td align="center">String</td>
+<td align="center">标题</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="center">String</td>
+<td align="center">内容</td>
+</tr>
+<tr>
+<td align="left">audioList</td>
+<td align="center">Array</td>
+<td align="center">音频列表</td>
+</tr>
+<tr>
+<td align="left">imageList</td>
+<td align="center">Array</td>
+<td align="center">图片列表</td>
+</tr>
+<tr>
+<td align="left">remindList</td>
+<td align="center">Array</td>
+<td align="center">提醒列表</td>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="center">Number</td>
+<td align="center">任务类型</td>
+</tr>
+<tr>
+<td align="left">expectStartTime</td>
+<td align="center">String</td>
+<td align="center">期望开始时间</td>
+</tr>
+<tr>
+<td align="left">expectFinishTime</td>
+<td align="center">String</td>
+<td align="center">期望结束时间</td>
+</tr></tbody></table>
+<ul>
+<li>audioList 格式：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">url</td>
+<td align="center">String</td>
+<td align="center">上传音频文件返回的url</td>
+</tr>
+<tr>
+<td align="left">duration</td>
+<td align="center">Number</td>
+<td align="center">音频文件的时长</td>
+</tr></tbody></table>
+<ul>
+<li>remindList 格式：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">info</td>
+<td align="center">String</td>
+<td align="center">提醒的内容</td>
+</tr>
+<tr>
+<td align="left">time</td>
+<td align="center">String</td>
+<td align="center">提醒的时间</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-11-创建综合任务" class="anchor" href="#11-创建综合任务" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>11. <a href="#%E7%9B%AE%E5%BD%95">创建综合任务</a></h3>
+<ul>
+<li><code>secretaryCreateTask</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">examinerId</td>
+<td align="center">String</td>
+<td align="center">审核人Id</td>
+</tr>
+<tr>
+<td align="left">title</td>
+<td align="center">String</td>
+<td align="center">标题</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="center">String</td>
+<td align="center">内容</td>
+</tr>
+<tr>
+<td align="left">taskList</td>
+<td align="center">Array</td>
+<td align="center">任务列表</td>
+</tr></tbody></table>
+<ul>
+<li>taskList 格式：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">executorId</td>
+<td align="center">String</td>
+<td align="center">执行人Id</td>
+</tr>
+<tr>
+<td align="left">supervisorId</td>
+<td align="center">String</td>
+<td align="center">监督人Id</td>
+</tr>
+<tr>
+<td align="left">title</td>
+<td align="center">String</td>
+<td align="center">标题</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="center">String</td>
+<td align="center">内容</td>
+</tr>
+<tr>
+<td align="left">audioList</td>
+<td align="center">Array</td>
+<td align="center">音频列表</td>
+</tr>
+<tr>
+<td align="left">imageList</td>
+<td align="center">Array</td>
+<td align="center">图片列表</td>
+</tr>
+<tr>
+<td align="left">remindList</td>
+<td align="center">Array</td>
+<td align="center">提醒列表</td>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="center">Number</td>
+<td align="center">任务类型(0：一般任务， 1：紧急任务，2：加急任务)</td>
+</tr>
+<tr>
+<td align="left">expectStartTime</td>
+<td align="center">String</td>
+<td align="center">期望开始时间</td>
+</tr>
+<tr>
+<td align="left">expectFinishTime</td>
+<td align="center">String</td>
+<td align="center">期望结束时间</td>
+</tr></tbody></table>
+<ul>
+<li>audioList 格式：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">url</td>
+<td align="center">String</td>
+<td align="center">上传音频文件返回的url</td>
+</tr>
+<tr>
+<td align="left">duration</td>
+<td align="center">Number</td>
+<td align="center">音频文件的时长</td>
+</tr></tbody></table>
+<ul>
+<li>remindList 格式：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">info</td>
+<td align="center">String</td>
+<td align="center">提醒的内容</td>
+</tr>
+<tr>
+<td align="left">time</td>
+<td align="center">String</td>
+<td align="center">提醒的时间</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-12-领导获取待审批的任务列表" class="anchor" href="#12-领导获取待审批的任务列表" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>12. <a href="#%E7%9B%AE%E5%BD%95">领导获取待审批的任务列表</a></h3>
+<ul>
+<li><code>getToExamineTaskList</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">ID</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">pageNo</td>
+<td align="center">Number</td>
+<td align="center">页号</td>
+</tr>
+<tr>
+<td align="left">pageSize</td>
+<td align="center">Number</td>
+<td align="center">每页数量</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>taskList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>5922b7726df4409ec01c425d<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>总测试标题<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>总测试内容<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>modifyTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>expectFinishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-16 03:00:00<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>expectStartTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-15 03:00:00<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>taskNumbers<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">1</span>,
+                <span class="pl-s"><span class="pl-pds">"</span>isSingleTask<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span> <span class="pl-c"><span class="pl-c">//</span>是否是单任务</span>
+            }
+        ]
+    }
+}</pre></div>
+<h3><a id="user-content-13-获取单一任务的详情" class="anchor" href="#13-获取单一任务的详情" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>13. <a href="#%E7%9B%AE%E5%BD%95">获取单一任务的详情</a></h3>
+<ul>
+<li><code>getSingleTaskDetail</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">ID</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">taskId</td>
+<td align="center">ID</td>
+<td align="center">任务Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>测试标题<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>测试内容<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>examineFinishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>applyFinishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>modifyTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>startExecTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>examineTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>publishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>expectFinishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-16 03:00:00<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>expectStartTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-15 03:00:00<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>state<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">1</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">1</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>imageList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            <span class="pl-s"><span class="pl-pds">"</span>http://localhost:3000/api/image?id=5922b7726df4409ec01c425b<span class="pl-pds">"</span></span>
+        ],
+        <span class="pl-s"><span class="pl-pds">"</span>audioList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://localhost:3000/api/image?id=5922b7726df4409ec01c425c<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>duration<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">10</span>
+            }
+        ],
+        <span class="pl-s"><span class="pl-pds">"</span>supervisor<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+            <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>方运江<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>59117ddb5150c20e08b560ac<span class="pl-pds">"</span></span>
+        },
+        <span class="pl-s"><span class="pl-pds">"</span>executor<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+            <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>方运江<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>59117ddb5150c20e08b560ac<span class="pl-pds">"</span></span>
+        },
+        <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>5922b7726df4409ec01c425e<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
+<h3><a id="user-content-14-获取群组任务的详情" class="anchor" href="#14-获取群组任务的详情" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>14. <a href="#%E7%9B%AE%E5%BD%95">获取群组任务的详情</a></h3>
+<ul>
+<li><code>getGroupTaskDetail</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">ID</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">taskId</td>
+<td align="center">ID</td>
+<td align="center">任务Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>总测试标题<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>总测试内容<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>taskList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>测试标题<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>测试内容<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>examineFinishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>applyFinishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>modifyTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>startExecTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>examineTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>publishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-22 18:03:30<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>expectFinishTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-16 03:00:00<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>expectStartTime<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>2017-05-15 03:00:00<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>state<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">1</span>,
+                <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">1</span>,
+                <span class="pl-s"><span class="pl-pds">"</span>imageList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+                    <span class="pl-s"><span class="pl-pds">"</span>http://localhost:3000/api/image?id=5922b7726df4409ec01c425b<span class="pl-pds">"</span></span>
+                ],
+                <span class="pl-s"><span class="pl-pds">"</span>audioList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+                    {
+                        <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://localhost:3000/api/image?id=5922b7726df4409ec01c425c<span class="pl-pds">"</span></span>,
+                        <span class="pl-s"><span class="pl-pds">"</span>duration<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">10</span>
+                    }
+                ],
+                <span class="pl-s"><span class="pl-pds">"</span>supervisor<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                    <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>,
+                    <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>方运江<span class="pl-pds">"</span></span>,
+                    <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>59117ddb5150c20e08b560ac<span class="pl-pds">"</span></span>
+                },
+                <span class="pl-s"><span class="pl-pds">"</span>executor<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                    <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>18085192480<span class="pl-pds">"</span></span>,
+                    <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>方运江<span class="pl-pds">"</span></span>,
+                    <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>59117ddb5150c20e08b560ac<span class="pl-pds">"</span></span>
+                },
+                <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>5922b7726df4409ec01c425e<span class="pl-pds">"</span></span>
+            }
+        ],
+        <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>5922b7726df4409ec01c425d<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
+<h3><a id="user-content-15-打回任务" class="anchor" href="#15-打回任务" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>15. <a href="#%E7%9B%AE%E5%BD%95">打回任务</a></h3>
+<ul>
+<li><code>rejectPublishTask</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">ID</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">taskId</td>
+<td align="center">String</td>
+<td align="center">任务Id</td>
+</tr>
+<tr>
+<td align="left">reason</td>
+<td align="center">String</td>
+<td align="center">被打回的原因</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-16-通过任务" class="anchor" href="#16-通过任务" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>16. <a href="#%E7%9B%AE%E5%BD%95">通过任务</a></h3>
+<ul>
+<li><code>agreePublishTask</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">ID</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">taskId</td>
+<td align="center">String</td>
+<td align="center">任务Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-17-创建提醒" class="anchor" href="#17-创建提醒" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>17. <a href="#%E7%9B%AE%E5%BD%95">创建提醒</a></h3>
+<ul>
+<li><code>createRemind</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">defaultRemindRule</td>
+<td align="center">String</td>
+<td align="center">默认提醒规则</td>
+</tr>
+<tr>
+<td align="left">customRemindTime</td>
+<td align="center">Date</td>
+<td align="center">自定义提醒时间</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-18-修改提醒" class="anchor" href="#18-修改提醒" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>18. <a href="#%E7%9B%AE%E5%BD%95">修改提醒</a></h3>
+<ul>
+<li><code>modifyRemind</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">remindId</td>
+<td align="center">String</td>
+<td align="center">提醒Id</td>
+</tr>
+<tr>
+<td align="left">defaultRemindRule</td>
+<td align="center">String</td>
+<td align="center">默认提醒规则</td>
+</tr>
+<tr>
+<td align="left">customRemindTime</td>
+<td align="center">Date</td>
+<td align="center">自定义提醒时间</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-19-推送提醒通知" class="anchor" href="#19-推送提醒通知" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>19. <a href="#%E7%9B%AE%E5%BD%95">推送提醒通知</a></h3>
+<ul>
+<li><code>pushRemindNotice</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">receiveUserId</td>
+<td align="center">String</td>
+<td align="center">接受者用户Id</td>
+</tr>
+<tr>
+<td align="left">remindId</td>
+<td align="center">String</td>
+<td align="center">提醒Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-20-创建日程" class="anchor" href="#20-创建日程" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>20. <a href="#%E7%9B%AE%E5%BD%95">创建日程</a></h3>
+<ul>
+<li><code>createSchedule</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">time</td>
+<td align="center">String</td>
+<td align="center">日程时间</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="center">String</td>
+<td align="center">日程内容</td>
+</tr>
+<tr>
+<td align="left">state</td>
+<td align="center">String</td>
+<td align="center">日程状态</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-21-修改日程" class="anchor" href="#21-修改日程" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>21. <a href="#%E7%9B%AE%E5%BD%95">修改日程</a></h3>
+<ul>
+<li><code>modifySchedule</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">id</td>
+<td align="center">String</td>
+<td align="center">日程Id</td>
+</tr>
+<tr>
+<td align="left">time</td>
+<td align="center">String</td>
+<td align="center">日程时间</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="center">String</td>
+<td align="center">日程内容</td>
+</tr>
+<tr>
+<td align="left">state</td>
+<td align="center">String</td>
+<td align="center">日程状态</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-22-删除日程" class="anchor" href="#22-删除日程" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>22. <a href="#%E7%9B%AE%E5%BD%95">删除日程</a></h3>
+<ul>
+<li><code>removeSchedule</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">id</td>
+<td align="center">String</td>
+<td align="center">日程Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-23-获取日程列表" class="anchor" href="#23-获取日程列表" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>23. <a href="#%E7%9B%AE%E5%BD%95">获取日程列表</a></h3>
+<ul>
+<li><code>getScheduleList</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">userId</td>
+<td align="center">String</td>
+<td align="center">用户Id</td>
+</tr>
+<tr>
+<td align="left">time</td>
+<td align="center">String</td>
+<td align="center">日程时间</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="center">String</td>
+<td align="center">日程内容</td>
+</tr>
+<tr>
+<td align="left">state</td>
+<td align="center">String</td>
+<td align="center">日程状态</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>scheduleList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>123<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>time<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>8:00<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>要干嘛<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>state<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">1</span>
+            }
+        ]
+    }
+}</pre></div>
+<h3><a id="user-content-24-修改进度" class="anchor" href="#24-修改进度" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>24. <a href="#%E7%9B%AE%E5%BD%95">修改进度</a></h3>
+<ul>
+<li><code>modifyProgress</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">taskId</td>
+<td align="center">String</td>
+<td align="center">任务Id</td>
+</tr>
+<tr>
+<td align="left">time</td>
+<td align="center">String</td>
+<td align="center">修改时间</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="center">String</td>
+<td align="center">修改内容</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+}</pre></div>
+<h3><a id="user-content-25-获取进度列表" class="anchor" href="#25-获取进度列表" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>25. <a href="#%E7%9B%AE%E5%BD%95">获取进度列表</a></h3>
+<ul>
+<li><code>getProgressList</code></li>
+<li>请求方式：<code>POST</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">参数名称</th>
+<th align="center">参数类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">taskId</td>
+<td align="center">String</td>
+<td align="center">任务Id</td>
+</tr></tbody></table>
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>context<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>progressList<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>time<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>8:00<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>状态<span class="pl-pds">"</span></span>,
+            }
+        ]
+    }
+}</pre></div>
+</article>
+  
+
+</div>
+</div>
+<script crossorigin="anonymous" integrity="sha256-X+Q/xqnlEgxCczSjjpp2AUGGgqM5gcBzhRQ0p+EAUEk=" src="https://assets-cdn.github.com/assets/frameworks-5fe43fc6a9e5120c427334a38e9a7601418682a33981c073851434a7e1005049.js"></script>
+<script async="async" crossorigin="anonymous" integrity="sha256-9f3FVxB/cYpRksFz2PYkixpq+nV44tJSLzI/gcmcC5s=" src="https://assets-cdn.github.com/assets/github-f5fdc557107f718a5192c173d8f6248b1a6afa7578e2d2522f323f81c99c0b9b.js"></script>
+</body>
+</html>

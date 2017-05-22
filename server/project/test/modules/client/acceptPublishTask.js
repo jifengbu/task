@@ -7,4 +7,4 @@ var param = {
     taskId : args[0],
 };
 
-post('/client/rejectPublishTask', param);
+post('/client/acceptPublishTask', param);

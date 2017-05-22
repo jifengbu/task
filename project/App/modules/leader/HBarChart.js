@@ -12,9 +12,15 @@ import Echarts from 'native-echarts';
 
 module.exports = React.createClass({
     render () {
-        const data = this.props.data;
-        const date = this.props.date;
+        const data = [1,2,3,4,5];//this.props.data;
+        const date = [1,2,3,4,5];//this.props.date;
         const option = {
+            grid: {
+                left: '5%',
+                right: '6%',
+                top: '3%',
+                containLabel: true,
+            },
             // title : {
             //     text: '世界人口总量',
             //     subtext: '数据来自网络'
@@ -40,26 +46,26 @@ module.exports = React.createClass({
                 {
                     type : 'value',
                     data : [0, 100],
-                    // show: false,
+                    show: false,
                 }
             ],
             yAxis : [
                 {
                     type : 'category',
-                    data : ['巴西','印尼','美国','印度','中国']
+                    data : ['王小六','王小五','王小四','王小三','王晓易','王小二']
                 }
             ],
             series : [
                 {
                     name:'2011年',
                     type:'bar',
-                    data:[50, 60, 70, 80, 90],
+                    data:[50, 60, 70, 80, 90, 30],
                     itemStyle: {normal: {
                         label : {show: true, position: 'right'},
                         color: function(params) {
                                // build a color map as your need.
                                var colorList = [
-                                 '#EC3E1F','#38C1B4',
+                                 '#bfe7ee','#ffe3e4',
                                ];
                                return colorList[params.dataIndex%2]
                            },
@@ -68,7 +74,7 @@ module.exports = React.createClass({
             ]
         };
         return (
-            <Echarts option={option} height={250} />
+            <Echarts option={option} height={238} />
         );
     },
 });

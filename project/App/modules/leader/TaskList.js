@@ -79,8 +79,6 @@ module.exports = React.createClass({
         }, true);
     },
     renderRow (obj, sectionID, rowID) {
-        const states = ['待审核', '审核未通过', '进行中', '已完成'];
-        const colors = ['blue', 'red', 'darkorange', 'green'];
         return (
             <TouchableOpacity onPress={this.onPress.bind(null, obj)} style={styles.rowItem}>
                 <View style={styles.rightStyle}>
@@ -92,6 +90,7 @@ module.exports = React.createClass({
                     </Image>
                     <View style={styles.midView}>
                         <Text numberOfLines={3} style={styles.description}>{obj.description+'哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'}</Text>
+                        <Text style={styles.more}>{'点击更多'}</Text>
                     </View>
                     <View style={styles.statusBar}>
                         <Text style={styles.childTasks}>
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
     },
     rowItem: {
         width: sr.w,
-        height: 123,
+        height: 133,
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -167,7 +166,6 @@ const styles = StyleSheet.create({
     childTasks: {
         marginLeft: 20,
         fontSize: 9,
-        backgroundColor: '#9e9e9e',
         backgroundColor: 'transparent',
     },
     childStyle: {
@@ -182,7 +180,7 @@ const styles = StyleSheet.create({
     rightStyle: {
         width: sr.w,
         marginTop: 14,
-        height: 109,
+        height: 119,
         backgroundColor :'#FFFFFF'
     },
     title_background: {
@@ -197,7 +195,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent'
     },
     midView: {
-        height: 61,
+        height: 71,
         width: sr.w,
     },
     description: {
@@ -205,6 +203,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginTop: 5,
         lineHeight: 16,
+        color: '#666666',
+    },
+    more: {
+        fontSize: 10,
+        marginTop: 2,
+        alignSelf: 'center',
         color: '#666666',
     },
     icon: {

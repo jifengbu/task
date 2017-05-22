@@ -18,8 +18,9 @@ module.exports = React.createClass({
     },
     render () {
         const { data, onPress} = this.props;
+
         return (
-            <TouchableOpacity onPress={onPress} style={{backgroundColor: '#FFFFFF',}}>
+            <View style={{backgroundColor: '#FFFFFF',}}>
                 <View style={[styles.rowContainer, { marginVertical: sr.s(this.props.rowHeight) }]}>
                     <Text
                         style={styles.textStyleAnother}>
@@ -36,16 +37,17 @@ module.exports = React.createClass({
                                     style={styles.iconStyle} />
                             </TouchableOpacity>
                         :
-                            <View
+                            <TouchableOpacity
+                                onPress={this.doComplete}
                                 style={styles.btnStyle}>
                                 <Image
                                     resizeMode='contain'
                                     source={app.img.leader_item_over}
                                     style={styles.iconStyle} />
-                            </View>
+                            </TouchableOpacity>
                     }
                 </View>
-            </TouchableOpacity>
+            </View>
         );
     },
 });
@@ -69,7 +71,6 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: '#666666',
         marginLeft: 20,
-        width: sr.w-70,
         fontFamily:'STHeitiSC-Medium',
     },
     rowContainer: {
@@ -88,11 +89,5 @@ const styles = StyleSheet.create({
     iconStyle: {
         width: 18,
         height: 18,
-    },
-    numStyle: {
-        fontSize:12,
-        width: 50,
-        marginLeft: 30,
-        color: '#666666',
     },
 });

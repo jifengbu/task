@@ -25,7 +25,7 @@ export default async ({
     });
 
     for (const item of taskList) {
-        let taskId = await createTask({...item, groupdId: doc.id, publishTime, publisherId: userId, examinerId});
+        let taskId = await createTask({...item, groupId: doc.id, publishTime, publisherId: userId, examinerId});
         taskIdList.push(taskId);
     }
     doc.taskList = taskIdList;

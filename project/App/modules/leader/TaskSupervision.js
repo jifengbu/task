@@ -12,11 +12,13 @@ const {
     TouchableOpacity,
 } = ReactNative;
 
-const { Button, TaskStepList } = COMPONENTS;
+const { Button, TaskStepList, DImage } = COMPONENTS;
+const TaskContent = require('./TaskContent.js');
 
 module.exports = React.createClass({
     statics: {
         title: '任务详情',
+        tabIndex: 0,
     },
     getInitialState () {
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -31,72 +33,92 @@ module.exports = React.createClass({
             app.pop();
         }, true);
     },
+    changeTab (tabIndex) {
+        this.setState({ tabIndex });
+    },
     renderRow(obj, i, n) {
         return (
             <View style={styles.taskItem}>
-                <Text style={styles.taskTitle1}>细分任务{n*1+1}</Text>
-                <Text style={styles.taskTitle}>任务主题：</Text>
-                <Text style={styles.taskContext}>{obj.title}</Text>
-                <Text style={styles.taskTitle}>任务描述：</Text>
-                <Text style={styles.taskContext}>{obj.description}</Text>
-                <Text style={styles.taskTitle}>任务结束时间：</Text>
-                <Text style={styles.taskContext}>{obj.endTime}</Text>
-                <Text style={styles.taskTitle}>任务监督人：</Text>
-                <Text style={styles.taskContext}>{obj.supervisor}</Text>
-                <Text style={styles.taskTitle}>任务执行人：</Text>
-                <Text style={styles.taskContext}>{obj.executor}</Text>
-                <Text style={styles.taskTitle}>任务提醒设置：</Text>
-                <Text style={styles.taskContext}>{obj.remind}</Text>
-                <TaskStepList listData={obj.logsList}/>
+                <TaskContent data={this.props.data} n={n}/>
+                <TaskStepList listData={obj.logsList} />
             </View>
         )
     },
+
     render () {
+        const { tabIndex } = this.state;
+        const menuAdminArray = ['任务更新', '任务提醒', '结束任务'];
         const { dataSource } = this.state;
         const { title, description, taskList } = this.props.data;
         const obj = this.props.data;
         return (
-            taskList ?
-            <ScrollView style={styles.container}>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>{'任务主题'+':'}</Text>
-                    <Text style={styles.title}>{title}</Text>
-                </View>
-                <View style={styles.textStyle}>
-                    <Text style={styles.title}>{'任务描述'+':'}</Text>
-                    <Text style={styles.title}>{description}</Text>
-                </View>
-                <ListView
-                    initialListSize={1}
-                    enableEmptySections
-                    removeClippedSubviews={false}
-                    dataSource={dataSource}
-                    keyboardShouldPersistTaps="always"
-                    renderRow={this.renderRow}
-                    />
-                <View style={styles.emptyStyle}/>
+            <View style={styles.container}>
                 {
-                    obj.state === 2 &&
-                    <Button onPress={this.closeTask.bind(null, obj.id)} style={styles.btnLogin} textStyle={styles.btnLoginText}>关闭任务</Button>
+                    taskList ?
+                    <ScrollView style={styles.scrollContainer}>
+                        <DImage
+                            resizeMode='stretch'
+                            source={app.img.home_title_bg}
+                            style={styles.titleBgImage}>
+                            <Text style={styles.titleText}>{title}</Text>
+                            <View style={styles.rightTitleView}>
+                                <Text style={styles.rightTitleText}>{'剩余时间：'}</Text>
+                                <Text style={styles.numberText}>{'5'}</Text>
+                                <Text style={styles.rightTitleText}>{'天'}</Text>
+                            </View>
+                        </DImage>
+                        <ListView
+                            initialListSize={1}
+                            enableEmptySections
+                            removeClippedSubviews={false}
+                            dataSource={dataSource}
+                            keyboardShouldPersistTaps="always"
+                            renderRow={this.renderRow}
+                            />
+                        <View style={styles.emptyStyle}/>
+                        {
+                            obj.state === 2 &&
+                            <Button onPress={this.closeTask.bind(null, obj.id)} style={styles.btnLogin} textStyle={styles.btnLoginText}>关闭任务</Button>
+                        }
+                    </ScrollView>
+                    :
+                    <ScrollView style={[styles.taskItem, {backgroundColor: '#EEEEEE'}]}>
+                        <Text style={styles.taskTitle}>任务结束时间：</Text>
+                        <Text style={styles.taskContext}>{obj.endTime}</Text>
+                        <Text style={styles.taskTitle}>任务监督人：</Text>
+                        <Text style={styles.taskContext}>{obj.supervisor}</Text>
+                        <Text style={styles.taskTitle}>任务执行人：</Text>
+                        <Text style={styles.taskContext}>{obj.executor}</Text>
+                        <Text style={styles.taskTitle}>任务提醒设置：</Text>
+                        <Text style={styles.taskContext}>{obj.remind}</Text>
+                        <TaskStepList listData={obj.logsList}/>
+                        <View style={styles.emptyStyle}/>
+                        {
+                            obj.state === 2 &&
+                            <Button onPress={this.closeTask.bind(null, obj.id)} style={styles.btnLogin} textStyle={styles.btnLoginText}>关闭任务</Button>
+                        }
+                    </ScrollView>
                 }
-            </ScrollView>
-            :
-            <ScrollView style={[styles.taskItem, {backgroundColor: '#EEEEEE'}]}>
-                <Text style={styles.taskTitle}>任务结束时间：</Text>
-                <Text style={styles.taskContext}>{obj.endTime}</Text>
-                <Text style={styles.taskTitle}>任务监督人：</Text>
-                <Text style={styles.taskContext}>{obj.supervisor}</Text>
-                <Text style={styles.taskTitle}>任务执行人：</Text>
-                <Text style={styles.taskContext}>{obj.executor}</Text>
-                <Text style={styles.taskTitle}>任务提醒设置：</Text>
-                <Text style={styles.taskContext}>{obj.remind}</Text>
-                <TaskStepList listData={obj.logsList}/>
-                <View style={styles.emptyStyle}/>
-                {
-                    obj.state === 2 &&
-                    <Button onPress={this.closeTask.bind(null, obj.id)} style={styles.btnLogin} textStyle={styles.btnLoginText}>关闭任务</Button>
-                }
-            </ScrollView>
+                <View style={styles.bottomContainer}>
+                    {
+                        menuAdminArray.map((item, i) => {
+                            return (
+                                <TouchableOpacity
+                                    key={i}
+                                    underlayColor='rgba(0, 0, 0, 0)'
+                                    onPress={this.changeTab.bind(null, i)}
+                                    style={styles.touchTab}>
+                                    <View style={[styles.tabButton, {backgroundColor: tabIndex === i ? '#ea372f' : '#dcdcdc'}]}>
+                                        <Text style={[styles.tabText, { color: tabIndex === i ? '#FFFFFF' : '#000000', fontSize: 12 }]} >
+                                            {item}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        })
+                    }
+                </View>
+            </View>
         );
     },
 });
@@ -106,11 +128,70 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF',
     },
+    scrollContainer: {
+        flex: 1,
+        marginBottom: 40,
+    },
+    titleBgImage: {
+        width: sr.w,
+        height: 40,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    titleText: {
+        width: sr.w-140,
+        marginLeft: 10,
+        fontSize: 16,
+        color: '#FFFFFF',
+        fontFamily: 'STHeitiSC-Medium',
+        backgroundColor: 'transparent',
+    },
+    rightTitleView: {
+        flexDirection: 'row',
+        backgroundColor: 'transparent',
+        alignItems: 'center',
+        marginRight: 25,
+    },
+    rightTitleText: {
+        fontSize: 14,
+        color: '#fbeb34',
+    },
+    numberText: {
+        fontSize: 16,
+        color: '#fbeb34',
+        fontFamily: 'STHeitiSC-Medium',
+    },
+    bottomContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width:sr.w,
+        height: 40,
+        backgroundColor: '#dcdcdc',
+        flexDirection: 'row',
+    },
+    touchTab: {
+        flex: 1,
+        height: 40,
+        justifyContent: 'center',
+    },
+    tabButton: {
+        flex: 1,
+        height: 40,
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor: '#ea372f',
+    },
+    tabText: {
+        fontFamily: 'STHeitiSC-Medium',
+        backgroundColor: 'transparent',
+    },
+
+
+
     taskItem: {
         marginTop: 10,
-        backgroundColor: '#EEEEE0',
-        marginHorizontal: 10,
-        paddingVertical: 10,
     },
     taskTitle1: {
         fontSize: 18,

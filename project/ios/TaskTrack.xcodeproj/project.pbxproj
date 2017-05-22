@@ -57,6 +57,8 @@
 		32FC26E01E5D297600E67A5F /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FC26DF1E5D297600E67A5F /* CoreTelephony.framework */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		D2629A501ED2C4350052DD4F /* RCTUtilsModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D2629A4F1ED2C4350052DD4F /* RCTUtilsModule.m */; };
+		D2629A521ED2C6520052DD4F /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2629A511ED2C6520052DD4F /* LocalAuthentication.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -381,6 +383,8 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		D2629A4F1ED2C4350052DD4F /* RCTUtilsModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTUtilsModule.m; path = native/RCTUtilsModule.m; sourceTree = "<group>"; };
+		D2629A511ED2C6520052DD4F /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -388,6 +392,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2629A521ED2C6520052DD4F /* LocalAuthentication.framework in Frameworks */,
 				32FC26E01E5D297600E67A5F /* CoreTelephony.framework in Frameworks */,
 				32FC25DE1E5C6DAC00E67A5F /* libz.tbd in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -538,6 +543,7 @@
 		32FC24E01E5C58CE00E67A5F /* TaskTrack */ = {
 			isa = PBXGroup;
 			children = (
+				D2629A281ED2C4110052DD4F /* native */,
 				32FC24E11E5C58CE00E67A5F /* AppDelegate.h */,
 				32FC24E21E5C58CE00E67A5F /* AppDelegate.m */,
 				32FC24E31E5C58CE00E67A5F /* icons */,
@@ -676,6 +682,7 @@
 		370CAFAF19130A43A1EA4EF7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D2629A511ED2C6520052DD4F /* LocalAuthentication.framework */,
 				32FC26DF1E5D297600E67A5F /* CoreTelephony.framework */,
 				32FC25DD1E5C6DAC00E67A5F /* libz.tbd */,
 			);
@@ -751,6 +758,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D2629A281ED2C4110052DD4F /* native */ = {
+			isa = PBXGroup;
+			children = (
+				D2629A4F1ED2C4350052DD4F /* RCTUtilsModule.m */,
+			);
+			name = native;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -780,6 +795,11 @@
 			attributes = {
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = Facebook;
+				TargetAttributes = {
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 7F39YYNBU4;
+					};
+				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "TaskTrack" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1220,6 +1240,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2629A501ED2C4350052DD4F /* RCTUtilsModule.m in Sources */,
 				32FC250D1E5C58CE00E67A5F /* main.m in Sources */,
 				32FC24FC1E5C58CE00E67A5F /* AppDelegate.m in Sources */,
 			);
@@ -1233,13 +1254,15 @@
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7F39YYNBU4;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../App/node_modules/@remobile/react-native-splashscreen/ios/RCTSplashScreen",
 					"$(SRCROOT)/../App/node_modules/@remobile/react-native-update/ios/RCTUpdate",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
 				);
 				INFOPLIST_FILE = GHwgh/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1256,13 +1279,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7F39YYNBU4;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../App/node_modules/@remobile/react-native-splashscreen/ios/RCTSplashScreen",
 					"$(SRCROOT)/../App/node_modules/@remobile/react-native-update/ios/RCTUpdate",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
 				);
 				INFOPLIST_FILE = GHwgh/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

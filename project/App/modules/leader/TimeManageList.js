@@ -12,6 +12,7 @@ const {
 
 const TaskSupervision = require('./TaskSupervision.js');
 const RecordItemView = require('./RecordItemView.js');
+const InputBoxAlert = require('./InputBoxAlert.js');
 
 module.exports = React.createClass({
     getInitialState () {
@@ -21,7 +22,7 @@ module.exports = React.createClass({
                 'isOver': 0,
         },{
                 'time':'12:00',
-                'content':'你想要。。。。。吃饭吗。。你想要。。。。。吃饭吗。。你想要。。。。。吃饭吗。。',
+                'content':'你想要。。。。。吃饭吗。。你想要。。。。。吃饭吗。。',
                 'isOver': 1,
         },];
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -29,22 +30,26 @@ module.exports = React.createClass({
             dataSource: this.ds.cloneWithRows(this.timeList),
         };
     },
-    componentWillMount () {
+    doComplete() {
+        console.log('-------');
     },
-    onPress(data) {
-        app.navigator.push({
-            component: TaskSupervision,
-            passProps: {data}
-        });
-    },
-    addTimeItem() {
+    doDelete() {
 
     },
-    componentDidMount () {
-        // const param = {
-        //     userID: app.personal.info.userID,
-        // };
-        // POST(app.route.GET_TASK_LIST_RQ, param, this.GET_TASK_LIST_RQSuccess.bind(null, this.state.currentProblemID), true);
+    doSave(context) {
+        console.log('=context==',context);
+    },
+    setAlert() {
+    },
+    doUpdate() {
+        app.showModal(
+            <InputBoxAlert doDelete={this.doDelete} doConfirm={this.doSave} setAlert={this.setAlert}/>
+        );
+    },
+    addTimeItem() {
+        app.showModal(
+            <InputBoxAlert doDelete={this.doDelete} doConfirm={this.doSave} setAlert={this.setAlert}/>
+        );
     },
     renderSeparator (sectionID, rowID) {
         return (
@@ -58,6 +63,8 @@ module.exports = React.createClass({
             <RecordItemView
                 rowHeight={8}
                 data={obj}
+                onPress={this.doUpdate}
+                doComplete={this.doComplete}
                 />
         );
     },

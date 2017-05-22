@@ -14,7 +14,7 @@ const {
 } = ReactNative;
 
 const moment = require('moment');
-const RecordItemView = require('./RecordItemView.js');
+const RemindItemView = require('./RemindItemView.js');
 
 const { Picker, Button, DImage } = COMPONENTS;
 
@@ -22,36 +22,43 @@ module.exports = React.createClass({
     statics: {
         color: '#FFFFFF',
         title: '提醒设置',
+        rightButton: { title: '完成', delayTime:1, handler: () => { app.scene.updateRemind(); } },
     },
     getInitialState () {
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
+            customRemindList: [],
+            remindList: [],
+            customRemindIsOver: false,
             startTime: moment(),
-            remindList:[{'content':'每天8:00提醒', 'isOver': 0}, {'content':'每天中午12点提醒', 'isOver': 1}, {'content':'任务结束前1小时提醒', 'isOver': 1}],
+            defaultRemindList:[{'id': '1', 'content':'每天8:00提醒', 'isOver': 0}, {'id': '2', 'content':'每天中午12点提醒', 'isOver': 0}, {'id': '3', 'content':'任务结束前1小时提醒', 'isOver': 1}],
         };
     },
-    // 标记完成实际完成的事
-    doActuallyComplete (currentActuallyID) {
-        // const param = {
-        //     userID: app.personal.info.userID,
-        //     id: currentActuallyID,
-        // };
-        // POST(app.route.ROUTE_FINISH_ACTUAL_COMPLETE_WORK, param, this.doActuallyCompleteSuccess.bind(null, currentActuallyID), true);
-        // this.doActuallyCompleteSuccess();
+    updateRemind () {
+        Picker.hide();
+        let {remindList, customRemindIsOver, startTime, defaultRemindList} = this.state;
+        if (customRemindIsOver) {
+            remindList.push(moment(startTime).format('YYYY年MM月DD日 HH时mm分'));
+        }
+        _.forEach(defaultRemindList, (item) => {
+            if (item.isOver) {
+                remindList.push(item.content);
+            }
+        });
+        this.props.doRefresh(this.state.remindList);
+        app.navigator.pop();
     },
-    doActuallyCompleteSuccess (id, data) {
-        // if (data.success) {
-        //     const { remindList } = this.state;
-        //     const planInfo = _.find(remindList, (item) => item.id == id);
-        //     if (planInfo) {
-        //         console.log(id);
-        //         planInfo.isOver = 1;
-        //         this.setState({ remindList });
-        //         this.setDayActually();
-        //     }
-        // } else {
-        //     Toast(data.msg);
-        // }
+    doActuallyComplete (currentID) {
+        let {defaultRemindList} = this.state;
+        const remindInfo = _.find(this.state.defaultRemindList, (item) => item.id == currentID);
+        if (remindInfo) {
+            if (remindInfo.isOver) {
+                remindInfo.isOver = 0;
+            } else {
+                remindInfo.isOver = 1;
+            }
+        }
+        this.setState({defaultRemindList: defaultRemindList});
     },
     renderSeparator (sectionID, rowID) {
         return (
@@ -60,7 +67,7 @@ module.exports = React.createClass({
     },
     renderRowDayCommplete (obj) {
         return (
-            <RecordItemView
+            <RemindItemView
                 data={obj}
                 rowHeight={10}
                 doComplete={this.doActuallyComplete.bind(null, obj.id)}
@@ -125,6 +132,9 @@ module.exports = React.createClass({
     getTimeText (date) {
         return moment(date).format('HH时mm分');
     },
+    doChoose() {
+        this.setState({customRemindIsOver: !this.state.customRemindIsOver});
+    },
     render () {
         const {startTime} = this.state;
         return (
@@ -138,7 +148,7 @@ module.exports = React.createClass({
                 <ListView
                     style={styles.list}
                     enableEmptySections
-                    dataSource={this.ds.cloneWithRows(this.state.remindList)}
+                    dataSource={this.ds.cloneWithRows(this.state.defaultRemindList)}
                     renderRow={this.renderRowDayCommplete}
                     renderSeparator={this.renderSeparator}
                     />
@@ -149,7 +159,6 @@ module.exports = React.createClass({
                     <Text style={styles.titleText}>{'在指定日期提醒我'}</Text>
                 </DImage>
                 <View style={styles.chooseContainer}>
-                    <Text style={styles.menuText}>选择时间:</Text>
                     <View style={styles.updownlside}>
                         <TouchableOpacity
                             activeOpacity={0.5}
@@ -172,6 +181,14 @@ module.exports = React.createClass({
                             <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
                         </TouchableOpacity>
                     </View>
+                    <TouchableOpacity
+                        onPress={this.doChoose}
+                        style={styles.btnStyle}>
+                        <Image
+                            resizeMode='contain'
+                            source={this.state.customRemindIsOver?app.img.leader_item_over:app.img.leader_item_notOver}
+                            style={styles.iconStyle} />
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         );
@@ -209,6 +226,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         flexDirection: 'row',
         alignItems:'center',
+        justifyContent: 'space-between',
     },
     menuText: {
         color: 'black',
@@ -237,5 +255,16 @@ const styles = StyleSheet.create({
     downCheckImage: {
         width: 21,
         height: 12,
+    },
+    btnStyle: {
+        width: 40,
+        height: 22,
+        marginRight: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    iconStyle: {
+        width: 18,
+        height: 18,
     },
 });

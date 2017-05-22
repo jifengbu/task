@@ -33,6 +33,7 @@ module.exports = React.createClass({
             endTime: moment(),
             supervisor: '李经理',
             executor: '李敏镐',
+            remindList: [],
             overlayShowLongPressMessageBox: false,
             overlayShowMessageBox: false,
         };
@@ -187,10 +188,15 @@ module.exports = React.createClass({
     goRemindSetting() {
         app.navigator.push({
             component: RemindSetting,
+            passProps:{ doRefresh:this.doRefreshRemind },
         })
     },
+    doRefreshRemind(obj) {
+        const { remindList } = this.state;
+        this.setState({ remindList: obj});
+    },
     render () {
-        const {startTime, endTime} = this.state;
+        const {startTime, endTime, remindList} = this.state;
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
@@ -331,14 +337,20 @@ module.exports = React.createClass({
                             <Button onPress={this.goRemindSetting} style={styles.btnSet} textStyle={styles.btnSetText}>{'点击设置'}</Button>
                         </View>
                         <View style={styles.divisionLine}/>
-                        <View style={styles.remindItem}>
-                            <DImage
-                                resizeMode='stretch'
-                                source={app.img.home_remind_check}
-                                style={styles.checkImage} />
-                            <Text style={styles.remindItemTitle}>{'每天08:30提醒一次'}</Text>
-                        </View>
-                        <View style={styles.divisionLine}/>
+                        {
+                            remindList.map((item, i) => {
+                                return (
+                                    <View key={i} style={styles.remindItem}>
+                                        <DImage
+                                            resizeMode='stretch'
+                                            source={app.img.home_remind_check}
+                                            style={styles.checkImage} />
+                                        <Text style={styles.remindItemTitle}>{item}</Text>
+                                    </View>
+                                );
+                            })
+                        }
+                        <View style={[styles.divisionLine, {marginTop: 5}]}/>
                     </View>
                     <View style={styles.imageUpLoadContainer}>
                         <View style={styles.remindTitleLeftView}>
@@ -583,7 +595,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         marginLeft: 10,
-        marginTop: 10,
     },
     clockImage: {
         width: 25,
@@ -611,7 +622,7 @@ const styles = StyleSheet.create({
     remindItem: {
         alignItems: 'center',
         flexDirection: 'row',
-        marginVertical: 10,
+        marginTop: 5,
         marginLeft: 20,
     },
     checkImage: {
@@ -625,6 +636,7 @@ const styles = StyleSheet.create({
     },
     imageUpLoadContainer: {
         width: sr.w,
+        marginTop: 10,
     },
     imageStyleView: {
         height: 134,

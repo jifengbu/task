@@ -8,6 +8,7 @@ const {
     StyleSheet,
     TextInput,
     View,
+    Switch,
     TouchableOpacity,
     ScrollView,
     LayoutAnimation,
@@ -97,6 +98,7 @@ module.exports = React.createClass({
             showSuccessToast: false,
             overlayShow: false,
             isEditStatus: false,
+            value: true,
         }, this.getStateFromPersonalInfo());
     },
     onWillHide() {
@@ -238,6 +240,12 @@ module.exports = React.createClass({
             component: EditPassWord,
         });
     },
+    editFingerPrint() {
+        //跳转到录指纹
+        // app.navigator.push({
+        //     component: EditPassWord,
+        // });
+    },
     render () {
         return (
             <View style={{ flex: 1 }}>
@@ -324,10 +332,34 @@ module.exports = React.createClass({
                                 <Text style={styles.contentText}>
                                     {'点击修改密码'}
                                 </Text>
-                                <Image
-                                    resizeMode='contain'
-                                    source={app.img.common_go}
-                                    style={styles.goIcon} />
+                                {
+                                    this.state.isEditStatus &&
+                                    <Image
+                                        resizeMode='contain'
+                                        source={app.img.common_go}
+                                        style={styles.goIcon} />
+                                }
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.lowSeprator} />
+                    <TouchableOpacity
+                        activeOpacity={DEFAULT_OPACITY}
+                        onPress={this.editFingerPrint}>
+                        <View style={styles.itemBgStyle}>
+                            <Text style={styles.headText}>指纹登陆</Text>
+                            <View style={styles.itemView}>
+                                <Text style={styles.contentSwitch}>
+                                    {'点击修改指纹'}
+                                </Text>
+                                {
+                                    this.state.isEditStatus &&
+                                    <Switch
+                                        onValueChange={(value) =>this.setState({value})}
+                                        onTintColor={'#f03b0a'}
+                                        value={this.state.value}
+                                        style={styles.goSwitch} />
+                                }
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -375,7 +407,6 @@ const styles = StyleSheet.create({
         width: 74,
         fontSize: 16,
         marginLeft: 33,
-        fontFamily: 'STHeitiSC-Medium',
         color: '#747474',
         alignSelf : 'center',
     },
@@ -383,7 +414,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 20,
         width: 217,
-        fontFamily: 'STHeitiSC-Medium',
+        color: '#BABABA',
+        alignSelf : 'center',
+    },
+    contentSwitch: {
+        fontSize: 16,
+        marginLeft: 20,
+        width: 180,
         color: '#BABABA',
         alignSelf : 'center',
     },
@@ -398,7 +435,6 @@ const styles = StyleSheet.create({
         height: 40,
         width: 233,
         fontSize: 16,
-        fontFamily: 'STHeitiSC-Medium',
         marginLeft: 20,
         paddingLeft: 0,
         color: '#BABABA',
@@ -421,6 +457,9 @@ const styles = StyleSheet.create({
     goIcon: {
         width: 16,
         height: 16,
+        backgroundColor: 'white',
+    },
+    goSwitch: {
         backgroundColor: 'white',
     },
     successToastContainer: {

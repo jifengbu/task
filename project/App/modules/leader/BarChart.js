@@ -14,7 +14,17 @@ module.exports = React.createClass({
     render () {
         const data = this.props.data;
         const date = this.props.date;
+        const title = this.props.title;
         const option = {
+            title : {
+                text: title,
+                x:'center',
+                y: 5,
+                textStyle: {
+                    color: '#f03b0a',
+                    fontSize: 12,
+                }
+            },
             grid: {
                 left: '5%',
                 right: '6%',
@@ -22,7 +32,7 @@ module.exports = React.createClass({
                 containLabel: true,
             },
             xAxis: {
-                data: ['11', '22', '33', '44', '55'],
+                data: [1,2,3,4],
                 axisLine:{
                     lineStyle:{
                         color:'#DDDDDD',
@@ -50,7 +60,8 @@ module.exports = React.createClass({
             series: [{
                 name: '销量',
                 type: 'bar',
-                data: [1,2,3,4,5],
+                barWidth: '40%',
+                data: ['11', '22', '33', '44'],
                 itemStyle: {
                     normal: {
                         color:'#F8BDAD',
@@ -77,7 +88,7 @@ module.exports = React.createClass({
             }],
         };
         return (
-            <Echarts option={option} height={270} />
+            <Echarts option={option} height={220} />
         );
     },
 });

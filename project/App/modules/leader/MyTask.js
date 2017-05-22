@@ -11,6 +11,8 @@ const {
 } = ReactNative;
 
 const TaskList = require('./TaskList.js');
+const Statistics = require('./Statistics.js');
+const TimeManageList = require('./TimeManageList.js');
 const { DImage } = COMPONENTS;
 
 module.exports = React.createClass({
@@ -76,7 +78,20 @@ module.exports = React.createClass({
                 </View>
                 <View style={styles.listStyle}>
                     {
+                        this.state.tabIndex ===0&&
                         <TaskList />
+                    }
+                    {
+                        this.state.tabIndex ===2&&
+                        <TaskList />
+                    }
+                    {
+                        this.state.tabIndex ===3&&
+                        <Statistics />
+                    }
+                    {
+                        this.state.tabIndex ===1&&
+                        <TimeManageList />
                     }
                 </View>
             </View>

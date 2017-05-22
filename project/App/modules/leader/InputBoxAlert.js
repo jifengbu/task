@@ -37,7 +37,7 @@ module.exports = React.createClass({
             Toast('内容为空');
             return;
         }
-        this.props.doConfirm(contitle, context);
+        this.props.doConfirm(context);
         app.closeModal();
     },
     doDelete () {

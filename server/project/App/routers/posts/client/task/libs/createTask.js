@@ -2,6 +2,7 @@ import { TaskModel, MediaModel } from '../../../../../models';
 import { getMediaId } from '../../../../../utils';
 
 export default async ({
+    groupId,
     publisherId,
     examinerId,
     executorId,
@@ -24,8 +25,8 @@ export default async ({
     if (imageList) {
         _imageList = imageList.map((item) => { return getMediaId(item) });
     }
-
     const doc = new TaskModel({
+        groupId,
         publisherId,
         examinerId,
         executorId,
