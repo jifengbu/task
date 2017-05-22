@@ -42,8 +42,8 @@ until(
                 audioList: [{url: files['star'], duration: 10}],
                 imageList: [files['cargo']],
                 type: 1,
-                needStartTime: '2017-05-15 03:00:00',
-                needEndTime: '2017-05-16 03:00:00',
+                expectStartTime: '2017-05-15 03:00:00',
+                expectFinishTime: '2017-05-16 03:00:00',
             }]
         };
 

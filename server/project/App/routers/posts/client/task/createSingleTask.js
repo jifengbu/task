@@ -11,8 +11,8 @@ export default async ({
     imageList,
     remindList,
     type,
-    needStartTime,
-    needEndTime,
+    expectStartTime,
+    expectFinishTime,
 }) => {
     const publishTime = Date.now();
     const taskId = await createTask({
@@ -24,15 +24,15 @@ export default async ({
         imageList,
         remindList,
         type,
-        needStartTime,
-        needEndTime,
+        expectStartTime,
+        expectFinishTime,
         publishTime,
     });
     const doc = new TaskGroupModel({
         publisherId: userId,
         taskList: [ taskId ],
-        needStartTime,
-        needEndTime,
+        expectStartTime,
+        expectFinishTime,
         publishTime,
     });
     await doc.save();

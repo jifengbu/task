@@ -2,8 +2,6 @@ import { TaskModel, MediaModel } from '../../../../models';
 import { getMediaId } from '../../../../utils';
 
 export default async ({
-    publisherId,
-    examinerId,
     executorId,
     supervisorId,
     title,
@@ -12,8 +10,8 @@ export default async ({
     imageList,
     remindList,
     type,
-    needStartTime,
-    needEndTime,
+    expectStartTime,
+    expectFinishTime,
 }) => {
     let _audioList = [];
     if (audioList) {
@@ -25,8 +23,6 @@ export default async ({
     }
 
     const doc = new TaskModel({
-        publisherId,
-        examinerId,
         executorId,
         supervisorId,
         title,
@@ -35,8 +31,8 @@ export default async ({
         imageList: _imageList,
         remindList,
         type,
-        needStartTime,
-        needEndTime,
+        expectStartTime,
+        expectFinishTime,
     });
     await doc.save();
     MediaModel._updateRef(

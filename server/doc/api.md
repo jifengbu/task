@@ -123,67 +123,6 @@
 }
 ```
 
-### 6. [创建任务](#目录)
-- `createTask`
-- 请求方式：`POST`
-
-| 参数名称 | 参数类型  | 描述 |
-| :- |:-:| :-:|
-| userId | String | 用户Id |
-| supervisorId | String | 监督人Id |
-| executorId | String | 执行人Id |
-| title | String | 标题 |
-| content | String | 内容 |
-| audioList | Array | 音频列表 |
-| imageList | Array | 图片列表 |
-| type | Number | 任务类型(0：一般任务， 1：紧急任务，2：加急任务) |
-| startTime | String | 开始时间 |
-| endTime | String | 结束时间 |
-| remindId | String | 提醒Id |
-
-```js
-{
-    "success": true,
-}
-```
-
-### 7. [修改任务](#目录)
-- `modifyTask`
-- 请求方式：`POST`
-
-| 参数名称 | 参数类型  | 描述 |
-| :- |:-:| :-:|
-| userId | String | 用户Id |
-| supervisorId | String | 监督人Id |
-| executorId | String | 执行人Id |
-| title | String | 标题 |
-| content | String | 内容 |
-| audioList | Array | 音频列表 |
-| imageList | Array | 图片列表 |
-| type | Number | 任务类型(0：一般任务， 1：紧急任务，2：加急任务) |
-| startTime | String | 开始时间 |
-| endTime | String | 结束时间 |
-| remindId | String | 提醒Id |
-
-```js
-{
-    "success": true,
-}
-```
-
-
-### 8. [删除任务](#目录)
-- `removeTask`
-- 请求方式：`POST`
-
-| 参数名称 | 参数类型  | 描述 |
-| taskId | String | 任务Id |
-
-```js
-{
-    "success": true,
-}
-```
 
 ### 9. [获取用户列表](#目录)
 - `getClientList`
@@ -269,6 +208,118 @@
     }
 }
 ```
+
+### 6. [创建单一任务](#目录)
+- `createSingleTask`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| userId | String | 用户Id |
+| executorId | String | 执行人Id |
+| supervisorId | String | 监督人Id |
+| title | String | 标题 |
+| content | String | 内容 |
+| audioList | Array | 音频列表 |
+| imageList | Array | 图片列表 |
+| remindList | Array | 提醒列表 |
+| type | Number | 任务类型(0：一般任务， 1：紧急任务，2：加急任务) |
+| expectStartTime | String | 期望开始时间 |
+| expectFinishTime | String | 期望结束时间 |
+###### audioList 格式：
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| url | String | 上传音频文件返回的url |
+| duration | Number | 音频文件的时长 |
+###### remindList 格式：
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| info | String | 提醒的内容 |
+| time | String | 提醒的时间 |
+```js
+{
+    "success": true,
+}
+```
+
+### 6. [创建综合任务](#目录)
+- `createGroupTask`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| userId | String | 用户Id |
+| examinerId | String | 审核人Id |
+| title | String | 标题 |
+| content | String | 内容 |
+| taskList | Array | 任务列表 |
+###### taskList 格式：
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| executorId | String | 执行人Id |
+| supervisorId | String | 监督人Id |
+| title | String | 标题 |
+| content | String | 内容 |
+| audioList | Array | 音频列表 |
+| imageList | Array | 图片列表 |
+| remindList | Array | 提醒列表 |
+| type | Number | 任务类型(0：一般任务， 1：紧急任务，2：加急任务) |
+| expectStartTime | String | 期望开始时间 |
+| expectFinishTime | String | 期望结束时间 |
+###### audioList 格式：
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| url | String | 上传音频文件返回的url |
+| duration | Number | 音频文件的时长 |
+###### remindList 格式：
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| info | String | 提醒的内容 |
+| time | String | 提醒的时间 |
+```js
+{
+    "success": true,
+}
+```
+
+### 7. [修改任务](#目录)
+- `modifyTask`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| userId | String | 用户Id |
+| supervisorId | String | 监督人Id |
+| executorId | String | 执行人Id |
+| title | String | 标题 |
+| content | String | 内容 |
+| audioList | Array | 音频列表 |
+| imageList | Array | 图片列表 |
+| type | Number | 任务类型(0：一般任务， 1：紧急任务，2：加急任务) |
+| startTime | String | 开始时间 |
+| endTime | String | 结束时间 |
+| remindId | String | 提醒Id |
+
+```js
+{
+    "success": true,
+}
+```
+
+
+### 8. [删除任务](#目录)
+- `removeTask`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| taskId | String | 任务Id |
+
+```js
+{
+    "success": true,
+}
+```
+
 
 ### 11. [获取任务列表](#目录)
 - `getTaskList`

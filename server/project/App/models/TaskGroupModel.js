@@ -12,8 +12,8 @@ const taskGroupSchema = new mongoose.Schema({
 
     state: { type: Number, default: 1 }, // 任务状态，是子任务的状态组合
 
-    needStartTime: { type: Date, default: Date.now }, // 需要任务开始时间（子任务的最小开始时间）
-    needEndTime: { type: Date, default: Date.now }, // 需要任务结束时间（子任务的最大结束时间）
+    expectStartTime: { type: Date, default: Date.now }, // 需要任务开始时间（子任务的最小开始时间）
+    expectFinishTime: { type: Date, default: Date.now }, // 需要任务结束时间（子任务的最大结束时间）
     publishTime: { type: Date, default: Date.now }, // 任务发布时间
 });
 
@@ -24,7 +24,7 @@ taskGroupSchema.virtual('id').get(function () {
 const transform = {
     virtuals: true,
     transform: function (doc, ret, options) {
-        formatTime(ret, 'needStartTime', 'needEndTime', 'publishTime');
+        formatTime(ret, 'expectStartTime', 'expectFinishTime', 'publishTime');
         delete ret._id;
         delete ret.__v;
         return ret;

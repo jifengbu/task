@@ -15,8 +15,8 @@ const taskSchema = new mongoose.Schema({
     type:  { type: Number, default: 0 }, // 任务类型，0：一般任务， 1：紧急任务，2：加急任务 (只对单一任务有效)
     state: { type: Number, default: 1 }, // 任务状态，2^0：待审批，2^1：驳回审批，2^2：待重新审批，2^3：待执行， 2^4：进行中，2^5：待完成审核，2^6：驳回完成审核，2^7：待重新完成审核，2^8：完成
 
-    needStartTime: { type: Date, default: Date.now }, // 需要开始时间
-    needEndTime: { type: Date, default: Date.now }, // 需要结束时间
+    expectStartTime: { type: Date, default: Date.now }, // 需要开始时间
+    expectFinishTime: { type: Date, default: Date.now }, // 需要结束时间
 
     publishTime: { type: Date, default: Date.now }, // 任务发布时间（包括重新提交审核）
     examineTime: { type: Date, default: Date.now }, // 审核时间（包括驳回审批）
@@ -34,7 +34,7 @@ taskSchema.virtual('id').get(function () {
 const transform = {
     virtuals: true,
     transform: function (doc, ret, options) {
-        formatTime(ret, 'needStartTime', 'needEndTime', 'publishTime', 'examineTime', 'startExecTime', 'modifyTime', 'applyFinishTime', 'examineFinishTime');
+        formatTime(ret, 'expectStartTime', 'expectFinishTime', 'publishTime', 'examineTime', 'startExecTime', 'modifyTime', 'applyFinishTime', 'examineFinishTime');
         ret.audioList  && (ret.audioList = ret.audioList.map((o) => getMediaPath(o)));
         ret.imageList  && (ret.imageList = ret.imageList.map((o) => getMediaPath(o)));
         delete ret._id;

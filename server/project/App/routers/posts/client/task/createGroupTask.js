@@ -11,8 +11,8 @@ export default async ({
 }) => {
     const publishTime = Date.now();
     const taskIdList = [];
-    const needStartTime = _.minBy(taskList, (o)=>o.needStartTime).needStartTime;
-    const needEndTime = _.maxBy(taskList, (o)=>o.needEndTime).needEndTime;
+    const expectStartTime = _.minBy(taskList, (o)=>o.expectStartTime).expectStartTime;
+    const expectFinishTime = _.maxBy(taskList, (o)=>o.expectFinishTime).expectFinishTime;
 
     for (const item of taskList) {
         let taskId = await createTask({...item, publishTime});
@@ -22,8 +22,8 @@ export default async ({
         publisherId: userId,
         examinerId,
         taskList: taskIdList,
-        needStartTime,
-        needEndTime,
+        expectStartTime,
+        expectFinishTime,
         publishTime: publishTime,
     });
     await doc.save();
