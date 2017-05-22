@@ -1,7 +1,6 @@
-import { Schema, model } from 'mongoose';
-import { formatTime, getMediaPath } from '../utils';
+import mongoose from 'mongoose';
 
-const schema = new Schema({
+const schema = new mongoose.Schema({
     key: { type: String }, // key
     name: { type: String }, // 标题
 });
@@ -21,4 +20,4 @@ const transform = {
 schema.options.toJSON = transform;
 schema.options.toObject = transform;
 
-export default model('TaskGroup', schema);
+export default mongoose.model('TaskType', schema);
