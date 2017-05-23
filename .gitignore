@@ -15,8 +15,7 @@ node_modules
 /**/public
 /**/.gradle
 /resource
-/server/doc
-!/server/doc/api.md
+/server/doc/github
 /效果图
 download
 *.idea
