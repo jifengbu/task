@@ -372,6 +372,7 @@
                 "content": "认真测试",
                 "modifyTime": "2017-05-23 08:44:58",
                 "expectFinishTime": "2017-05-16 03:00:00",
+                "type": 1,
                 "id": "5923860a5c1070c1e96defd2"
             }
         ]
@@ -664,9 +665,24 @@
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
 | userId | String | 用户Id |
-| time | String | 日程时间 |
 | content | String | 日程内容 |
-| state | String | 日程状态 |
+
+```js
+{
+    "success": true,
+}
+```
+
+---
+
+### 24. [完成日程](#24-创建日程createschedule)
+- `finishSchedule`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| userId | String | 用户Id |
+| scheduleId | String | 日程Id |
 
 ```js
 {
@@ -682,10 +698,9 @@
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| id | String | 日程Id |
-| time | String | 日程时间 |
+| userId | String | 用户Id |
+| scheduleId | String | 日程Id |
 | content | String | 日程内容 |
-| state | String | 日程状态 |
 
 ```js
 {
@@ -701,7 +716,8 @@
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| id | String | 日程Id |
+| userId | String | 用户Id |
+| scheduleId | String | 日程Id |
 
 ```js
 {
@@ -719,8 +735,6 @@
 | :- |:-:| :-:|
 | userId | String | 用户Id |
 | time | String | 日程时间 |
-| content | String | 日程内容 |
-| state | String | 日程状态 |
 
 ```js
 {
@@ -728,10 +742,9 @@
     "context": {
         "scheduleList": [
             {
-                "id":"123",
-                "time":"8:00",
-                "content":"要干嘛",
-                "state":1
+                "content": "测试日程",
+                "state": 0,
+                "id": "59225114d4118c3a27ff4a5d"
             }
         ]
     }

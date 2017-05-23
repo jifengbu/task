@@ -33,7 +33,7 @@ until(
         var param = {
             userId,
             taskId: args[0],
-            title: '测试任务1',
+            title: '测试任务2',
             content: '认真测试1',
             audioList: [{url: files['star'], duration: 100}],
             imageList: [files['cargo']],

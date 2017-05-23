@@ -36,7 +36,6 @@ export default async ({
         expectFinishTime,
         modifyTime,
     }));
-
     if (doc) {
         MediaModel._updateRef(
             ...(audioList ? _audioList : []).map((item) => ({ [item.url]: 1 })),

@@ -5,7 +5,7 @@ export default async ({
     scheduleId,
     content,
 }) => {
-    const doc = await ScheduleModel.findByIdAndUpdate(scheduleId, { content });
+    const doc = await ScheduleModel.findByIdAndUpdate(scheduleId, { content, modifyTime: Date.now() });
     if (!doc) {
         return { success: false, msg: '修改失败' };
     }

@@ -8,6 +8,7 @@ export default async ({ userId, type, keyword, pageNo, pageSize }) => {
     .select({
         title: 1,
         content: 1,
+        type: 1,
         modifyTime: 1,
         expectFinishTime: 1,
     });
