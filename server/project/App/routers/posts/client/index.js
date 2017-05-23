@@ -27,12 +27,17 @@ export rejectPublishTask from './task/leader/rejectPublishTask'; // 不同意发
 export secretaryCreateTask from './task/secretary/secretaryCreateTask'; // 秘书创建任务
 export secretaryGetRejectPublishTaskList from './task/secretary/secretaryGetRejectPublishTaskList'; // 获取打回任务列表
 
-
 // schedule
 export createSchedule from './schedule/createSchedule'; // 创建日程
 export modifySchedule from './schedule/modifySchedule'; // 修改日程
 export removeSchedule from './schedule/removeSchedule'; // 删除日程
 export getScheduleList from './schedule/getScheduleList'; // 获取日程列表
+export finishSchedule from './schedule/finishSchedule'; // 完成日程
+
+//progress
+export getTaskProgressList from './progress/getTaskProgressList'; // 获取任务进度列表
+export remaindTask from './progress/remaindTask'; // 提醒任务
+export updateTaskProgress from './progress/updateTaskProgress'; // 更新任务进度
 
 //client
 export getClientList from './client/getClientList'; // 获取用户列表
