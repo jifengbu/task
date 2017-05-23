@@ -1,5 +1,5 @@
-import { TaskGroupModel } from '../../../../../models';
-import createTask from '../libs/createTask';
+import { TaskGroupModel } from '../../../../models';
+import createTask from './libs/createTask';
 
 export default async ({
     userId,

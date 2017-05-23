@@ -7,7 +7,7 @@ export getPersonalInfo from './common/getPersonalInfo';// 获取个人信息
 export modifyPersonalInfo from './common/modifyPersonalInfo'; // 修改个人信息
 export submitFeedback from './common/submitFeedback'; // 提交反馈意见
 
-
+//task
 export getTaskTypeList from './task/getTaskTypeList'; // 获取任务类型列表
 export getTaskListByType from './task/getTaskListByType'; // 通过任务类型获取列表
 export getMostCaredTaskList from './task/getMostCaredTaskList'; // 获取最关心任务列表
@@ -17,15 +17,13 @@ export modifyGroupTask from './task/modifyGroupTask'; // 修改群组任务
 export modifyTask from './task/modifyTask'; // 修改单一任务
 export removeGroupTask from './task/removeGroupTask'; // 删除群组任务
 export removeTask from './task/removeTask'; // 删除单一任务
-// 领导端
-export leaderCreateTask from './task/leader/leaderCreateTask'; // 领导创建任务
-export getToExamineTaskList from './task/leader/getToExamineTaskList'; // 获取待审核的任务列表
-export leaderGetRejectPublishTaskList from './task/leader/leaderGetRejectPublishTaskList'; // 获取打回任务列表
-export agreePublishTask from './task/leader/agreePublishTask'; // 同意发布任务
-export rejectPublishTask from './task/leader/rejectPublishTask'; // 不同意发布任务
-// 秘书端
-export secretaryCreateTask from './task/secretary/secretaryCreateTask'; // 秘书创建任务
-export secretaryGetRejectPublishTaskList from './task/secretary/secretaryGetRejectPublishTaskList'; // 获取打回任务列表
+
+export leaderCreateTask from './task/leaderCreateTask'; // 领导创建任务
+export secretaryCreateTask from './task/secretaryCreateTask'; // 秘书创建任务
+export getToExamineTaskList from './task/getToExamineTaskList'; // 获取待审核的任务列表
+export agreePublishTask from './task/agreePublishTask'; // 同意发布任务
+export rejectPublishTask from './task/rejectPublishTask'; // 不同意发布任务
+export getRejectPublishTaskList from './task/getRejectPublishTaskList'; // 获取打回任务列表
 
 // schedule
 export createSchedule from './schedule/createSchedule'; // 创建日程

@@ -1,6 +1,6 @@
-import { TaskGroupModel } from '../../../../../models';
+import { TaskGroupModel } from '../../../../models';
 import _ from 'lodash';
-import createTask from '../libs/createTask';
+import createTask from './libs/createTask';
 
 export default async ({
     userId,

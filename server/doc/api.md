@@ -384,6 +384,38 @@
 
 ---
 
+### 12. [获取打回申请发布任务列表](#12-根据类型获取的任务列表gettasklistbytype)
+- `getRejectPublishTaskList`
+- 请求方式：`POST`
+
+| 参数名称 | 参数类型  | 描述 |
+| :- |:-:| :-:|
+| userId | ID | 用户Id |
+| isLeader | Boolean | 是否是领导端 |
+| pageNo | Number | 页号 |
+| pageSize | Number | 每页数量 |
+
+```js
+{
+    "success": true,
+    "context": {
+        "taskList": [
+            {
+                "title": "测试任务",
+                "content": "认真测试",
+                "modifyTime": "2017-05-23 08:44:58",
+                "expectFinishTime": "2017-05-16 03:00:00",
+                "rejectPublishReason": "不合格",
+                "type": 1,
+                "id": "5923860a5c1070c1e96defd2"
+            }
+        ]
+    }
+}
+```
+
+---
+
 ### 13. [获取单一任务的详情](#13-获取单一任务的详情getsingletaskdetail)
 - `getSingleTaskDetail`
 - 请求方式：`POST`
@@ -574,7 +606,7 @@
 
 ---
 
-### 19. [打回任务](#19-打回任务rejectpublishtask)
+### 19. [打回申请发布任务](#19-打回任务rejectpublishtask)
 - `rejectPublishTask`
 - 请求方式：`POST`
 

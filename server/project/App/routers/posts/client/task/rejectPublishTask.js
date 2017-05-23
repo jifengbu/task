@@ -1,8 +1,8 @@
-import { TaskGroupModel, TaskModel } from '../../../../../models';
+import { TaskGroupModel, TaskModel } from '../../../../models';
 import _ from 'lodash';
 
-export default async ({ userId, taskId }) => {
-    const doc = await TaskModel.findByIdAndUpdate(taskId, {state: 4});
+export default async ({ userId, taskId, reason }) => {
+    const doc = await TaskModel.findByIdAndUpdate(taskId, {state: 4, rejectPublishReason: reason});
     const taskGroup = await TaskGroupModel.findById(doc.groupId)
     .select({
         taskList: 1,
@@ -14,6 +14,6 @@ export default async ({ userId, taskId }) => {
     });
     taskGroup.state = _.reduce(taskGroup.taskList.map(o=>o.state), (r, o)=>r|o);
     await taskGroup.save();
-    
+
     return { success: true };
 };

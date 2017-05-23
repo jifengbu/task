@@ -1,4 +1,4 @@
-import { TaskGroupModel } from '../../../../../models';
+import { TaskGroupModel } from '../../../../models';
 
 export default async ({ userId, pageNo, pageSize }) => {
     const criteria = {examinerId: userId, state: 1}
