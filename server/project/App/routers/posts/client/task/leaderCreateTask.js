@@ -1,5 +1,6 @@
 import { TaskGroupModel } from '../../../../models';
 import createTask from './libs/createTask';
+import updateTaskProgress from '../progress/updateTaskProgress';
 
 export default async ({
     userId,
@@ -46,6 +47,7 @@ export default async ({
 
     doc.taskList = [ taskId ];
     await doc.save();
+    await updateTaskProgress(userId, taskId, '发布任务');
 
     return { success: true };
 };

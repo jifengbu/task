@@ -1,6 +1,7 @@
 import { TaskGroupModel } from '../../../../models';
 import _ from 'lodash';
 import createTask from './libs/createTask';
+import updateTaskProgress from '../progress/updateTaskProgress';
 
 export default async ({
     userId,
@@ -26,6 +27,7 @@ export default async ({
 
     for (const item of taskList) {
         let taskId = await createTask({...item, groupId: doc.id, publishTime, publisherId: userId, examinerId});
+        await updateTaskProgress(userId, taskId, '发布任务');
         taskIdList.push(taskId);
     }
     doc.taskList = taskIdList;

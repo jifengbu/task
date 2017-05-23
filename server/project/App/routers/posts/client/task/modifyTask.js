@@ -2,6 +2,7 @@ import { TaskGroupModel, TaskModel } from '../../../../models';
 import _ from 'lodash';
 import modifyTask from './libs/modifyTask';
 import { omitNil } from '../../../../utils';
+import updateTaskProgress from '../progress/updateTaskProgress';
 
 export default async ({
     userId,
@@ -67,6 +68,7 @@ export default async ({
             }));
         }
     }
+    await updateTaskProgress(userId, taskId, '修改了任务');
 
     return { success: true };
 };

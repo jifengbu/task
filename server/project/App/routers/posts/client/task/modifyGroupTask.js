@@ -1,5 +1,6 @@
 import { TaskGroupModel } from '../../../../models';
 import { omitNil } from '../../../../utils';
+import updateTaskProgress from '../progress/updateTaskProgress';
 
 export default async ({
     userId,

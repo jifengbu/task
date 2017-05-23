@@ -1,5 +1,6 @@
 import { TaskGroupModel, TaskModel } from '../../../../models';
 import _ from 'lodash';
+import updateTaskProgress from '../progress/updateTaskProgress';
 
 export default async ({ userId, taskId, reason }) => {
     const doc = await TaskModel.findByIdAndUpdate(taskId, {state: 4, rejectPublishReason: reason});
@@ -14,6 +15,7 @@ export default async ({ userId, taskId, reason }) => {
     });
     taskGroup.state = _.reduce(taskGroup.taskList.map(o=>o.state), (r, o)=>r|o);
     await taskGroup.save();
+    await updateTaskProgress(userId, taskId, '拒绝了任务的发布');
 
     return { success: true };
 };
