@@ -1,7 +1,8 @@
 import { TaskModel } from '../../../../models';
+import { getKeywordCriteriaForTask } from '../../../../utils';
 
-export default async ({ userId, type, pageNo, pageSize }) => {
-    const criteria = {type}
+export default async ({ userId, type, keyword, pageNo, pageSize }) => {
+    const criteria = getKeywordCriteriaForTask(keyword, {type});
     const query = TaskModel.find(criteria).sort({ publishTime: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
     const docs = await query
     .select({

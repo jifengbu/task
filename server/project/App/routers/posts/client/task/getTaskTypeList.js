@@ -1,7 +1,7 @@
 import { TaskTypeModel } from '../../../../models';
 
-export default async ({ userId, pageNo, pageSize }) => {
-    const query = TaskTypeModel.find().sort({ key: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
+export default async ({ userId }) => {
+    const query = TaskTypeModel.find();
     const docs = await query
     .select({
         type: 1,
