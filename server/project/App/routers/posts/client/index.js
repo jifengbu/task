@@ -10,10 +10,13 @@ export submitFeedback from './common/submitFeedback'; // 提交反馈意见
 
 export getTaskTypeList from './task/getTaskTypeList'; // 获取任务类型列表
 export getTaskListByType from './task/getTaskListByType'; // 通过任务类型获取列表
-export searchTaskList from './task/searchTaskList'; // 搜索任务列表
 export getMostCaredTaskList from './task/getMostCaredTaskList'; // 获取最关心任务列表
 export getGroupTaskDetail from './task/getGroupTaskDetail'; // 获取群组任务的详情
 export getSingleTaskDetail from './task/getSingleTaskDetail'; // 获取单一任务的详情
+export modifyGroupTask from './task/modifyGroupTask'; // 修改群组任务
+export modifyTask from './task/modifyTask'; // 修改单一任务
+export removeGroupTask from './task/removeGroupTask'; // 删除群组任务
+export removeTask from './task/removeTask'; // 删除单一任务
 // 领导端
 export leaderCreateTask from './task/leader/leaderCreateTask'; // 领导创建任务
 export getToExamineTaskList from './task/leader/getToExamineTaskList'; // 获取待审核的任务列表

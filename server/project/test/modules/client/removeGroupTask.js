@@ -6,4 +6,4 @@ var param = {
     taskId: args[0],
 };
 
-post('/client/removeTask', param);
+post('/client/removeGroupTask', param);

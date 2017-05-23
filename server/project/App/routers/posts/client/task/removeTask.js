@@ -1,17 +1,25 @@
-import { TaskModel, MediaModel } from '../../../../models';
+import { TaskModel, TaskGroupModel, MediaModel } from '../../../../models';
 
 export default async ({
     userId,
     taskId,
 }) => {
-    const doc = await TaskModel.findByIdAndRemove(taskId);
-    if (doc) {
+    const task = await TaskModel.findById(taskId);
+    if (task) {
+        const group = await TaskGroupModel.findById(task.groupId);
+        if (group.taskList.length === 1) {
+            await group.remove();
+        } else {
+            group.taskList.pull(task.id);
+            await group.save();
+        }
         MediaModel._updateRef(
-            ...doc.audioList.map((item) => ({ [item]: -1 })),
+            ...task.audioList.map((item) => ({ [item.url]: -1 })),
         );
         MediaModel._updateRef(
-            ...doc.imageList.map((item) => ({ [item]: -1 })),
+            ...task.imageList.map((item) => ({ [item]: -1 })),
         );
+        await task.remove();
     }
     return { success: true };
 };

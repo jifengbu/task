@@ -1,56 +1,72 @@
-import { TaskModel, MediaModel } from '../../../../models';
-import { getMediaId, omitNil } from '../../../../utils';
+import { TaskGroupModel, TaskModel } from '../../../../models';
+import _ from 'lodash';
+import modifyTask from './libs/modifyTask';
+import { omitNil } from '../../../../utils';
 
 export default async ({
     userId,
     taskId,
     executorId,
+    supervisorId,
     title,
     content,
     audioList,
     imageList,
+    remindList,
     type,
-    startTime,
-    endTime,
+    expectStartTime,
+    expectFinishTime,
 }) => {
-    let _audioList = [];
-    if (audioList) {
-        _audioList = audioList.map((item) => { return getMediaId(item) });
-    }
-    let _imageList= [];
-    if (imageList) {
-        _imageList = audioList.map((item) => { return getMediaId(item) });
-    }
-    const doc = await TaskModel.findByIdAndUpdate(taskId, omitNil({
+    const modifyTime = Date.now();
+    const groupId = await modifyTask(omitNil({
+        taskId,
         executorId,
+        supervisorId,
         title,
         content,
-        audioList: _audioList,
-        imageList: _imageList,
+        audioList,
+        imageList,
+        remindList,
         type,
-        startTime,
-        endTime,
-    }), { new: true }).select({
-        executorId: 1,
-        title: 1,
-        content: 1,
-        audioList: 1,
-        imageList: 1,
-        type: 1,
-        startTime: 1,
-        endTime: 1,
-    }).populate({
-        path: 'executorId',
-        select: { name: 1, phone: 1 },
-    });
-    if (!doc) {
-        return { success: false, msg: '修改失败' };
+        expectStartTime,
+        expectFinishTime,
+        modifyTime,
+    }));
+
+    if (groupId) {
+        const group = await TaskGroupModel.findById(groupId);
+        if (group.isSingleTask) {
+            await group.update(omitNil({
+                title,
+                content,
+                expectStartTime,
+                expectFinishTime,
+                modifyTime,
+            }));
+        } else {
+            let _expectStartTime = expectStartTime;
+            let _expectFinishTime = expectFinishTime;
+            if (expectStartTime || expectFinishTime) {
+                for (const id of group.taskList) {
+                    let task = await TaskModel.findById(id);
+                    task = task.toObject();
+                    if (expectStartTime) {
+                        _expectStartTime = _.min([_expectStartTime, task.expectStartTime]);
+                    }
+                    if (expectStartTime) {
+                        _expectFinishTime = _.max([_expectFinishTime, task.expectFinishTime]);
+                    }
+                }
+            }
+            await group.update(omitNil({
+                title,
+                content,
+                expectStartTime: _expectStartTime,
+                expectFinishTime: _expectFinishTime,
+                modifyTime,
+            }));
+        }
     }
-    MediaModel._updateRef(
-        ...(audioList ? _audioList : []).map((item) => ({ [item]: 1 })),
-        ...(audioList ? doc.audioList : []).map((item) => ({ [item]: -1 })),
-        ...(imageList ? _imageList : []).map((item) => ({ [item]: 1 })),
-        ...(imageList ? doc.imageList : []).map((item) => ({ [item]: -1 })),
-    );
-    return { success: true, context: doc  };
+
+    return { success: true };
 };
