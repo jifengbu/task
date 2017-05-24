@@ -19,11 +19,8 @@ const ModifyPassword = require('./ModifyPassword.js');
 const { Button, WebviewMessageBox } = COMPONENTS;
 
 const CHILD_PAGES = [
-    { title:'软件许可协议', module: Help, img:app.img.common_point, info:'' },
     { title:'意见反馈', module: Feedback, img:app.img.common_point, info:'' },
     { title:'修改密码', module: ModifyPassword, img:app.img.common_point, info:'' },
-    { title:'在线更新', module: UpdatePage, img:app.img.common_point, info:'' },
-    { title:'关于', module: About, img:app.img.common_point, info:'' },
 ];
 
 const MenuItem = React.createClass({

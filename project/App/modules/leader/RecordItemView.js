@@ -13,22 +13,22 @@ const {
 module.exports = React.createClass({
     componentDidMount () {
     },
-    doComplete () {
-        this.props.doComplete();
+    doComplete (id) {
+        this.props.doComplete(id);
     },
     render () {
         const { data, onPress} = this.props;
         return (
-            <TouchableOpacity onPress={onPress} style={{backgroundColor: '#FFFFFF',}}>
+            <TouchableOpacity onPress={onPress.bind(null,data)} style={{backgroundColor: '#FFFFFF',}}>
                 <View style={[styles.rowContainer, { marginVertical: sr.s(this.props.rowHeight) }]}>
                     <Text
                         style={styles.textStyleAnother}>
                         {data.content}
                     </Text>
                     {
-                        this.props.data.isOver === 0 ?
+                        this.props.data.state === 0 ?
                             <TouchableOpacity
-                                onPress={this.doComplete}
+                                onPress={this.doComplete.bind(null,data&&data.id)}
                                 style={styles.btnStyle}>
                                 <Image
                                     resizeMode='contain'

@@ -1,6 +1,7 @@
 'use strict';
 
-const React = require('react');const ReactNative = require('react-native');
+const React = require('react');
+const ReactNative = require('react-native');
 const {
     StyleSheet,
     Text,
@@ -31,17 +32,13 @@ module.exports = React.createClass({
         }
         return context;
     },
-    doConfirm (id) {
+    doConfirm () {
         const context = this.fomatString(this.state.inputText);
         if (context === '') {
             Toast('内容为空');
             return;
         }
-        this.props.doConfirm(context,id);
-        app.closeModal();
-    },
-    doDelete (id) {
-        this.props.doDelete(id);
+        this.props.doAdd(context);
         app.closeModal();
     },
     setAlert () {
@@ -51,8 +48,7 @@ module.exports = React.createClass({
         dismissKeyboard();
     },
     componentDidMount () {
-        const { data } = this.props;
-        this.setState({ inputText:data.content });
+        this.setState({ inputText:this.props.inputText });
     },
     calculateStrLength (oldStr) {
         let height = 0;
@@ -79,7 +75,6 @@ module.exports = React.createClass({
         }
     },
     render () {
-        const { data } = this.props;
         let textHeight = 50;
         //textHeight = 96;
         return (
@@ -112,20 +107,15 @@ module.exports = React.createClass({
                                     placeholder={'请输入提醒内容'}
                                     autoCapitalize={'none'}
                                     underlineColorAndroid={'transparent'}
-                                    defaultValue={this.state.inputText}
+                                    defaultValue={this.props.inputText}
                                     keyboardType={'default'}
                               />
                             </View>
                             <View style={styles.buttonViewStyle}>
                                 <TouchableOpacity
-                                    onPress={this.doConfirm.bind(null,data&&data.id)}
+                                    onPress={this.doConfirm}
                                     style={[styles.buttonStyleContain,{ borderBottomRightRadius: 2 }]}>
-                                    <Text style={styles.buttonStyle} >保  存</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={this.doDelete.bind(null,data&&data.id)}
-                                    style={styles.buttonStyleContainCancel}>
-                                    <Text style={styles.buttonStyle} >删  除</Text>
+                                    <Text style={styles.buttonStyle} >确  定</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -164,16 +154,6 @@ const styles = StyleSheet.create({
         borderColor:'#FF6363',
         borderWidth:1,
         borderBottomLeftRadius: 2,
-    },
-    buttonStyleContainCancel: {
-        flex: 1,
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor: '#C6C6C6',
-        height: 46,
-        borderColor:'#C6C6C6',
-        borderWidth:1,
-        borderBottomRightRadius: 2,
     },
     textStyle: {
         fontSize: 16,

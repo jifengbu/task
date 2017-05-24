@@ -28,14 +28,39 @@ module.exports = React.createClass({
     getInitialState () {
         return {
             tabIndex: 0,
+            dataDetail: null,
+            taskType: '',
         };
     },
-    changeTab (tabIndex) {
-        this.setState({ tabIndex });
+    componentDidMount() {
+        this.getTaskTypeList();
+    },
+    getTaskTypeList() {
+        const param = {
+            userID: app.personal.info.userID,
+        };
+        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getPersonalInfoSuccess);
+    },
+    getPersonalInfoSuccess (data) {
+        if (data.success) {
+            const context = data.context;
+            if (context) {
+                this.setState({dataDetail:context});
+            }
+        } else {
+            app.dismissProgressHud();
+            Toast(data.msg);
+        }
+    },
+    changeTab (tabIndex,taskType) {
+        this.setState({ tabIndex,taskType });
     },
     render () {
-        const { tabIndex } = this.state;
-        const menuAdminArray = ['最关心任务', '加急任务', '紧急任务', '一般任务', '综合任务', '打回任务'];
+        const { tabIndex, dataDetail,taskType } = this.state;
+        let menuAdminArray = [];
+        if (dataDetail) {
+            menuAdminArray = dataDetail.taskTypeList;
+        }
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -47,10 +72,10 @@ module.exports = React.createClass({
                             return (
                                 <TouchableOpacity
                                     key={i}
-                                    onPress={this.changeTab.bind(null, i)}
+                                    onPress={this.changeTab.bind(null, i, item.key)}
                                     style={styles.tabButtonLeft}>
                                     <Text style={[styles.tabText, tabIndex === i ? { color:'#fff000' } : { color:'#FFFFFF' }]} >
-                                        {item}
+                                        {item.name}
                                     </Text>
                                     <View style={[styles.tabLine, tabIndex === i ? { backgroundColor: '#fff000' } : null]} />
                                 </TouchableOpacity>
@@ -60,12 +85,28 @@ module.exports = React.createClass({
                 </ScrollView>
                 <View style={styles.listStyle}>
                     {
-                        this.state.tabIndex !==5&&
-                        <TaskList />
+                        this.state.tabIndex ===0&&
+                        <TaskList taskType={taskType}/>
+                    }
+                    {
+                        this.state.tabIndex ===1&&
+                        <TaskList taskType={taskType}/>
+                    }
+                    {
+                        this.state.tabIndex ===2&&
+                        <TaskList taskType={taskType}/>
+                    }
+                    {
+                        this.state.tabIndex ===3&&
+                        <TaskList taskType={taskType}/>
+                    }
+                    {
+                        this.state.tabIndex ===4&&
+                        <TaskList taskType={taskType}/>
                     }
                     {
                         this.state.tabIndex ===5&&
-                        <RepulseTackList />
+                        <RepulseTackList taskType={taskType}/>
                     }
                 </View>
             </View>

@@ -25,39 +25,41 @@ module.exports = React.createClass({
             dataSource: this.ds.cloneWithRows(this.taskList),
         };
     },
-    registerEvents (name) {
-        this.addListenerOn(app.socket, name, (param) => {
-            this[name](param);
-        });
-    },
-    componentWillMount () {
-        this.registerEvents('NEW_TASK_APPLY_EVENT');
-        this.registerEvents('NEW_TASK_PUBLISH_EVENT');
-        this.registerEvents('TASK_LIST_UPDATE_EVENT');
-    },
-    NEW_TASK_APPLY_EVENT (task) {
-        this.taskList.unshift(task);
-        this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
-        app.addTaskBadge(1);
-        //更新badge
-        Toast('有新的任务申请，请尽快审核');
-    },
-    NEW_TASK_PUBLISH_EVENT (task) {
-        this.taskList.unshift(task);
-        this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
-        app.addTaskBadge(1);
-    },
-    TASK_LIST_UPDATE_EVENT (taskList) {
-        this.taskList = taskList;
-        this.setState({dataSource: this.ds.cloneWithRows(taskList)});
-        app.setTaskBadge(_.sum(_.map(this.taskList, (o)=>_.includes(o.readed, app.personal.info.phone)?0:1)));
-    },
     componentDidMount () {
-        app.socket.sendData('GET_TASK_LIST_RQ', {}, (data)=>{
-            this.taskList = data.taskList;
-            this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
-            app.setTaskBadge(_.sum(_.map(this.taskList, (o)=>_.includes(o.readed, app.personal.info.phone)?0:1)));
-        }, true);
+        let { taskType } = this.props;
+        console.log('===taskType===',taskType);
+        if (taskType) {
+            this.type = taskType;
+        }
+        this.getTaskListByType(this.type);
+    },
+    getTaskListByType(taskType) {
+        const param = {
+            userID: app.personal.info.userID,
+            keyword: '',
+            type: taskType,
+            pageNo: this.pageNo,
+            pageSize: 10,
+        };
+        POST(app.route.ROUTE_GET_TASK_LIST_BY_TYPE, param, this.getTaskListByTypeSuccess);
+    },
+    getTaskListByTypeSuccess (data) {
+        if (data.success) {
+            const context = data.context;
+            if (context) {
+                this.taskList = context.taskList;
+                this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
+            }
+        } else {
+            this.getListFailed();
+        }
+    },
+    getListFailed () {
+        this.pageNo--;
+    },
+    onEndReached () {
+        // this.pageNo++;
+        // this.getTaskListByType(this.type);
     },
     renderRow (obj, sectionID, rowID) {
         return (
@@ -106,6 +108,7 @@ const RowItem = React.createClass({
     render () {
         const {obj } = this.props;
         const { isLookAll,lineHeight } = this.state;
+        let time = app.utils.getSurplusTimeString(obj.expectFinishTime);
         return (
           <TouchableOpacity onPress={this.onPress.bind(null, obj)} style={styles.rowItem}>
               <View style={styles.rightStyle}>
@@ -122,7 +125,7 @@ const RowItem = React.createClass({
                   <View style={styles.line}/>
                   <View style={[styles.midView,{height: lineHeight}]}>
                       <Text onLayout={this._measureLineHeight} numberOfLines={isLookAll ? 200 : 3} style={styles.description}>
-                          {'哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'}
+                          {obj.content}
                       </Text>
                       {
                           !isLookAll &&
@@ -133,6 +136,22 @@ const RowItem = React.createClass({
                           <Image resizeMode='contain' source={app.img.leader_check_detail} style={[styles.iconStyle,{transform:[{ rotate: isLookAll ?'-180deg':'0deg' }]}]} />
                       </TouchableOpacity>
                   </View>
+                  {
+                      isLookAll &&
+                      <View style={styles.statusBar}>
+                          <Text style={styles.childTasks}>
+                              {obj.expectFinishTime}
+                          </Text>
+                          <View style={styles.childStyle}>
+                              <Text style={styles.childTasks}>
+                                  {'距离结束还有：'}
+                              </Text>
+                              <Text style={styles.childState}>
+                                  {time}
+                              </Text>
+                          </View>
+                      </View>
+                  }
               </View>
           </TouchableOpacity>
         );
@@ -224,5 +243,28 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
+    },
+    childStyle: {
+        marginRight: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    childTasks: {
+        marginLeft: 20,
+        fontSize: 9,
+        backgroundColor: 'transparent',
+    },
+    childState: {
+        fontSize: 9,
+        color:'#f64136',
+    },
+    statusBar: {
+        width: sr.w,
+        height: 21,
+        marginTop: 5,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        backgroundColor: '#c7c7c7',
     },
 });

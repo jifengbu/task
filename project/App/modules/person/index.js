@@ -37,6 +37,7 @@ module.exports = React.createClass({
                     <TouchableOpacity onPress={this.doEditPersonInfo}>
                         <Image
                             resizeMode='stretch'
+                            defaultSource={app.img.personal_head}
                             source={app.img.common_head}
                             style={styles.headStyle}
                             />

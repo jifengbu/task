@@ -13,51 +13,68 @@ const {
 } = ReactNative;
 
 const Subscribable = require('Subscribable');
-const TaskContent = require('./TaskContent.js');
+const GroupTaskContent = require('./GroupTaskContent.js');
 const { Button, DImage } = COMPONENTS;
 
 module.exports = React.createClass({
     mixins: [Subscribable.Mixin],
     statics: {
-        title: '书记，主任批准代发',
+        title: '任务审批',
     },
     getInitialState () {
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
-            agree: 1,
+            title: '',
+            content: '',
+            taskList: [],
             dataSource: ds.cloneWithRows([]),
         };
     },
-    toPublishTask() {
-        let {id} = this.props.data;
-        const {content='', agree} = this.state;
-        app.socket.sendData('APPROVAL_TASK_RQ', {
-            id, content, agree
-        }, (data)=>{
-            app.navigator.pop();
-            Toast('审批完成');
-        }, true);
+    componentDidMount () {
+        this.getGroupTaskDetail();
+    },
+    getGroupTaskDetail () {
+        const param = {
+            userID: app.personal.info.userID,
+            taskId: this.props.taskId,
+        };
+        POST(app.route.ROUTE_GET_GROUP_TASK_DETAIL, param, this.getGroupTaskDetailSuccess);
+    },
+    getGroupTaskDetailSuccess (data) {
+        if (data.success) {
+            if (data.context) {
+                const list = data.context.taskList || [];
+                const title = data.context.title || '';
+                const content = data.context.content || '';
+                this.setState({
+                    title,
+                    content,
+                    taskList: list,
+                });
+            }
+        } else {
+            Toast('获取数据错误，请稍后重试！');
+        }
     },
     renderRow(obj, i, n) {
         return (
             <View style={styles.container}>
-                <TaskContent data={this.props.data} n={n}/>
+                <GroupTaskContent data={obj} n={n}/>
             </View>
         )
     },
     render () {
-        let {agree} = this.state;
-        let {title, description, taskList=[1,2]} = this.props.data;
+        let {title, content, taskList=[]} = this.state;
         return (
             <ScrollView style={styles.container}>
                 <DImage
                     resizeMode='stretch'
                     source={app.img.home_title_bg}
                     style={styles.titleBgImage}>
-                    <Text style={styles.titleText}>{title||'中央经济会议'}</Text>
+                    <Text style={styles.titleText}>{title}</Text>
                 </DImage>
                 <View style={styles.textStyle}>
-                    <Text style={styles.describeText}>{'三六九等福利卡将受到法律框架看得十分艰苦拉萨定居风口浪尖卅卡德罗夫家里的沙发款式独家福利卡绝世独立看风景啊离开的'}</Text>
+                    <Text style={styles.describeText}>{content}</Text>
                 </View>
                 <View style={styles.planImage}>
                     <Text style={[styles.timeText, {marginLeft: 20}]}>{'开始时间：2017-05-10'}</Text>

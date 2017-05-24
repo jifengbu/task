@@ -22,26 +22,6 @@ module.exports = React.createClass({
             renderSplashType: 0,
         };
     },
-    doGetPersonalInfo () {
-        const param = {
-            shopId: app.personal.info.shopId,
-        };
-        POST(app.route.ROUTE_GET_PERSONAL_INFO, param, this.getPersonalInfoSuccess, this.getInfoError);
-    },
-    getPersonalInfoSuccess (data) {
-        if (data.success) {
-            const context = data.context;
-            app.personal.set(context);
-            this.changeToHomePage();
-            app.personal.setNeedLogin(false);
-        } else {
-            this.getInfoError();
-        }
-    },
-    getInfoError () {
-        app.personal.setNeedLogin(true);
-        this.changeToLoginPage();
-    },
     enterLoginPage (needHideSplashScreen) {
         app.navigator.replace({
             component: Login,
@@ -74,23 +54,25 @@ module.exports = React.createClass({
     },
     enterNextPage () {
         app.updateMgr.setNeedShowSplash(false);
-        if (this.state.renderSplashType === 1) {
-            this.enterLoginPage();
-        } else {
-            this.enterHomePage();
-        }
+        this.enterLoginPage();
+        // if (this.state.renderSplashType === 1) {
+        //     this.enterLoginPage();
+        // } else {
+        //     this.enterHomePage();
+        // }
     },
     changeToNextPage () {
-        if (app.personal.needLogin) {
-            this.changeToLoginPage();
-        } else {
-            app.socket.register(app.personal.info.phone);
-            app.utils.until(
-                () => app.socket.connected,
-                (cb) => setTimeout(cb, 100),
-                () => this.changeToHomePage()
-            );
-        }
+        this.changeToLoginPage();
+        // if (app.personal.needLogin) {
+        //     this.changeToLoginPage();
+        // } else {
+        //     app.socket.register(app.personal.info.phone);
+        //     app.utils.until(
+        //         () => app.socket.connected,
+        //         (cb) => setTimeout(cb, 100),
+        //         () => this.changeToHomePage()
+        //     );
+        // }
     },
     componentDidMount () {
         app.utils.until(

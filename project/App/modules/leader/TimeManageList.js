@@ -13,6 +13,8 @@ const {
 const TaskSupervision = require('./TaskSupervision.js');
 const RecordItemView = require('./RecordItemView.js');
 const InputBoxAlert = require('./InputBoxAlert.js');
+const InputBoxAdd = require('./InputBoxAdd.js');
+const moment = require('moment');
 
 module.exports = React.createClass({
     getInitialState () {
@@ -30,25 +32,110 @@ module.exports = React.createClass({
             dataSource: this.ds.cloneWithRows(this.timeList),
         };
     },
-    doComplete() {
-        console.log('-------');
+    componentDidMount() {
+        //获取日程列表
+        this.getScheduleList();
     },
-    doDelete() {
+    getScheduleList(id) {
+        const param = {
+            userId: app.personal.info.userID,
+        };
+        POST(app.route.ROUTE_GET_SCHEDULE_LIST, param, this.getScheduleListSuccess);
+    },
+    getScheduleListSuccess (data) {
+        if (data.success) {
+            if (data.context) {
+                this.timeList = data.context.scheduleList;
+                this.setState({dataSource: this.ds.cloneWithRows(this.timeList)});
+            }
+        } else {
+            app.dismissProgressHud();
+            Toast(data.msg);
+        }
+    },
+    doComplete(id) {
+        this.finishSchedule(id);
+    },
+    finishSchedule(id) {
+        const param = {
+            userId: app.personal.info.userID,
+            scheduleId: id,
+        };
+        POST(app.route.ROUTE_FINISH_SCHEDULE, param, this.finishScheduleSuccess);
+    },
+    finishScheduleSuccess (data) {
+        if (data.success) {
 
+        } else {
+            app.dismissProgressHud();
+            Toast(data.msg);
+        }
     },
-    doSave(context) {
-        console.log('=context==',context);
+    doDelete(id) {
+        //删除日程
+        this.removeSchedule(id);
+    },
+    removeSchedule(id) {
+        const param = {
+            scheduleId: id,
+        };
+        POST(app.route.ROUTE_REMOVE_SCHEDULE, param, this.removeScheduleSuccess);
+    },
+    removeScheduleSuccess (data) {
+        if (data.success) {
+
+        } else {
+            app.dismissProgressHud();
+            Toast(data.msg);
+        }
+    },
+    doSave(content,id) {
+        //修改日程
+        this.modifySchedule(content,id);
+    },
+    modifySchedule(content,id) {
+        const param = {
+            scheduleId: id,
+            userId: app.personal.info.userID,
+            content: content,
+        };
+        POST(app.route.ROUTE_MODIFY_SCHEDULE, param, this.modifyScheduleSuccess);
+    },
+    modifyScheduleSuccess (data) {
+        if (data.success) {
+
+        } else {
+            app.dismissProgressHud();
+            Toast(data.msg);
+        }
     },
     setAlert() {
+        //设置提醒
     },
-    doUpdate() {
+    doAdd(content) {
+        //增加日程
+        this.createSchedule(content);
+    },
+    createSchedule(content) {
+        const param = {
+            userId: app.personal.info.userID,
+            content: content,
+        };
+        POST(app.route.ROUTE_CREATE_SCHEDULE, param, this.createScheduleSuccess);
+    },
+    createScheduleSuccess (data) {
+        if (data.success) {
+
+        }
+    },
+    doUpdate(obj) {
         app.showModal(
-            <InputBoxAlert doDelete={this.doDelete} doConfirm={this.doSave} setAlert={this.setAlert}/>
+            <InputBoxAlert doDelete={this.doDelete} doConfirm={this.doSave} setAlert={this.setAlert} data={obj} />
         );
     },
     addTimeItem() {
         app.showModal(
-            <InputBoxAlert doDelete={this.doDelete} doConfirm={this.doSave} setAlert={this.setAlert}/>
+            <InputBoxAdd doAdd={this.doAdd} setAlert={this.setAlert}/>
         );
     },
     renderSeparator (sectionID, rowID) {

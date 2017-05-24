@@ -21,6 +21,8 @@ const EditPassWord = require('./EditPassWord.js');
 const PersonalInfoMgr = require('../../manager/PersonalInfoMgr.js');
 const Subscribable = require('Subscribable');
 const Camera = require('@remobile/react-native-camera');
+const LocalDataMgr = require('../../manager/LocalDataMgr.js');
+const FingerView = app.isandroid?require('./FingerViewAndroid.js'):require('./FingerViewIos.js');
 
 const { DImage, ActionSheet, Picker } = COMPONENTS;
 
@@ -38,10 +40,27 @@ module.exports = React.createClass({
         //     this.setState({ headImgSource: { uri: param.head } });
         // });
     },
+    onWillFocus(){
+        this.haveFinger = LocalDataMgr.getValueFromKey('haveFinger');
+        this.setState({switchValue: (this.haveFinger && this.haveFinger==1)?true:false});
+    },
+    getInitialState () {
+        this.haveFinger = LocalDataMgr.getValueFromKey('haveFinger');
+
+        return Object.assign({
+            showSuccessToast: false,
+            overlayShow: false,
+            isEditStatus: false,
+            switchValue: (this.haveFinger && this.haveFinger==1)?true:false,
+        }, this.getStateFromPersonalInfo());
+    },
     goBack () {
         app.navigator.pop();
     },
     toggleEdit () {
+        this.haveFinger = LocalDataMgr.getValueFromKey('haveFinger');
+        this.setState({switchValue: (this.haveFinger && this.haveFinger==1)?true:false});
+
         Picker.hide();
         dismissKeyboard();
         if (this.state.isEditStatus) {
@@ -93,14 +112,7 @@ module.exports = React.createClass({
             headImgSource: headImgSource,
         };
     },
-    getInitialState () {
-        return Object.assign({
-            showSuccessToast: false,
-            overlayShow: false,
-            isEditStatus: false,
-            value: true,
-        }, this.getStateFromPersonalInfo());
-    },
+
     onWillHide() {
         Picker.hide();
     },
@@ -241,10 +253,18 @@ module.exports = React.createClass({
         });
     },
     editFingerPrint() {
-        //跳转到录指纹
-        // app.navigator.push({
-        //     component: EditPassWord,
-        // });
+    },
+    onSwitchChange(value){
+        this.setState({switchValue:value});
+        // 设置指纹
+        if (value) {
+            app.navigator.push({
+                component: FingerView,
+            });
+        }else {
+            // 关闭指纹，不用跳转
+            LocalDataMgr.setValueAndKey('haveFinger', 0);
+        }
     },
     render () {
         return (
@@ -350,14 +370,13 @@ module.exports = React.createClass({
                             <Text style={styles.headText}>指纹登陆</Text>
                             <View style={styles.itemView}>
                                 <Text style={styles.contentSwitch}>
-                                    {'点击修改指纹'}
+                                    {''}
                                 </Text>
                                 {
-                                    this.state.isEditStatus &&
                                     <Switch
-                                        onValueChange={(value) =>this.setState({value})}
+                                        onValueChange={this.onSwitchChange}
                                         onTintColor={'#f03b0a'}
-                                        value={this.state.value}
+                                        value={this.state.switchValue}
                                         style={styles.goSwitch} />
                                 }
                             </View>

@@ -14,17 +14,17 @@ const CONFIG = {
 // 如果是本地开发模式， CONFIG.ISSUE = false， TEST_CONFIG.ISSUE = false, 同时可以修改调试的服务器
 // 如果是发布测试服务器， CONFIG.ISSUE = false，TEST_CONFIG.ISSUE = true
 const TEST_CONFIG = {
-    ISSUE: true,
+    ISSUE: false,
     BASE_SERVER_INDEX: 0, // 只有 TEST_CONFIG.ISSUE 为 false时生效
 };
 
 // web服务器 依次是本地服务器，本地测试服务器, 测试服务器， 正式服务器
-const BASE_SERVERS = ['192.168.1.126:3000', '120.25.96.74:3000', 'www.gyyxjqd.com'];
+const BASE_SERVERS = ['localhost:3000', '120.25.96.74:3000', 'www.gyyxjqd.com'];
 const BASE_SERVER = CONFIG.ISSUE ? BASE_SERVERS[2] : TEST_CONFIG.ISSUE ? BASE_SERVERS[1] : BASE_SERVERS[TEST_CONFIG.BASE_SERVER_INDEX];
 
 module.exports = {
     APP_NAME: '商家端',
-    THEME_COLORS: ['#3BA9B0', '#A62045', '#239FDB'],
+    THEME_COLORS: ['#ea372f', '#A62045', '#239FDB'],
     ISSUE_IOS: CONFIG.ISSUE_IOS,
     NOT_NEED_UPDATE_JS_START: !(CONFIG.ISSUE || TEST_CONFIG.ISSUE), // 启动时不需要更新小版本
     MINIFY: CONFIG.ISSUE, // 是否压缩js文件，我们采取测试服务器为了查找问题不用压缩js文件，正式服务器需要压缩js文件，并且不能看到调试信息

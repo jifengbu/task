@@ -13,6 +13,9 @@ const {
 const Subscribable = require('Subscribable');
 const TaskSupervision = require('./TaskSupervision.js');
 const ExamineTask = require('./ExamineTask.js');
+import Badge from 'react-native-smart-badge';
+const { STATUS_TEXT_HIDE, STATUS_START_LOAD, STATUS_HAVE_MORE, STATUS_NO_DATA, STATUS_ALL_LOADED, STATUS_LOAD_ERROR } = CONSTANTS.LISTVIEW_INFINITE.STATUS;
+
 
 module.exports = React.createClass({
     mixins: [Subscribable.Mixin],
@@ -20,48 +23,70 @@ module.exports = React.createClass({
         title: '任务列表',
     },
     getInitialState () {
-        this.taskList = [];
-        this.type = '';
+        this.list = [];
         this.pageNo = 1;
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
-            dataSource: this.ds.cloneWithRows(this.taskList),
+            dataSource: this.ds.cloneWithRows(this.list),
+            infiniteLoadStatus: STATUS_TEXT_HIDE,
         };
     },
-    onPress(data) {
-        app.navigator.push({
-            component: TaskSupervision,
-            passProps: {data}
+    registerEvents (name) {
+        this.addListenerOn(app.socket, name, (param) => {
+            this[name](param);
         });
-        // if (!_.includes(data.readed, app.personal.info.phone)) {
-        //     app.socket.sendData('UPDATE_READED_RQ', {id: data.id});
-        //     app.subTaskBadge(1);
-        // }
+    },
+    componentWillMount () {
+        this.registerEvents('NEW_TASK_APPLY_EVENT');
+        this.registerEvents('NEW_TASK_PUBLISH_EVENT');
+        this.registerEvents('TASK_LIST_UPDATE_EVENT');
+    },
+    NEW_TASK_APPLY_EVENT (task) {
+        this.taskList.unshift(task);
+        this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
+        app.addTaskBadge(1);
+        //更新badge
+        Toast('有新的任务申请，请尽快审核');
+    },
+    NEW_TASK_PUBLISH_EVENT (task) {
+        this.taskList.unshift(task);
+        this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
+        app.addTaskBadge(1);
+    },
+    TASK_LIST_UPDATE_EVENT (taskList) {
+        this.taskList = taskList;
+        this.setState({dataSource: this.ds.cloneWithRows(taskList)});
+        app.setTaskBadge(_.sum(_.map(this.taskList, (o)=>_.includes(o.readed, app.personal.info.phone)?0:1)));
+    },
+    onPress(taskId) {
+        app.navigator.push({
+            component: ExamineTask,
+            passProps: {taskId}
+        });
     },
     componentDidMount () {
-        let { taskType } = this.props;
-        console.log('===taskType===',taskType);
-        if (taskType) {
-            this.type = taskType;
-        }
-        this.getTaskListByType(this.type);
+        this.getList();
     },
-    getTaskListByType(taskType) {
+    getList () {
         const param = {
             userID: app.personal.info.userID,
-            keyword: '',
-            type: taskType,
             pageNo: this.pageNo,
-            pageSize: 10,
         };
-        POST(app.route.ROUTE_GET_TASK_LIST_BY_TYPE, param, this.getTaskListByTypeSuccess);
+        this.setState({ infiniteLoadStatus: this.pageNo === 1 ? STATUS_START_LOAD : STATUS_HAVE_MORE });
+        POST(app.route.ROUTE_GET_TO_EXAMINE_TASK_LIST, param, this.getListSuccess, this.getListFailed);
     },
-    getTaskListByTypeSuccess (data) {
+    getListSuccess (data) {
         if (data.success) {
-            const context = data.context;
-            if (context) {
-                this.taskList = context.taskList;
-                this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
+            if (data.context) {
+                const list = data.context.taskList || [];
+                this.list = this.list.concat(list);
+                const infiniteLoadStatus = list.length < CONSTANTS.PER_PAGE_COUNT ? STATUS_ALL_LOADED : STATUS_HAVE_MORE;
+                this.setState({
+                    infiniteLoadStatus: infiniteLoadStatus,
+                    dataSource:this.ds.cloneWithRows(this.list),
+                });
+            } else {
+                this.setState({ infiniteLoadStatus: STATUS_NO_DATA });
             }
         } else {
             this.getListFailed();
@@ -69,15 +94,25 @@ module.exports = React.createClass({
     },
     getListFailed () {
         this.pageNo--;
+        this.setState({ infiniteLoadStatus: STATUS_LOAD_ERROR });
     },
     onEndReached () {
-        // this.pageNo++;
-        // this.getTaskListByType(this.type);
+        if (this.state.infiniteLoadStatus !== STATUS_TEXT_HIDE) {
+            return;
+        }
+        this.pageNo++;
+        this.getList();
+    },
+    renderFooter () {
+        return (
+            <View style={styles.listFooterContainer}>
+                <Text style={styles.listFooter}>{CONSTANTS.LISTVIEW_INFINITE.TEXT[this.state.infiniteLoadStatus]}</Text>
+            </View>
+        );
     },
     renderRow (obj, sectionID, rowID) {
-        let time = app.utils.getSurplusTimeString(obj.expectFinishTime);
         return (
-            <TouchableOpacity onPress={this.onPress.bind(null, obj)} style={styles.rowItem}>
+            <TouchableOpacity onPress={this.onPress.bind(null, obj.id)} style={styles.rowItem}>
                 <View style={styles.rightStyle}>
                     <Image
                         resizeMode='stretch'
@@ -87,19 +122,21 @@ module.exports = React.createClass({
                     </Image>
                     <View style={styles.midView}>
                         <Text numberOfLines={3} style={styles.description}>{obj.content}</Text>
+                        <Text style={styles.more}>{'点击更多'}</Text>
                     </View>
                     <View style={styles.statusBar}>
                         <Text style={styles.childTasks}>
-                            {obj.expectFinishTime}
+                            {obj.expectStartTime}
                         </Text>
                         <View style={styles.childStyle}>
                             <Text style={styles.childTasks}>
                                 {'距离结束还有：'}
                             </Text>
                             <Text style={styles.childState}>
-                                {time}
+                                {app.utils.getSurplusTimeString(obj.expectFinishTime)}
                             </Text>
                         </View>
+
                     </View>
                 </View>
                 {
@@ -143,6 +180,15 @@ const styles = StyleSheet.create({
     listStyle: {
         alignSelf:'stretch',
         backgroundColor: '#FFFFFF',
+    },
+    listFooterContainer: {
+        height: 60,
+        alignItems: 'center',
+    },
+    listFooter: {
+        marginVertical: 10,
+        color: 'gray',
+        fontSize: 14,
     },
     rowItem: {
         width: sr.w,
@@ -198,6 +244,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginTop: 5,
         lineHeight: 16,
+        color: '#666666',
+    },
+    more: {
+        fontSize: 10,
+        marginTop: 2,
+        alignSelf: 'center',
         color: '#666666',
     },
     icon: {

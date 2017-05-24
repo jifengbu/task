@@ -13,8 +13,9 @@ const {
     TouchableOpacity,
 } = ReactNative;
 
+const InputBoxReject = require('./InputBoxReject.js');
+
 const { Button, TaskStepList, DImage, DelayTouchableOpacity } = COMPONENTS;
-const describe = '水电费水电费的爽肤水地方第三方第三方第三方地方是的方式发送到发送地方阿斯顿发生的发低烧发放苏打发送到发送地方阿斯顿发生的发低烧发放苏打发送到发送地方阿斯顿发生的发低烧发放苏打粉撒的发多少发多少发放的 撒地方撒的方式地方士大夫撒打发的说法';
 
 module.exports = React.createClass({
     getInitialState () {
@@ -33,39 +34,28 @@ module.exports = React.createClass({
         }
     },
     render () {
-        const { title, description, taskList } = this.props.data;
         let {isLookAll} = this.state;
         const obj = this.props.data;
         return (
             <View style={styles.container}>
-                <DImage
-                    resizeMode='stretch'
-                    source={app.img.home_task_bg}
-                    style={styles.titleBgImage}>
-                    <Text style={styles.titleText}>{'子任务'+this.props.n*1+1}</Text>
-                    <View style={styles.btnView}>
-                        <Button onPress={this.applyTask} style={[styles.btnSubmit, {backgroundColor: '#ea372f'}]} textStyle={[styles.btnSubmitText, {color: '#FFFFFF'}]}>{'通过'}</Button>
-                        <Button onPress={this.applyTask} style={[styles.btnSubmit, {backgroundColor: '#e2e2e2'}]} textStyle={[styles.btnSubmitText, {color: '#838384'}]}>{'打回'}</Button>
-                    </View>
-                </DImage>
                 <View style={styles.taskTitleContainer}>
                     <View style={styles.taskTitleView}>
                         <Text style={styles.taskTitle}>任务监督人：</Text>
-                        <Text style={styles.taskContext}>{obj.supervisor||'张三'}</Text>
+                        <Text style={styles.taskContext}>{obj.supervisor.name}</Text>
                     </View>
                     <View style={styles.taskTitleView}>
                         <Text style={styles.taskTitle}>任务执行人：</Text>
-                        <Text style={styles.taskContext}>{obj.executor||'李四'}</Text>
+                        <Text style={styles.taskContext}>{obj.executor.name}</Text>
                     </View>
                 </View>
                 <View style={styles.taskTitleContainer}>
                     <View style={styles.taskTitleView}>
                         <Text style={styles.taskTitle}>开始时间：</Text>
-                        <Text style={styles.taskContext}>{obj.endTime||'2017-05-10 13:30'}</Text>
+                        <Text style={styles.taskContext}>{obj.expectStartTime}</Text>
                     </View>
                     <View style={styles.taskTitleView}>
                         <Text style={styles.taskTitle}>结束时间：</Text>
-                        <Text style={styles.taskContext}>{obj.endTime||'2017-05-12 13:30'}</Text>
+                        <Text style={styles.taskContext}>{obj.expectFinishTime}</Text>
                     </View>
                 </View>
                 <View style={styles.divisionLine}/>
@@ -78,14 +68,10 @@ module.exports = React.createClass({
                                 style={styles.clockImage} />
                             <Text style={styles.remindTitle}>{'任务描述'}</Text>
                         </View>
-                        <DImage
-                            resizeMode='stretch'
-                            source={app.img.home_horn}
-                            style={[styles.clockImage, {marginRight: 25}]} />
                     </View>
                     <View style={[styles.synopsisStyle, { height: this.state.lineHeight }]}>
                         <Text onLayout={this._measureLineHeight} numberOfLines={isLookAll ? 100 : 3} style={styles.synopsisText}>
-                            {(app.isandroid ? '        ' : '\t') + describe}
+                            {(app.isandroid ? '        ' : '\t') + obj.content}
                         </Text>
                         {
                             !isLookAll &&
@@ -110,54 +96,86 @@ module.exports = React.createClass({
                         <Button onPress={this.goRemindSetting} style={styles.btnSet} textStyle={styles.btnSetText}>{'点击设置'}</Button>
                     </View>
                     <View style={styles.divisionLine}/>
-                    <View style={styles.remindItem}>
-                        <DImage
-                            resizeMode='stretch'
-                            source={app.img.home_remind_check}
-                            style={styles.checkImage} />
-                        <Text style={styles.remindItemTitle}>{'每天08:30提醒一次'}</Text>
-                    </View>
+                    {
+                        obj.imageList.map((item, i) => {
+                            return (
+                                <View key={i} style={styles.remindItem}>
+                                    <DImage
+                                        resizeMode='stretch'
+                                        source={app.img.home_remind_check}
+                                        style={styles.checkImage} />
+                                    <Text style={styles.remindItemTitle}>{'每天08:30提醒一次'}</Text>
+                                </View>
+                            );
+                        })
+                    }
                     <View style={styles.divisionLine}/>
                 </View>
-                <View style={styles.imageUpLoadContainer}>
-                    <View style={styles.remindTitleLeftView}>
-                        <DImage
-                            resizeMode='cover'
-                            source={app.img.home_accessory}
-                            style={styles.clockImage} />
-                        <Text style={styles.remindTitle}>{'附件'}</Text>
-                    </View>
-                    <View style={styles.imageStyleView}>
-                        <DelayTouchableOpacity
-                            activeOpacity={0.6}
-                            style={styles.imageButtonView}
-                            onPress={this.showPohotoImg}>
-                            <DImage resizeMode='cover' source={app.img.home_add_image_icon} style={styles.imagelogostyle} />
-                        </DelayTouchableOpacity>
-                        <ScrollView horizontal style={styles.imageContainer}>
-                            {
-                                ['http://sdfsdf', 'http://sdfsdf'].map((item, i) => {
-                                    return (
-                                        <TouchableHighlight
-                                            key={i}
-                                            underlayColor='rgba(0, 0, 0, 0)'
-                                            onPress={this.showBigImage}
-                                            onLongPress={this.showImageLongPressMessageBox}
-                                            style={styles.bigImageTouch}>
-                                            <Image
+                {
+                    obj.imageList.length&&
+                    <View style={styles.imageUpLoadContainer}>
+                        <View style={styles.remindTitleLeftView}>
+                            <DImage
+                                resizeMode='cover'
+                                source={app.img.home_accessory}
+                                style={styles.clockImage} />
+                            <Text style={styles.remindTitle}>{'附件'}</Text>
+                        </View>
+                        <View style={styles.imageStyleView}>
+                            <ScrollView horizontal style={styles.imageContainer}>
+                                {
+                                    obj.imageList.map((item, i) => {
+                                        return (
+                                            <TouchableHighlight
                                                 key={i}
-                                                resizeMode='stretch'
-                                                source={{ uri: item }}
-                                                style={styles.imageStyletu}
-                                                />
-                                        </TouchableHighlight>
+                                                underlayColor='rgba(0, 0, 0, 0)'
+                                                onPress={this.showBigImage}
+                                                onLongPress={this.showImageLongPressMessageBox}
+                                                style={styles.bigImageTouch}>
+                                                <Image
+                                                    resizeMode='stretch'
+                                                    source={{ uri: item }}
+                                                    style={styles.imageStyletu}
+                                                    />
+                                            </TouchableHighlight>
+                                        );
+                                    })
+                                }
+                            </ScrollView>
+                        </View>
+                        <View style={styles.divisionLine}/>
+                    </View>
+                }
+                {
+                    obj.audioList.length&&
+                    <View style={styles.voiceUpside}>
+                        <View style={styles.remindTitleLeftView}>
+                            <DImage
+                                resizeMode='stretch'
+                                source={app.img.home_horn}
+                                style={styles.clockImage} />
+                            <Text style={styles.remindTitle}>{'语音'}</Text>
+                        </View>
+                        <ScrollView horizontal style={styles.voiceContainer}>
+                            {
+                                obj.audioList.map((item, i) => {
+                                    return (
+                                        <View key={i} style={[styles.audioContainer]}>
+                                            <TouchableOpacity
+                                                activeOpacity={0.6}
+                                                delayLongPress={1500}
+                                                style={styles.audioPlay}>
+                                                <Image source={app.img.home_voice_say_play} style={styles.imageVoice} />
+                                                <Text style={styles.textTime} >{item.duration + "''"}</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     );
                                 })
                             }
                         </ScrollView>
+                        <View style={[styles.divisionLine, {marginBottom: 15}]}/>
                     </View>
-                </View>
-                <View style={[styles.divisionLine, {marginBottom: 15}]}/>
+                }
             </View>
         );
     },
@@ -194,6 +212,13 @@ const styles = StyleSheet.create({
     btnSubmitText: {
         fontSize: 13,
         fontWeight: '600',
+    },
+    childTaskTitle: {
+        marginTop: 10,
+        marginHorizontal: 10,
+        fontSize: 16,
+        color: '#e06f69',
+        fontFamily: 'STHeitiSC-Medium',
     },
     taskTitleContainer: {
         flexDirection: 'row',
@@ -294,7 +319,7 @@ const styles = StyleSheet.create({
     remindItem: {
         alignItems: 'center',
         flexDirection: 'row',
-        marginVertical: 10,
+        marginTop: 5,
         marginLeft: 20,
     },
     checkImage: {
@@ -306,6 +331,41 @@ const styles = StyleSheet.create({
         color: '#323232',
         marginLeft: 5,
     },
+    voiceUpside: {
+        width: sr.w,
+        marginTop: 5,
+        backgroundColor:'#FFFFFF',
+    },
+    voiceContainer: {
+        flexDirection: 'row',
+        marginLeft:20,
+    },
+    audioContainer: {
+        width: 70,
+        height:47,
+        marginRight: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection:'row',
+    },
+    audioPlay: {
+        height: 35,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#EEEEEE',
+    },
+    imageVoice:{
+        width:17,
+        height:22,
+        marginRight: 10,
+    },
+    textTime:{
+        fontSize: 12,
+        textAlign: 'left',
+        color :'gray',
+    },
     imageUpLoadContainer: {
         width: sr.w,
     },
@@ -313,16 +373,6 @@ const styles = StyleSheet.create({
         height: 134,
         alignItems: 'center',
         flexDirection:'row',
-    },
-    imageButtonView: {
-        height: 105,
-        width:105,
-        marginLeft:10,
-        backgroundColor:'#EEEEEE',
-    },
-    imagelogostyle: {
-        height: 105,
-        width:105,
     },
     imageContainer: {
         flexDirection: 'row',

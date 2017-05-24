@@ -40,6 +40,7 @@ module.exports = {
     home_banner:require('./image/home/banner.png'),
     home_check_menu:require('./image/home/check_menu.png'),
     home_clock:require('./image/home/clock.png'),
+    home_close_icon:require('./image/home/close_icon.png'),
     home_describe:require('./image/home/describe.png'),
     home_dot:require('./image/home/dot.png'),
     home_down_check:require('./image/home/down_check.png'),

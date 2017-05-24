@@ -25,18 +25,24 @@ module.exports = React.createClass({
         title: '单一任务',
     },
     getInitialState () {
+        this.tempClientList = [];
         return {
             title: '',
-            description: '',
+            content: '',
             tabIndex: 0,
             startTime: moment(),
             endTime: moment(),
-            supervisor: '李经理',
-            executor: '李敏镐',
+            supervisor: '',
+            executor: '',
             remindList: [],
             overlayShowLongPressMessageBox: false,
             overlayShowMessageBox: false,
         };
+    },
+    componentDidMount () {
+        _.forEach(app.clientList, (item) => {
+            this.tempClientList.push(item.name);
+        });
     },
     changeTab (tabIndex) {
         this.setState({ tabIndex });
@@ -168,12 +174,12 @@ module.exports = React.createClass({
         return moment(date).format('HH时mm分');
     },
     showSelectSuperVisor() {
-        Picker(['王经理', '李经理'], ['李经理'], '').then((value)=>{
+        Picker(this.tempClientList, [this.tempClientList[0]], '').then((value)=>{
             this.setState({supervisor: value[0]});
         });
     },
     showSelectExecutor() {
-        Picker(['王东来', '李敏镐'], ['李敏镐'], '').then((value)=>{
+        Picker(this.tempClientList, [this.tempClientList[0]], '').then((value)=>{
             this.setState({executor: value[0]});
         });
     },
@@ -194,6 +200,30 @@ module.exports = React.createClass({
     doRefreshRemind(obj) {
         const { remindList } = this.state;
         this.setState({ remindList: obj});
+    },
+    doCreateTask() {
+        const {title, content} = this.state;
+        const param = {
+            userID: app.personal.info.userID,
+            executorId: app.personal.info.userID,
+            supervisorId: app.personal.info.userID,
+            title: title,
+            content: content,
+            audioList: [],
+            imageList: [],
+            remindList: [],
+            type: [],
+            expectStartTime: this.state.startTime,
+            expectFinishTime: this.state.endTime,
+        };
+        POST(app.route.ROUTE_GET_SINGLE_TASK_DETAIL, param, this.getSingleTaskDetailSuccess);
+    },
+    getSingleTaskDetailSuccess (data) {
+        if (data.success) {
+            //
+        } else {
+            Toast('获取数据错误，请稍后重试！');
+        }
     },
     render () {
         const {startTime, endTime, remindList} = this.state;
@@ -218,7 +248,7 @@ module.exports = React.createClass({
                             placeholder={'点击输入任务描述'}
                             textStyle={styles.contentText}
                             placeholderTextColor={'#A7A7A7'}
-                            onChangeText={(text) => this.setState({description: text})}
+                            onChangeText={(text) => this.setState({content: text})}
                             />
                     </View>
                     <View style={styles.voiceUpside}>
@@ -255,7 +285,7 @@ module.exports = React.createClass({
                                 style={styles.timeTextContainer}
                                 >
                                 <Text style={styles.timeText}>
-                                    {this.state.supervisor||'选择监督人'}
+                                    {this.state.supervisor||'请选择'}
                                 </Text>
                                 <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
                             </TouchableOpacity>
@@ -268,7 +298,7 @@ module.exports = React.createClass({
                                 style={styles.timeTextContainer}
                                 >
                                 <Text style={styles.timeText}>
-                                    {this.state.executor||'选择执行人'}
+                                    {this.state.executor||'请选择'}
                                 </Text>
                                 <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
                             </TouchableOpacity>
@@ -390,7 +420,7 @@ module.exports = React.createClass({
                             </ScrollView>
                         </View>
                     </View>
-                    <Button onPress={this.doAnonymousLogin} style={styles.btnSubmit} textStyle={styles.btnSubmitText}>{'送    审'}</Button>
+                    <Button onPress={this.doCreateTask} style={styles.btnSubmit} textStyle={styles.btnSubmitText}>{'确    定'}</Button>
                 </ScrollView>
                 {
                     this.state.overlayShowLongPressMessageBox &&

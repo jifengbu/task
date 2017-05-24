@@ -13,7 +13,7 @@ const {
 } = ReactNative;
 
 const { Button, TaskStepList, DImage } = COMPONENTS;
-const TaskContent = require('./TaskContent.js');
+const SingleTaskContent = require('./SingleTaskContent.js');
 
 module.exports = React.createClass({
     statics: {
@@ -21,84 +21,57 @@ module.exports = React.createClass({
         tabIndex: 0,
     },
     getInitialState () {
-        const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-        const {taskList} = this.props.data;
         return {
-            dataSource: ds.cloneWithRows(taskList||[]),
+            taskDetail: null,
         };
     },
-    closeTask(id) {
-        app.socket.sendData('CLOSE_TASK_RQ', {id}, (data)=>{
-            Toast('关闭任务成功');
-            app.pop();
-        }, true);
+    componentDidMount () {
+        this.getSingleTaskDetail();
+    },
+    getSingleTaskDetail () {
+        const param = {
+            userID: app.personal.info.userID,
+            taskId: this.props.taskId,
+        };
+        POST(app.route.ROUTE_GET_SINGLE_TASK_DETAIL, param, this.getSingleTaskDetailSuccess);
+    },
+    getSingleTaskDetailSuccess (data) {
+        if (data.success) {
+            if (data.context) {
+                const taskDetail = data.context;
+                this.setState({taskDetail});
+            }
+        } else {
+            Toast('获取数据错误，请稍后重试！');
+        }
     },
     changeTab (tabIndex) {
         this.setState({ tabIndex });
     },
-    renderRow(obj, i, n) {
-        return (
-            <View style={styles.taskItem}>
-                <TaskContent data={this.props.data} n={n}/>
-                <TaskStepList listData={obj.logsList} />
-            </View>
-        )
-    },
-
     render () {
-        const { tabIndex } = this.state;
+        const { tabIndex, taskDetail } = this.state;
         const menuAdminArray = ['任务更新', '任务提醒', '结束任务'];
-        const { dataSource } = this.state;
-        const { title, description, taskList } = this.props.data;
-        const obj = this.props.data;
+        const { title, expectFinishTime } = this.state.taskDetail || {};
         return (
             <View style={styles.container}>
-                {
-                    taskList ?
-                    <ScrollView style={styles.scrollContainer}>
-                        <DImage
-                            resizeMode='stretch'
-                            source={app.img.home_title_bg}
-                            style={styles.titleBgImage}>
-                            <Text style={styles.titleText}>{title}</Text>
-                            <View style={styles.rightTitleView}>
-                                <Text style={styles.rightTitleText}>{'剩余时间：'}</Text>
-                                <Text style={styles.numberText}>{'5'}</Text>
-                                <Text style={styles.rightTitleText}>{'天'}</Text>
-                            </View>
-                        </DImage>
-                        <ListView
-                            initialListSize={1}
-                            enableEmptySections
-                            removeClippedSubviews={false}
-                            dataSource={dataSource}
-                            keyboardShouldPersistTaps="always"
-                            renderRow={this.renderRow}
-                            />
-                        <View style={styles.emptyStyle}/>
-                        {
-                            obj.state === 2 &&
-                            <Button onPress={this.closeTask.bind(null, obj.id)} style={styles.btnLogin} textStyle={styles.btnLoginText}>关闭任务</Button>
-                        }
-                    </ScrollView>
-                    :
-                    <ScrollView style={[styles.taskItem, {backgroundColor: '#EEEEEE'}]}>
-                        <Text style={styles.taskTitle}>任务结束时间：</Text>
-                        <Text style={styles.taskContext}>{obj.endTime}</Text>
-                        <Text style={styles.taskTitle}>任务监督人：</Text>
-                        <Text style={styles.taskContext}>{obj.supervisor}</Text>
-                        <Text style={styles.taskTitle}>任务执行人：</Text>
-                        <Text style={styles.taskContext}>{obj.executor}</Text>
-                        <Text style={styles.taskTitle}>任务提醒设置：</Text>
-                        <Text style={styles.taskContext}>{obj.remind}</Text>
-                        <TaskStepList listData={obj.logsList}/>
-                        <View style={styles.emptyStyle}/>
-                        {
-                            obj.state === 2 &&
-                            <Button onPress={this.closeTask.bind(null, obj.id)} style={styles.btnLogin} textStyle={styles.btnLoginText}>关闭任务</Button>
-                        }
-                    </ScrollView>
-                }
+                <ScrollView style={styles.scrollContainer}>
+                    <DImage
+                        resizeMode='stretch'
+                        source={app.img.home_title_bg}
+                        style={styles.titleBgImage}>
+                        <Text style={styles.titleText}>{title}</Text>
+                        <View style={styles.rightTitleView}>
+                            <Text style={styles.rightTitleText}>{'剩余时间：'}</Text>
+                            <Text style={styles.numberText}>{app.utils.getSurplusTimeString(expectFinishTime)}</Text>
+                        </View>
+                    </DImage>
+                    {
+                        taskDetail&&
+                        <SingleTaskContent data={taskDetail} />
+                    }
+                    <View style={styles.emptyStyle}/>
+                    <TaskStepList listData={[]} />
+                </ScrollView>
                 <View style={styles.bottomContainer}>
                     {
                         menuAdminArray.map((item, i) => {
@@ -187,85 +160,11 @@ const styles = StyleSheet.create({
         fontFamily: 'STHeitiSC-Medium',
         backgroundColor: 'transparent',
     },
-
-
-
     taskItem: {
         marginTop: 10,
-    },
-    taskTitle1: {
-        fontSize: 18,
-        color: '#A0522D',
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    taskTitle: {
-        fontSize: 16,
-        color: '#8B6914',
-        marginLeft: 10,
-    },
-    taskContext: {
-        fontSize: 14,
-        marginLeft: 50,
-        marginTop: 10,
-        marginBottom: 10,
-        color: '#BDBDBD',
-    },
-    textStyle: {
-        width:sr.w,
-        height:45,
-        flexDirection: 'row',
-        alignItems:'center',
-    },
-    title: {
-        color: 'black',
-        marginHorizontal: 20,
-        fontSize: 14,
-    },
-    input: {
-        width: 200,
-        height: 45,
-        fontSize: 14,
     },
     emptyStyle: {
         width: sr.w,
         height: 30,
-    },
-    btnStyle: {
-        width: 160,
-        height: 35,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: 'black',
-    },
-    topLine: {
-        position: 'absolute',
-        left: 0,
-        bottom: 0,
-        width: sr.w,
-        height: 2,
-        backgroundColor: 'black',
-    },
-    topTextStyle: {
-        width: sr.w,
-        height: 40,
-        marginBottom: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    btnLogin: {
-        height: 46,
-        width: sr.w - 100,
-        marginTop: 20,
-        alignSelf: 'center',
-        borderRadius: 6,
-        marginBottom: 30,
-        backgroundColor: '#A52A2A',
-    },
-    btnLoginText: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#FFFFFF',
     },
 });

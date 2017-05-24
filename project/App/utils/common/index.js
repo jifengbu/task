@@ -1,3 +1,4 @@
+const moment = require('moment');
 module.exports = {
     until (test, iterator, callback) {
         if (!test()) {
@@ -158,5 +159,21 @@ module.exports = {
             time.push(_time);
         }
         return time;
+    },
+    getSurplusTimeString (str) {
+        const now = moment();
+        const time = moment(str);
+        const days = time.diff(moment(), 'days');
+        const hours = time.diff(moment(), 'hours');
+        const mut = time.diff(moment(), 'minutes');
+        if (days >= 1) {
+            return (days + '天');
+        } else {
+            if (hours >= 1) {
+                return (hours + '小时');
+            } else {
+                return mut>0?(mut + '分钟'):'已过期';
+            }
+        }
     },
 };

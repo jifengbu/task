@@ -22,6 +22,16 @@ module.exports = React.createClass({
             inputText: '',
         };
     },
+    doConfirm () {
+        const context = this.fomatString(this.state.inputText);
+        if (context === '') {
+            Toast('内容为空');
+            return;
+        }
+        this.props.doConfirm(context);
+
+        app.closeModal();
+    },
     fomatString (oldStr) {
         let newStr = '';
         let context = '';
@@ -31,28 +41,11 @@ module.exports = React.createClass({
         }
         return context;
     },
-    doConfirm (id) {
-        const context = this.fomatString(this.state.inputText);
-        if (context === '') {
-            Toast('内容为空');
-            return;
-        }
-        this.props.doConfirm(context,id);
-        app.closeModal();
-    },
-    doDelete (id) {
-        this.props.doDelete(id);
-        app.closeModal();
-    },
-    setAlert () {
-        this.props.setAlert();
-    },
     doHideDismissKeyboard () {
         dismissKeyboard();
     },
     componentDidMount () {
-        const { data } = this.props;
-        this.setState({ inputText:data.content });
+        this.setState({ inputText:this.props.inputText });
     },
     calculateStrLength (oldStr) {
         let height = 0;
@@ -79,27 +72,15 @@ module.exports = React.createClass({
         }
     },
     render () {
-        const { data } = this.props;
         let textHeight = 50;
-        //textHeight = 96;
         return (
             <Modal transparent>
                 <TouchableOpacity
                     activeOpacity={1}
                     onPress={this.doHideDismissKeyboard}
                     style={styles.overlayContainer}>
-                    <View style={[styles.background, { height:sr.s(332)}]}>
-                        <View style={[styles.container, { height:sr.s(312)}]}>
-                            <View>
-                                <TouchableOpacity onPress={this.setAlert} style={[styles.topViewNoSide, { height: textHeight }]}>
-                                    <Image
-                                        resizeMode='contain'
-                                        source={app.img.leader_inputBox_alert}
-                                        style={styles.alertIcon} />
-                                    <Text style={styles.alertButtonStyle} >点击提醒设置</Text>
-                                </TouchableOpacity>
-                                <View style={styles.lineView} />
-                            </View>
+                    <View style={[styles.background, { height:sr.s(282) }]}>
+                        <View style={[styles.container, { height:sr.s(262) }]}>
                             <View style={[styles.textStyleViewNoSide, { height: sr.s(250 - textHeight) }]}>
                                 <TextInput
                                     ref={(ref) => { this.contentInput = ref; }}
@@ -109,29 +90,24 @@ module.exports = React.createClass({
                                         }
                                     }
                                     multiline
-                                    placeholder={'请输入提醒内容'}
+                                    placeholder={'请输入更新内容'}
                                     autoCapitalize={'none'}
                                     underlineColorAndroid={'transparent'}
-                                    defaultValue={this.state.inputText}
+                                    defaultValue={this.props.inputText}
                                     keyboardType={'default'}
                               />
                             </View>
                             <View style={styles.buttonViewStyle}>
                                 <TouchableOpacity
-                                    onPress={this.doConfirm.bind(null,data&&data.id)}
-                                    style={[styles.buttonStyleContain,{ borderBottomRightRadius: 2 }]}>
-                                    <Text style={styles.buttonStyle} >保  存</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={this.doDelete.bind(null,data&&data.id)}
-                                    style={styles.buttonStyleContainCancel}>
-                                    <Text style={styles.buttonStyle} >删  除</Text>
+                                    onPress={this.doConfirm}
+                                    style={[styles.buttonStyleContain, { borderBottomRightRadius: 2 }]}>
+                                    <Text style={styles.buttonStyle} >{'确认打回'}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <TouchableHighlight
                             onPress={app.closeModal}
-                            underlayColor='rgba(0, 0, 0, 0)'
+                            underlayColor={'rgba(0, 0, 0, 0)'}
                             style={styles.touchableHighlight}>
                             <Image
                                 resizeMode='contain'
@@ -177,6 +153,8 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         fontSize: 16,
+        paddingVertical: 2,
+        margin: 5,
         width: sr.w - 60,
         flex: 1,
         fontFamily: 'STHeitiSC-Medium',
@@ -192,13 +170,9 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontFamily: 'STHeitiSC-Medium',
     },
-    alertButtonStyle: {
-        fontSize: 14,
-        color: '#f64136',
-    },
     background: {
         width: sr.w,
-        marginTop: 120,
+        marginTop: 150,
         alignItems: 'center',
         backgroundColor: 'transparent',
     },
@@ -210,8 +184,8 @@ const styles = StyleSheet.create({
     },
     topViewNoSide: {
         width: sr.w - 45,
-        paddingLeft: 20,
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: 'white',
         flexDirection: 'row',
     },
@@ -259,9 +233,5 @@ const styles = StyleSheet.create({
     closeIcon: {
         width: 30,
         height: 30,
-    },
-    alertIcon: {
-        width: 20,
-        height: 20,
     },
 });

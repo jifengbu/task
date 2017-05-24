@@ -16,6 +16,7 @@ const {
 const ForgetPassword = require('./ForgetPassword.js');
 const Register = require('./Register.js');
 const Home = require('../home/index.js');
+const LocalDataMgr = require('../../manager/LocalDataMgr.js');
 import { DeviceEventEmitter } from 'react-native';
 
 const { Button } = COMPONENTS;
@@ -92,18 +93,27 @@ module.exports = React.createClass({
         };
     },
     componentDidMount () {
-        app.personal.setNeedLogin(true);
         app.toggleNavigationBar(false);
 
-        registerEvents(this.onFingerReturn, 'FINGER_RETURN');
-        this.failCount = 0;
-        UtilsModule.fingerPrint();
+        this.haveFinger = LocalDataMgr.getValueFromKey('haveFinger');
+        this.needLogin = LocalDataMgr.getValueFromKey('notNeedLogin');
+
+        if (this.haveFinger && this.haveFinger==1) {
+            registerEvents(this.onFingerReturn, 'FINGER_RETURN');
+            this.failCount = 0;
+            UtilsModule.fingerPrint();
+        }else if (this.notNeedLogin && this.notNeedLogin==1) {
+            this.getPersonalInfo();
+        } else {
+            this.showPassword();
+        }
     },
     fingerNextStep(){
-        if (app.personal.needLogin) {
-            this.showPassword();
-        } else {
+        this.notNeedLogin = LocalDataMgr.getValueFromKey('notNeedLogin');
+        if (this.notNeedLogin && this.notNeedLogin==1) {
             this.getPersonalInfo();
+        } else {
+            this.showPassword();
         }
     },
     onFingerReturn(returnJson){
@@ -152,7 +162,6 @@ module.exports = React.createClass({
         }
     },
     doLogin () {
-
         const { phone, password } = this.state;
         if (!app.utils.checkPhone(phone)) {
             Toast('手机号码不是有效的手机号码');
@@ -171,34 +180,35 @@ module.exports = React.createClass({
     },
     doLoginSuccess (data) {
         if (data.success) {
-            app.personal.info.shopId = data.context.shopId;
             app.personal.info.phone = this.state.phone;
+            app.personal.info.userID = data.context.userId;
+            this.getClientList(data.context.userId);
             app.login.savePhone(this.state.phone);
             this.getPersonalInfo();
-            app.personal.setNeedLogin(false);
         } else {
-            Toast(data.msg);
+            Toast('获取用户信息失败');
             app.dismissProgressHud();
         }
     },
     doLoginError (error) {
+        LocalDataMgr.setValueAndKey('notNeedLogin', 0);
         app.dismissProgressHud();
     },
     getPersonalInfo () {
         const param = {
-            shopId: app.personal.info.shopId,
+            userID: app.personal.info.userID,
         };
         POST(app.route.ROUTE_GET_PERSONAL_INFO, param, this.getPersonalInfoSuccess, this.getPersonalInfoError);
     },
     getPersonalInfoSuccess (data) {
         if (data.success) {
             const context = data.context;
+            context['userID'] = app.personal.info.userID;
+            context['phone'] = this.state.phone;
             app.personal.set(context);
-            app.personal.info.phone = this.state.phone;
             app.navigator.replace({
                 component: Home,
             });
-            app.personal.setNeedLogin(false);
         } else {
             app.dismissProgressHud();
             Toast(data.msg);
@@ -206,6 +216,19 @@ module.exports = React.createClass({
     },
     getPersonalInfoError (error) {
         app.dismissProgressHud();
+    },
+    getClientList(userID) {
+        const param = {
+            userID: userID,
+        };
+        POST(app.route.ROUTE_GET_CLIENT_LIST, param, this.getClientListSuccess);
+    },
+    getClientListSuccess(data) {
+        if (data.success) {
+            app.clientList = data.context.clientList;
+        } else {
+            Toast('获取数据错误，请稍后重试！');
+        }
     },
     showPassword () {
         this.setState({ showPassword: true });
@@ -265,7 +288,7 @@ module.exports = React.createClass({
                         <View>
                             <Image
                                 resizeMode='stretch'
-                                source={app.img.login_user}
+                                source={app.img.leader_finger}
                                 style={styles.finger_icon}
                                 />
                             <View style={styles.buView}>

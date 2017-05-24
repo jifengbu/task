@@ -6,5 +6,5 @@ export default async (app, socket, {
     password,
 }) => {
     console.log("=======", username, password);
-    socket.emit('USER_LOGIN_RS', { username, password });
+    socket.emit('TEST_RS', { username, password });
 };

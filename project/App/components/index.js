@@ -20,4 +20,5 @@ module.exports = {
     Picker: require('./Picker.js'),
     Timeline: require('./Timeline.js'),
     TaskStepList: require('./TaskStepList.js'),
+    Notifications: require('./Notifications.js'),
 };

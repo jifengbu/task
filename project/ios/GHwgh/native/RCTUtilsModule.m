@@ -3,7 +3,6 @@
 #import <React/RCTEventDispatcher.h>
 #import <LocalAuthentication/LocalAuthentication.h>
 
-
 #define EVENT_FINGER_RETURN @"FINGER_RETURN"
 
 @interface RCTUtilsModule : NSObject <RCTBridgeModule>
@@ -37,7 +36,7 @@ RCT_EXPORT_METHOD(fingerPrint) {
   
   LAContext *ctx = [[LAContext alloc] init];
   NSError *error = nil;
-  NSString *myLocalizedReasonString = @"请输入指纹";
+  NSString *myLocalizedReasonString = @"请验证已有指纹";
   // 判断设备是否支持指纹识别
   if ([ctx canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error])
   {

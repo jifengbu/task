@@ -18,7 +18,7 @@ post('/client/login', param).then((obj) => {
             var socket = io.connect('ws://' + host+':' + port);
             socket.on('connect', function(obj) {
                 console.log('connect to server');
-                socket.emit('USER_LOGIN_RQ', {username:'fang', password: '123456'});
+                socket.emit('TEST_RQ', {username:'fang', password: '123456'});
             }).on('disconnect', function(obj) {
                 console.log('disconnect to server');
             }).on('connect_error', function(obj) {
