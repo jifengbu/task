@@ -140,9 +140,14 @@ uploadErrorCallback () {
         "phone": "手机号码"
         "name": "用户名"
         "head": "头像"
-        "position": "职位"
+        "position": "职位",
+        "authority": 1
     }
 }
+```
+####### authority的说明：
+```
+authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有综合部权限，8：拥有监督者权限
 ```
 ---
 
@@ -210,9 +215,7 @@ uploadErrorCallback () {
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
 | userId | String | 用户Id |
-| keyword | String | 搜索关键字 |
-| pageNo | Number | 第几页 |
-| pageSize | Number | 每页的数量 |
+| authority | Number | [权限](#authority的说明) |
 
 ```js
 {
@@ -224,68 +227,9 @@ uploadErrorCallback () {
                 "email": "42550564@qq.com",
                 "name": "方运江",
                 "head": "http://localhost:3000/api/image?id=59117df95150c20e08b560af",
-                "partment": {
-                    "name": "123",
-                    "id": "591fa902b526bebf009d92c3"
-                },
-                "reservePhone": [
-                    "18085192480"
-                ],
                 "id": "59117ddb5150c20e08b560ac"
             }
         ]
-    }
-}
-```
-
----
-
-### 9. [获取用户详情](#9-获取用户详情getclientdetail)
-- `getClientDetail`
-- 请求方式：`POST`
-
-| 参数名称 | 参数类型  | 描述 |
-| :- |:-:| :-:|
-| userId | String | 用户Id |
-| clientId | String | 获取详情的用户Id |
-
-```js
-{
-    "success": true,
-    "context": {
-        "phone": "18085192480",
-        "email": "42550564@qq.com",
-        "name": "方运江",
-        "head": "http://localhost:3000/api/image?id=59117df95150c20e08b560af",
-        "birthday": "1982-02-25",
-        "partment": {
-            "name": "123",
-            "descript": "123",
-            "chargeMan": {
-                "phone": "18085192480",
-                "name": "方运江",
-                "head": "http://localhost:3000/api/image?id=59117df95150c20e08b560af",
-                "id": "59117ddb5150c20e08b560ac"
-            },
-            "superior": {
-                "name": "工信部",
-                "id": "591cf488f6a0636b34d64985"
-            },
-            "phoneList": [
-                "18085192480"
-            ],
-            "id": "591fa902b526bebf009d92c3",
-            "membersNum": 1,
-            "suborsNum": 1
-        },
-        "registerTime": "2017-05-09 16:29:15",
-        "salary": 0,
-        "reservePhone": [
-            "18085192480"
-        ],
-        "age": 35,
-        "sex": 0,
-        "id": "59117ddb5150c20e08b560ac"
     }
 }
 ```

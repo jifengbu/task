@@ -9,6 +9,7 @@ const clientSchema = new mongoose.Schema({
     name: { type: String }, // 姓名
     sex: { type: Number, default: 0 }, // 性别 0:男   1:女
     age: { type: Number, default: 0 }, // 年龄
+    authority: { type: Number, default: 1 }, //权限，2^0：普通权限 2^1：拥有领导权限，2^2：拥有综合部权限，2^3：拥有监督者权限
     head: { type: Schema.Types.ObjectId, ref: 'Media' }, // 用户头像
     birthday: { type: String }, // 生日
     reservePhone: [{ type: String }], // 预备电话

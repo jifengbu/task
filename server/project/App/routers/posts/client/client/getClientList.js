@@ -1,9 +1,7 @@
 import { ClientModel } from '../../../../models';
-import { getKeywordCriteriaForClient } from '../../../../utils';
 
-export default async ({ userId, keyword, pageNo, pageSize }) => {
-    const criteria = getKeywordCriteriaForClient(keyword);
-    const query = ClientModel.find(criteria).sort({ registerTime: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
+export default async ({ userId, authority }) => {
+    const query = ClientModel.find({authority});
     const docs = await query
     .select({
         phone: 1,
@@ -11,11 +9,6 @@ export default async ({ userId, keyword, pageNo, pageSize }) => {
         name: 1,
         head: 1,
         post: 1,
-        partment: 1,
-        reservePhone: 1,
-    }).populate({
-        path: 'partment',
-        select: { name: 1 },
     });
 
     return { success: true, context: {

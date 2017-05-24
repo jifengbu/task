@@ -46,4 +46,3 @@ export updateTaskProgress from './progress/updateTaskProgress'; // 更新任务�
 
 // client
 export getClientList from './client/getClientList'; // 获取用户列表
-export getClientDetail from './client/getClientDetail'; // 获取用户详情
