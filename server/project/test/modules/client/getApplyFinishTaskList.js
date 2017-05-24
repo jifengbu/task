@@ -8,4 +8,4 @@ var param = {
     pageSize: 3,
 };
 
-post('/client/getToExamineTaskList', param);
+post('/client/getApplyFinishTaskList', param);

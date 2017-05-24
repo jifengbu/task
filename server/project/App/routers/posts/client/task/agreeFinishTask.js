@@ -1,4 +1,5 @@
 import { TaskGroupModel, TaskModel } from '../../../../models';
+import _ from 'lodash';
 import updateTaskProgress from '../progress/updateTaskProgress';
 
 export default async ({ userId, taskId }) => {

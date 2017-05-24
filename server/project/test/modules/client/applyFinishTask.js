@@ -7,4 +7,4 @@ var param = {
     taskId : args[0],
 };
 
-post('/client/applyFinish', param);
+post('/client/applyFinishTask', param);

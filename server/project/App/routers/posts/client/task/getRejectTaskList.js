@@ -3,9 +3,9 @@ import { TaskModel } from '../../../../models';
 export default async ({ userId, role, pageNo, pageSize }) => { //role = ['leader', 'secretary', 'executor']
     let criteria = {};
     if (role === 'leader') {
-        criteria = {$and: [{ state: 2,  examinerId: userId }, { state: 64,  publisherId: userId }] };
+        criteria = {$or: [{ state: 2,  examinerId: userId }, { state: 64,  publisherId: userId }] };
     } else if (role === 'secretary') {
-        criteria = {$and: [{ state: 2,  publisherId: userId }, { state: 64,  publisherId: userId }] };
+        criteria = {$or: [{ state: 2,  publisherId: userId }, { state: 64,  publisherId: userId }] };
     } else {
         criteria = { state: 64,  executorId: userId };
     }
