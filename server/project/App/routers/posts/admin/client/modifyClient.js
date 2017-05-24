@@ -7,11 +7,13 @@ export default async ({
     name,
     phone,
     partment,
+    authority,
 }) => {
     const doc = await ClientModel.findByIdAndUpdate(clientId, omitNil({
         name,
         phone,
         partment,
+        authority,
     }), { new: true }).select({
         phone: 1,
         email: 1,
@@ -19,6 +21,7 @@ export default async ({
         head: 1,
         post: 1,
         partment: 1,
+        authority: 1,
         reservePhone: 1,
     }).populate({
         path: 'partment',

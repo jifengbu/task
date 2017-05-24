@@ -13,6 +13,7 @@ export default async ({ userId, keyword, pageNo, pageSize }) => {
         head: 1,
         post: 1,
         partment: 1,
+        authority: 1,
         reservePhone: 1,
     }).populate({
         path: 'partment',

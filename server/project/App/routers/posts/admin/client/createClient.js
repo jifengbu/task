@@ -6,11 +6,13 @@ export default async ({
     name,
     phone,
     partment,
+    authority,
 }) => {
     const doc = new ClientModel({
         name,
         phone,
         partment,
+        authority,
     });
     await doc.save();
     let context = await ClientModel.findById(doc.id)
@@ -21,6 +23,7 @@ export default async ({
         head: 1,
         post: 1,
         partment: 1,
+        authority: 1,
         reservePhone: 1,
     }).populate({
         path: 'partment',

@@ -19,6 +19,8 @@ module.exports = {
     ROUTE_GET_CLIENT_LIST: API_SERVER + 'getClientList', // 获取用户列表
     ROUTE_GET_PERSONAL_INFO: API_SERVER + 'getPersonalInfo', //  获取个人信息
     ROUTE_MODIFY_PERSONAL_INFO: API_SERVER + 'modifyPersonalInfo', //  修改个人信息
+    ROUTE_MODIFY_PASSWORD: API_SERVER + 'modifyPassword', //  修改个人密码
+    ROUTE_UPDATE_FILE: API_SERVER + 'uploadFile', //  上传文件
 
     // 网页地址
     ROUTE_USER_LICENSE: API_SERVER + 'protocals/user.html', // 用户协议
