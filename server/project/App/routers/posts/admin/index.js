@@ -5,7 +5,7 @@ export findPassword from './common/findPassword'; // 找回密码
 export modifyPassword from './common/modifyPassword'; // 修改密码
 export removeUnusedMedia from './common/removeUnusedMedia'; // 删除无用的media文件
 
-//client
+// client
 export getClientList from './client/getClientList'; // 获取用户列表
 export getClientDetail from './client/getClientDetail'; // 获取用户详情
 export createClient from './client/createClient'; // 创建人员

@@ -7,7 +7,7 @@ export default async ({ userId, time, pageNo, pageSize }) => {
     .select({
         content: 1,
         state: 1,
-    })
+    });
 
     return { success: true, context: {
         scheduleList: docs,

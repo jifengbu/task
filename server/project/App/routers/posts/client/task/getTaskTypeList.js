@@ -10,5 +10,5 @@ export default async ({ userId }) => {
 
     return { success: true, context: {
         taskTypeList: docs,
-    } }
+    } };
 };

@@ -35,7 +35,7 @@ until(
             taskId: args[0],
             title: '测试任务2',
             content: '认真测试1',
-            audioList: [{url: files['star'], duration: 100}],
+            audioList: [{ url: files['star'], duration: 100 }],
             imageList: [files['cargo']],
             expectStartTime: '2017-03-15 03:00:00',
         };

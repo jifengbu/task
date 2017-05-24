@@ -18,5 +18,5 @@ export default async ({
         return { success: false, msg: '修改失败' };
     }
 
-    return { success: true, context: doc  };
+    return { success: true, context: doc };
 };

@@ -35,7 +35,7 @@ until(
             supervisorId: userId,
             title: '测试任务',
             content: '认真测试',
-            audioList: [{url: files['star'], duration: 10}],
+            audioList: [{ url: files['star'], duration: 10 }],
             imageList: [files['cargo']],
             type: 1,
             expectStartTime: '2017-05-15 03:00:00',

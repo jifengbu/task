@@ -3,7 +3,7 @@ import { getKeywordCriteriaForPartment } from '../../../../utils';
 
 export default async ({ userId, keyword, pageNo, pageSize }) => {
     const criteria = getKeywordCriteriaForPartment(keyword);
-    const count = pageNo===0 ? await PartmentModel.count(criteria) : undefined;
+    const count = pageNo === 0 ? await PartmentModel.count(criteria) : undefined;
     const query = PartmentModel.find(criteria).sort({ publishTime: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
     const docs = await query
     .select({
@@ -24,7 +24,7 @@ export default async ({ userId, keyword, pageNo, pageSize }) => {
 
     return { success: true, context: {
         count,
-        partmentList: docs.map((item)=>{
+        partmentList: docs.map((item) => {
             item = item.toObject();
             item.membersNum = item.members.length;
             delete item.members;

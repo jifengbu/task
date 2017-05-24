@@ -85,7 +85,7 @@ export function formatTime (obj, ...keys) {
         obj[key] && (obj[key] = moment(obj[key]).format('YYYY-MM-DD HH:mm:ss'));
     }
 }
-export function testPhone(phone) {
+export function testPhone (phone) {
     return /^1\d{10}$/.test(phone);
 }
 export function sendFindPasswordMail (address, password) {

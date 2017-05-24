@@ -4,7 +4,7 @@ var args = process.argv.splice(2);
 
 var param = {
     userId,
-    taskId : args[0],
+    taskId: args[0],
     reason: '不合格',
 };
 

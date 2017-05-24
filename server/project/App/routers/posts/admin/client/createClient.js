@@ -22,7 +22,6 @@ export default async ({
         post: 1,
         partment: 1,
         reservePhone: 1,
-        partment: 1,
     }).populate({
         path: 'partment',
         select: { name: 1 },

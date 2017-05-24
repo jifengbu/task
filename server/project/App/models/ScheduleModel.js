@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 import { formatTime, formatMedia } from '../utils';
 
 const scheduleSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'Client' }, //用户ID
+    userId: { type: Schema.Types.ObjectId, ref: 'Client' }, // 用户ID
     state: { type: Number, default: 0 }, // state，0：未完成，1，完成
-    content: { type: String}, // 具体内容
+    content: { type: String }, // 具体内容
     createTime: { type: Date, default: Date.now }, // 创建时间
     modifyTime: { type: Date, default: Date.now }, // 创建时间
     remaindTime: { type: Date, default: Date.now }, // 提醒时间

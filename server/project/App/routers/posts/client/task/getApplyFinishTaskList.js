@@ -1,7 +1,7 @@
 import { TaskModel } from '../../../../models';
 
 export default async ({ userId, pageNo, pageSize }) => {
-    const criteria = {publisherId: userId, state: 32}
+    const criteria = { publisherId: userId, state: 32 };
     const query = TaskModel.find(criteria).sort({ publishTime: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
     const docs = await query
     .select({

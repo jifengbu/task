@@ -20,7 +20,6 @@ export default async ({
         post: 1,
         partment: 1,
         reservePhone: 1,
-        partment: 1,
     }).populate({
         path: 'partment',
         select: { name: 1 },
@@ -29,6 +28,5 @@ export default async ({
         return { success: false, msg: '修改失败' };
     }
 
-
-    return { success: true, context: doc  };
+    return { success: true, context: doc };
 };

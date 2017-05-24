@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 import { formatTime } from '../utils';
 
 const partmentSchema = new Schema({
-    name: { type: String}, // 部门名称
-    descript: { type: String}, // 部门描述
-    phoneList: [ { type: String} ], // 联系电话
+    name: { type: String }, // 部门名称
+    descript: { type: String }, // 部门描述
+    phoneList: [ { type: String } ], // 联系电话
     chargeMan: { type: Schema.Types.ObjectId, ref: 'Client' }, // 负责人
     members: [ { type: Schema.Types.ObjectId, ref: 'Client' } ], // 部门成员
 

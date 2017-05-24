@@ -21,9 +21,9 @@ export default async ({
     if (audioList) {
         _audioList = audioList.map((item) => { item.url = getMediaId(item.url); return item; });
     }
-    let _imageList= [];
+    let _imageList = [];
     if (imageList) {
-        _imageList = imageList.map((item) => { return getMediaId(item) });
+        _imageList = imageList.map((item) => { return getMediaId(item); });
     }
     const doc = new TaskModel({
         groupId,
@@ -46,5 +46,5 @@ export default async ({
         ..._audioList.map((item) => ({ [item.url]: 1 })),
         ..._imageList.map((item) => ({ [item]: 1 })),
     );
-    return  doc.id;
+    return doc.id;
 };

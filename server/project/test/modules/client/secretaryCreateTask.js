@@ -39,12 +39,12 @@ until(
                 content: '测试内容',
                 executorId: userId,
                 supervisorId: userId,
-                audioList: [{url: files['star'], duration: 10}],
+                audioList: [{ url: files['star'], duration: 10 }],
                 imageList: [files['cargo']],
                 type: 1,
                 expectStartTime: '2017-05-15 03:00:00',
                 expectFinishTime: '2017-05-16 03:00:00',
-            }]
+            }],
         };
 
         post('/client/secretaryCreateTask', param);

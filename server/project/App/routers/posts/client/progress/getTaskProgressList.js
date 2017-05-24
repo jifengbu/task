@@ -1,7 +1,7 @@
 import { ProgressModel } from '../../../../models';
 
 export default async ({ userId, taskId }) => {
-    const query = ProgressModel.find({taskId}).sort({ createTime: 'desc' });
+    const query = ProgressModel.find({ taskId }).sort({ createTime: 'desc' });
     const docs = await query
     .select({
         clientId: 1,

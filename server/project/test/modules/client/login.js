@@ -14,22 +14,22 @@ post('/client/login', param).then((obj) => {
         client.userId = obj.context.userId;
         saveClient(client);
         if (args[0] === '--socket') {
-            console.log('ws://' + host+':' + port);
-            var socket = io.connect('ws://' + host+':' + port);
-            socket.on('connect', function(obj) {
+            console.log('ws://' + host + ':' + port);
+            var socket = io.connect('ws://' + host + ':' + port);
+            socket.on('connect', function (obj) {
                 console.log('connect to server');
-                socket.emit('TEST_RQ', {username:'fang', password: '123456'});
-            }).on('disconnect', function(obj) {
+                socket.emit('TEST_RQ', { username: 'fang', password: '123456' });
+            }).on('disconnect', function (obj) {
                 console.log('disconnect to server');
-            }).on('connect_error', function(obj) {
+            }).on('connect_error', function (obj) {
                 console.error('connect to server error');
-            }).on('connect_timeout', function(obj) {
+            }).on('connect_timeout', function (obj) {
                 console.error('connect to server timeout');
-            }).on('reconnect', function(obj) {
+            }).on('reconnect', function (obj) {
                 console.log('magenta@reconnect to server');
-            }).on('reconnect_failed', function(obj) {
+            }).on('reconnect_failed', function (obj) {
                 console.error('reconnect to server failed');
-            }).on('USER_LOGIN_RS', function(obj) {
+            }).on('USER_LOGIN_RS', function (obj) {
                 console.log(obj);
             });
         }

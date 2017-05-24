@@ -7,7 +7,7 @@ export getPersonalInfo from './common/getPersonalInfo';// 获取个人信息
 export modifyPersonalInfo from './common/modifyPersonalInfo'; // 修改个人信息
 export submitFeedback from './common/submitFeedback'; // 提交反馈意见
 
-//task
+// task
 export getTaskTypeList from './task/getTaskTypeList'; // 获取任务类型列表
 export getTaskListByType from './task/getTaskListByType'; // 通过任务类型获取列表
 export getMostCaredTaskList from './task/getMostCaredTaskList'; // 获取最关心任务列表
@@ -38,11 +38,11 @@ export removeSchedule from './schedule/removeSchedule'; // 删除日程
 export getScheduleList from './schedule/getScheduleList'; // 获取日程列表
 export finishSchedule from './schedule/finishSchedule'; // 完成日程
 
-//progress
+// progress
 export getTaskProgressList from './progress/getTaskProgressList'; // 获取任务进度列表
 export remaindTask from './progress/remaindTask'; // 提醒任务
 export updateTaskProgress from './progress/updateTaskProgress'; // 更新任务进度
 
-//client
+// client
 export getClientList from './client/getClientList'; // 获取用户列表
 export getClientDetail from './client/getClientDetail'; // 获取用户详情

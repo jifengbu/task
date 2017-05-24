@@ -12,8 +12,8 @@ export default async ({
 }) => {
     const publishTime = Date.now();
     const taskIdList = [];
-    const expectStartTime = _.minBy(taskList, (o)=>o.expectStartTime).expectStartTime;
-    const expectFinishTime = _.maxBy(taskList, (o)=>o.expectFinishTime).expectFinishTime;
+    const expectStartTime = _.minBy(taskList, (o) => o.expectStartTime).expectStartTime;
+    const expectFinishTime = _.maxBy(taskList, (o) => o.expectFinishTime).expectFinishTime;
 
     const doc = new TaskGroupModel({
         publisherId: userId,
@@ -26,7 +26,7 @@ export default async ({
     });
 
     for (const item of taskList) {
-        let taskId = await createTask({...item, groupId: doc.id, publishTime, publisherId: userId, examinerId});
+        let taskId = await createTask({ ...item, groupId: doc.id, publishTime, publisherId: userId, examinerId });
         await updateTaskProgress(userId, taskId, '发布任务');
         taskIdList.push(taskId);
     }

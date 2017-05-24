@@ -19,9 +19,9 @@ export default async ({
     if (audioList) {
         _audioList = audioList.map((item) => { item.url = getMediaId(item.url); return item; });
     }
-    let _imageList= [];
+    let _imageList = [];
     if (imageList) {
-        _imageList = imageList.map((item) => { return getMediaId(item) });
+        _imageList = imageList.map((item) => { return getMediaId(item); });
     }
     const doc = await TaskModel.findByIdAndUpdate(taskId, omitNil({
         executorId,
@@ -43,7 +43,7 @@ export default async ({
             ...(imageList ? _imageList : []).map((item) => ({ [item]: 1 })),
             ...(imageList ? doc.imageList : []).map((item) => ({ [item]: -1 })),
         );
-        return  doc.groupId;
+        return doc.groupId;
     }
     return undefined;
 };

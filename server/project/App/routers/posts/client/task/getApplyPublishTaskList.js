@@ -1,7 +1,7 @@
 import { TaskGroupModel } from '../../../../models';
 
 export default async ({ userId, pageNo, pageSize }) => {
-    const criteria = {examinerId: userId, state: 1}
+    const criteria = { examinerId: userId, state: 1 };
     const query = TaskGroupModel.find(criteria).sort({ publishTime: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
     const docs = await query
     .select({
@@ -14,7 +14,7 @@ export default async ({ userId, pageNo, pageSize }) => {
         taskList: 1,
     });
 
-    const taskList = docs.map((item)=>{
+    const taskList = docs.map((item) => {
         item = item.toObject();
         if (item.isSingleTask) {
             item.id = item.taskList[0];
@@ -23,7 +23,7 @@ export default async ({ userId, pageNo, pageSize }) => {
         }
         delete item.taskList;
         return item;
-    })
+    });
 
     return { success: true, context: {
         taskList,

@@ -3,15 +3,15 @@ const Schema = mongoose.Schema;
 import { formatTime } from '../utils';
 
 const progressSchema = new Schema({
-    clientId: { type: Schema.Types.ObjectId, ref: 'Client' }, //人员ID
-    taskId: { type: Schema.Types.ObjectId, ref: 'Task' }, //任务ID
-    info: { type: String}, // 具体内容
-    type: { type: Number, default: 0}, // 类型，0：任务更新，1：任务提醒
+    clientId: { type: Schema.Types.ObjectId, ref: 'Client' }, // 人员ID
+    taskId: { type: Schema.Types.ObjectId, ref: 'Task' }, // 任务ID
+    info: { type: String }, // 具体内容
+    type: { type: Number, default: 0 }, // 类型，0：任务更新，1：任务提醒
     createTime: { type: Date, default: Date.now }, // 创建时间
 });
 
 progressSchema.virtual('userName').get(function () {
-    return (this.clientId||{}).name||(this.clientId||{}).phone;
+    return (this.clientId || {}).name || (this.clientId || {}).phone;
 });
 progressSchema.virtual('content').get(function () {
     if (this.type === 0) {

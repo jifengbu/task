@@ -31,7 +31,7 @@ export default async ({
         return { success: false, msg: '没有该部门' };
     }
     const context = doc.toObject();
-    context.subors = context.subors.map((item)=>{
+    context.subors = context.subors.map((item) => {
         item.membersNum = item.members.length;
         delete item.members;
         item.suborsNum = item.subors.length;

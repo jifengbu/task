@@ -45,5 +45,5 @@ export default async ({
     context.suborsNum = context.subors.length;
     delete context.subors;
 
-    return { success: true, context  };
+    return { success: true, context };
 };
