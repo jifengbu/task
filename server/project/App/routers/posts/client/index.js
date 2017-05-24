@@ -6,6 +6,7 @@ export modifyPassword from './common/modifyPassword';// 修改密码
 export getPersonalInfo from './common/getPersonalInfo';// 获取个人信息
 export modifyPersonalInfo from './common/modifyPersonalInfo'; // 修改个人信息
 export submitFeedback from './common/submitFeedback'; // 提交反馈意见
+export uploadFile from './common/uploadFile'; // 上传文件
 
 // task
 export getTaskTypeList from './task/getTaskTypeList'; // 获取任务类型列表
