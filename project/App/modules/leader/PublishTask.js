@@ -17,6 +17,7 @@ const AudioRecorder = require('../../native/index.js').AudioRecorder;
 const RemindSetting = require('./RemindSetting.js');
 const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('./RecordVoiceMessageBox.js');
+const ShowBigImage = require('./ShowBigImage.js');
 
 const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
@@ -39,6 +40,8 @@ module.exports = React.createClass({
             supervisor: '',
             executor: '',
             remindList: [],
+            netUrlImages: [],
+            uploadVoices: [],
             overlayShowLongPressMessageBox: false,
             overlayShowMessageBox: false,
         };
@@ -237,12 +240,12 @@ module.exports = React.createClass({
         });
     },
     showBigImage (localUrlImages, index) {
-        // app.showModal(
-        //     <AidBigImage
-        //         doImageClose={app.closeModal}
-        //         defaultIndex={index}
-        //         defaultImageArray={localUrlImages} />
-        // );
+        app.showModal(
+            <ShowBigImage
+                doImageClose={app.closeModal}
+                defaultIndex={index}
+                defaultImageArray={imageArray} />
+        );
     },
     goRemindSetting() {
         app.navigator.push({
@@ -298,7 +301,7 @@ module.exports = React.createClass({
         }
     },
     render () {
-        const {startTime, endTime, remindList} = this.state;
+        const {startTime, endTime, remindList, netUrlImages, uploadVoices} = this.state;
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
@@ -329,7 +332,7 @@ module.exports = React.createClass({
                         </TouchableOpacity>
                         <ScrollView horizontal style={styles.voiceContainer}>
                             {
-                                ['http: //sdfsdf', 'http: //sdfsdf'].map((item, i) => {
+                                uploadVoices.map((item, i) => {
                                     return (
                                         <View key={i} style={[styles.audioContainer]}>
                                             <TouchableOpacity
@@ -486,12 +489,12 @@ module.exports = React.createClass({
                             </DelayTouchableOpacity>
                             <ScrollView horizontal style={styles.imageContainer}>
                                 {
-                                    ['http://sdfsdf', 'http://sdfsdf'].map((item, i) => {
+                                    netUrlImages.map((item, i) => {
                                         return (
                                             <TouchableHighlight
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
-                                                onPress={this.showBigImage}
+                                                onPress={this.showBigImage.bind(null, netUrlImages, i)}
                                                 onLongPress={this.showImageLongPressMessageBox}
                                                 style={styles.bigImageTouch}>
                                                 <Image

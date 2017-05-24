@@ -12,22 +12,9 @@ const {
 
 const DImage = require('./DImage.js');
 
-var arr = [
-    {content: '主任下发任务', time: '2017-04-14'},
-    {content: '李红接收任务，监督人：李白', time: '2017-04-14'},
-    {content: '主任下发任务', time: '2017-04-14'},
-    {content: '李红接收任务，监督人：李白', time: '2017-04-14'},
-    {content: '主任下发任务', time: '2017-04-14'},
-];
-
 module.exports = React.createClass({
     getInitialState () {
-        if (this.props.listData) {
-            this.list = this.props.listData;
-            console.log('this.props.listData', this.props.listData);
-        } else {
-            this.list = arr;
-        }
+        this.list = [];
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
             dataSource: this.ds.cloneWithRows(this.list),
@@ -41,10 +28,10 @@ module.exports = React.createClass({
                   rowID%2 === 0&&
                   <View style={styles.leftStyle}>
                       <View style={styles.titleStyle}>
-                          <Text style={[styles.timeText,{color: rowID == lastNum? 'red': '#1b1b1b'}]}>{obj.time}</Text>
+                          <Text style={[styles.timeText,{color: rowID == lastNum? 'red': '#1b1b1b'}]}>{obj.createTime}</Text>
                       </View>
-                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.title}</Text>
-                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{'上课大家福利就是对方'}</Text>
+                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.userName}</Text>
+                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.content}</Text>
                   </View>
                 }
                 <View style={[styles.itemStyle,{marginLeft: rowID%2 !== 0?sr.w/2-25:0}]}>
@@ -59,9 +46,9 @@ module.exports = React.createClass({
                   rowID%2 !== 0&&
                   <View style={styles.rightStyle}>
                       <View style={styles.titleStyle}>
-                          <Text style={[styles.timeText,{color: rowID == lastNum? 'red': '#1b1b1b'}]}>{obj.time}</Text>
+                          <Text style={[styles.timeText,{color: rowID == lastNum? 'red': '#1b1b1b'}]}>{obj.createTime}</Text>
                       </View>
-                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.title}</Text>
+                      <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.userName}</Text>
                       {!!obj.content && <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.content}</Text>}
                   </View>
                 }
@@ -80,7 +67,7 @@ module.exports = React.createClass({
                     onEndReachedThreshold={10}
                     enableEmptySections
                     style={styles.listStyle}
-                    dataSource={this.state.dataSource}
+                    dataSource={this.ds.cloneWithRows(this.props.listData)}
                     renderRow={this.renderRow}
                     />
                 <View style={{height: 20, backgroundColor: '#FFFFFF'}}/>

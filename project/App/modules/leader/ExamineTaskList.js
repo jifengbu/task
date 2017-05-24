@@ -37,9 +37,9 @@ module.exports = React.createClass({
         });
     },
     componentWillMount () {
-        this.registerEvents('NEW_TASK_APPLY_EVENT');
-        this.registerEvents('NEW_TASK_PUBLISH_EVENT');
-        this.registerEvents('TASK_LIST_UPDATE_EVENT');
+        // this.registerEvents('NEW_TASK_APPLY_EVENT');
+        // this.registerEvents('NEW_TASK_PUBLISH_EVENT');
+        // this.registerEvents('TASK_LIST_UPDATE_EVENT');
     },
     NEW_TASK_APPLY_EVENT (task) {
         this.taskList.unshift(task);

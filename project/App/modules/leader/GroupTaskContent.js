@@ -14,8 +14,9 @@ const {
 } = ReactNative;
 
 const InputBoxReject = require('./InputBoxReject.js');
+const ShowBigImage = require('./ShowBigImage.js');
 
-const { Button, TaskStepList, DImage, DelayTouchableOpacity } = COMPONENTS;
+const { Button, DImage } = COMPONENTS;
 
 module.exports = React.createClass({
     getInitialState () {
@@ -61,6 +62,14 @@ module.exports = React.createClass({
         } else {
             Toast('获取数据错误，请稍后重试！');
         }
+    },
+    showBigImage (imageArray, index) {
+        app.showModal(
+            <ShowBigImage
+                doImageClose={app.closeModal}
+                defaultIndex={index}
+                defaultImageArray={imageArray} />
+        );
     },
     render () {
         let {isLookAll, isExamine} = this.state;
@@ -172,7 +181,7 @@ module.exports = React.createClass({
                                             <TouchableHighlight
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
-                                                onPress={this.showBigImage}
+                                                onPress={this.showBigImage.bind(null, obj.imageList, i)}
                                                 onLongPress={this.showImageLongPressMessageBox}
                                                 style={styles.bigImageTouch}>
                                                 <Image
