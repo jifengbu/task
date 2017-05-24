@@ -4,8 +4,6 @@ const Schema = mongoose.Schema;
 
 const feedbackSchema = new Schema({
     clientId: { type: Schema.Types.ObjectId, ref: 'Client' }, // 客户Id
-    shipperId: { type: Schema.Types.ObjectId, ref: 'Shipper' }, // 商户Id
-    auditorId: { type: Schema.Types.ObjectId, ref: 'Auditor' }, // 商务厅管理员Id
     content: { type: String, required: true }, // 反馈内容
     email: { type: String }, // 联系邮箱
     state: { type: Number, default: 0 }, // 申请发卡的状态， 0：未处理，1：处理中，2：已处理

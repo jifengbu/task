@@ -1,4 +1,5 @@
 import { TaskModel } from '../../../../models';
+import readTask from './libs/readTask';
 
 export default async ({
     userId,
@@ -38,5 +39,6 @@ export default async ({
     if (!doc) {
         return { success: false, msg: '没有该任务' };
     }
+    await readTask(userId, taskId);
     return { success: true, context: doc };
 };

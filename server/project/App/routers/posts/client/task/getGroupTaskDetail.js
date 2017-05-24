@@ -1,4 +1,5 @@
 import { TaskGroupModel } from '../../../../models';
+import readTask from './libs/readTask';
 
 export default async ({
     userId,
@@ -45,6 +46,9 @@ export default async ({
     });
     if (!doc) {
         return { success: false, msg: '没有该任务' };
+    }
+    for (const task of doc.taskList) {
+        await readTask(userId, task.id);
     }
     return { success: true, context: doc };
 };

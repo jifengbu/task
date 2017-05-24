@@ -5,6 +5,7 @@ export MediaModel from './MediaModel';
 export TaskTypeModel from './TaskTypeModel';
 export TaskModel from './TaskModel';
 export TaskGroupModel from './TaskGroupModel';
+export TaskReadedModel from './TaskReadedModel';
 export ScheduleModel from './ScheduleModel';
 export ProgressModel from './ProgressModel';
 export PartmentModel from './PartmentModel';
