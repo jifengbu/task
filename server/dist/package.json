@@ -1,5 +1,5 @@
 {
-  "name": "Card_Server",
+  "name": "Task_Server",
   "version": "0.0.1",
   "scripts": {
     "start": "pm2 start app.js"

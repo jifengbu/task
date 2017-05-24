@@ -17,6 +17,8 @@ node_modules
 /resource
 /server/doc/github
 /appServer
+/server/dist/*
+!/server/dist/package.json
 /效果图
 download
 *.idea
