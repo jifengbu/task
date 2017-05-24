@@ -44,7 +44,7 @@ module.exports = React.createClass({
                     style={{ flex: 1 }}
                     disable={!active}
                     renderRow={this.renderRow}
-                    listParam={{ userId: app.personal.info.shopId, type }}
+                    listParam={{ userId: app.personal.info.userId, type }}
                     listName={type + '.list'}
                     listUrl={app.route.ROUTE_GET_NOTIFY_LIST}
                     refreshEnable

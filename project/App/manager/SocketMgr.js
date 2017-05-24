@@ -1,5 +1,5 @@
 'use strict';
-var io = require('socket.io-client/socket.io');
+var io = require('socket.io-client');
 
 class Manager {
     register() {

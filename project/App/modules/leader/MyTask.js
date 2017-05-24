@@ -10,7 +10,7 @@ const {
     WebView,
 } = ReactNative;
 
-const TaskList = require('./TaskList.js');
+const CareTaskList = require('./CareTaskList.js');
 const ExamineTaskList = require('./ExamineTaskList.js');
 const Statistics = require('./Statistics.js');
 const TimeManageList = require('./TimeManageList.js');
@@ -21,32 +21,13 @@ module.exports = React.createClass({
         return {
             tabIndex: 0,
             isNotification: true,
-            taskType: '',
         };
-    },
-    componentDidMount() {
-        this.getTaskTypeList();
-    },
-    getTaskTypeList() {
-        const param = {
-            userID: app.personal.info.userID,
-        };
-        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getPersonalInfoSuccess);
-    },
-    getPersonalInfoSuccess (data) {
-        if (data.success) {
-            const context = data.context;
-            if (context) {
-                let type = _.find(context.taskTypeList,(o)=>o.name=='最关心任务');
-                this.setState({taskType:type.key});
-            }
-        }
     },
     changeTab (tabIndex) {
         this.setState({ tabIndex });
     },
     render () {
-        const { tabIndex,taskType } = this.state;
+        const { tabIndex } = this.state;
         const menuAdminArray = ['最关心任务', '日程提醒', '任务审批', '统计'];
         return (
             <View style={styles.container}>
@@ -99,8 +80,8 @@ module.exports = React.createClass({
                 </View>
                 <View style={styles.listStyle}>
                     {
-                        this.state.tabIndex ===0&&taskType != ''&&
-                        <TaskList taskType={taskType}/>
+                        this.state.tabIndex ===0&&
+                        <CareTaskList />
                     }
                     {
                         this.state.tabIndex ===2&&

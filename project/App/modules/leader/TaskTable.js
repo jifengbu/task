@@ -6,30 +6,61 @@ const {
     StyleSheet,
     View,
     Text,
+    TextInput,
+    Image,
     ScrollView,
     TouchableOpacity,
     WebView,
 } = ReactNative;
 
 const TaskList = require('./TaskList.js');
+const CareTaskList = require('./CareTaskList.js');
+const ApproveTaskList = require('./ApproveTaskList.js');
 const RepulseTackList = require('./RepulseTackList.js');
-const Search = require('./Search.js');
 
 const { DImage } = COMPONENTS;
 
+var searchText = '';
+
+var Title = React.createClass({
+    render() {
+        return (
+            <View style={styles.txtInputView}>
+                <TextInput
+                    placeholder="输入搜索关键字"
+                    defaultValue={searchText}
+                    onChangeText={(text) => {searchText=text}}
+                    onSubmitEditing={this.props.doStartSearch}
+                    style={styles.txtInputSearch}
+                    />
+                <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={this.props.doStartSearch}
+                    style={styles.txtFindView}>
+                   <Image
+                        resizeMode='cover'
+                        source={app.img.leader_search}
+                        style={styles.icon_find}/>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+});
+
 module.exports = React.createClass({
     statics: {
-      rightButton: { image: app.img.leader_seach_seach, handler: ()=>{
-          app.navigator.push({
-              component: Search,
-          });
-      }},
+        title: (<Title doStartSearch={()=>{app.scene.doStartSearch()}}/>),
+        rightButton: { image: null, handler: ()=>{app.scene.doStartSearch()}},
+    },
+    doStartSearch() {
+        this.setState({keyword: searchText});
     },
     getInitialState () {
         return {
             tabIndex: 0,
             dataDetail: null,
             taskType: '',
+            keyword: '',
         };
     },
     componentDidMount() {
@@ -37,7 +68,7 @@ module.exports = React.createClass({
     },
     getTaskTypeList() {
         const param = {
-            userID: app.personal.info.userID,
+            userId: app.personal.info.userId,
         };
         POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getPersonalInfoSuccess);
     },
@@ -56,11 +87,13 @@ module.exports = React.createClass({
         this.setState({ tabIndex,taskType });
     },
     render () {
-        const { tabIndex, dataDetail,taskType } = this.state;
+        const { tabIndex, dataDetail,taskType,keyword } = this.state;
         let menuAdminArray = [];
+        let taskArr = [{"key": "0","name": "最关心任务",},{"key": "1","name": "打回任务",},{"key": "2","name": "审批任务",}];
         if (dataDetail) {
             menuAdminArray = dataDetail.taskTypeList;
         }
+        taskArr.push(...menuAdminArray);
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -68,7 +101,7 @@ module.exports = React.createClass({
                     scrollEnabled
                     style={styles.tabContainer}>
                     {
-                        menuAdminArray.map((item, i) => {
+                        taskArr.map((item, i) => {
                             return (
                                 <TouchableOpacity
                                     key={i}
@@ -86,27 +119,27 @@ module.exports = React.createClass({
                 <View style={styles.listStyle}>
                     {
                         this.state.tabIndex ===0&&
-                        <TaskList taskType={taskType}/>
+                        <CareTaskList />
                     }
                     {
                         this.state.tabIndex ===1&&
-                        <TaskList taskType={taskType}/>
+                        <RepulseTackList />
                     }
                     {
                         this.state.tabIndex ===2&&
-                        <TaskList taskType={taskType}/>
+                        <ApproveTaskList />
                     }
                     {
                         this.state.tabIndex ===3&&
-                        <TaskList taskType={taskType}/>
+                        <TaskList taskType={taskType} keyword={keyword}/>
                     }
                     {
                         this.state.tabIndex ===4&&
-                        <TaskList taskType={taskType}/>
+                        <TaskList taskType={taskType} keyword={keyword}/>
                     }
                     {
                         this.state.tabIndex ===5&&
-                        <RepulseTackList taskType={taskType}/>
+                        <TaskList taskType={taskType} keyword={keyword}/>
                     }
                 </View>
             </View>
@@ -121,7 +154,7 @@ const styles = StyleSheet.create({
     },
     tabContainer: {
         flexDirection: 'row',
-        backgroundColor: 'red',
+        backgroundColor: '#ea372f',
     },
     tabButtonLeft: {
         width: sr.w / 5,
@@ -143,5 +176,39 @@ const styles = StyleSheet.create({
     listStyle: {
         width: sr.w,
         height: sr.ch-35,
+    },
+    txtInputSearch: {
+        height: 25,
+        width: 305,
+        color: '#929292',
+        paddingVertical: -2,
+        fontSize: 14,
+        paddingLeft: 5,
+        borderColor: '#D7D7D7',
+        backgroundColor: '#FFFFFF',
+        overflow: 'hidden',
+        alignItems:'center',
+        borderRadius: 4,
+    },
+    txtInputView: {
+        height: 25,
+        width: 336,
+        paddingVertical: -10,
+        backgroundColor: 'transparent',
+        flexDirection: 'row',
+        overflow: 'hidden',
+        alignItems:'center',
+    },
+    txtFindView: {
+        backgroundColor: 'transparent',
+        width: 25,
+        height: 25,
+        marginLeft: 5,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    icon_find: {
+        height: 20,
+        width: 20,
     },
 });

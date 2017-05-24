@@ -64,8 +64,8 @@ module.exports = React.createClass({
         Picker.hide();
         dismissKeyboard();
         if (this.state.isEditStatus) {
-            const { headImg, name, post } = app.personal.info;
-            if (name != this.state.name ||post != this.state.post) {
+            const { headImg, name, position } = app.personal.info;
+            if (name != this.state.name ||position != this.state.position) {
                 this.updatePersnalInfo();
             } else {
                 this.setState({ isEditStatus: false });
@@ -82,8 +82,8 @@ module.exports = React.createClass({
     },
     showBox () {
         dismissKeyboard();
-        const { headImg, name, post } = app.personal.info;
-        if (name != this.state.name ||post != this.state.post) {
+        const { headImg, name, position } = app.personal.info;
+        if (name != this.state.name ||position != this.state.position) {
             this.showConfirmBox();
         } else {
             app.navigator.pop();
@@ -99,26 +99,25 @@ module.exports = React.createClass({
     },
     getStateFromPersonalInfo () {
         const info = app.personal.info;
-        const post = info.post;
+        const position = info.position;
         const name = info.name;
         let headImgSource = app.img.personal_add_header;
-        // if (info.headImg) {
-        //     headImgSource = { uri: info.headImg };
-        // }
+        if (info.head) {
+            headImgSource = { uri: info.head };
+        }
         return {
             name: name,
-            post: post,
+            position: position,
             actionSheetVisible: false,
             headImgSource: headImgSource,
         };
     },
-
     onWillHide() {
         Picker.hide();
     },
     setPersonalInfo () {
         const info = app.personal.info;
-        info.post = this.state.post;
+        info.position = this.state.position;
         info.name = this.state.name;
         info.headImg = this.state.headImgSource.uri || '';
         app.personal.set(info);
@@ -145,13 +144,12 @@ module.exports = React.createClass({
         return newStr;
     },
     updatePersnalInfo () {
-        const detailsMap = this.setData();
-        if (detailsMap.name == '') {
+        if (this.state.name == '') {
             Toast('名称不能为空');
             return;
         }
         const param = {
-            userID: app.personal.info.userID,
+            userId: app.personal.info.userId,
             detail: detailsMap,
         };
         POST(app.route.ROUTE_UPDATE_PERSONAL_INFO, param, this.updatePersnalInfoSuccess, this.updatePersnalInfoError, true);
@@ -174,13 +172,6 @@ module.exports = React.createClass({
     },
     onFocus () {
         Picker.hide();
-    },
-    setData () {
-        const detailsMap = {};
-        detailsMap['name'] = _.trim(this.state.name);
-        detailsMap['post'] = this.state.post;
-        // detailsMap['headImg'] = this.state.headImgSource.uri || '';
-        return detailsMap;
     },
     doCloseActionSheet () {
         this.setState({ actionSheetVisible:false });
@@ -227,7 +218,7 @@ module.exports = React.createClass({
         options.fileName = filePath.substr(filePath.lastIndexOf('/') + 1);
         options.mimeType = 'image/jpeg';
         options.params = {
-            userID:app.personal.info.userID,
+            userId:app.personal.info.userId,
         };
         this.uploadOn = true;
         UPLOAD(filePath, app.route.ROUTE_UPDATE_FILE, options, (progress) => console.log(progress),
@@ -307,6 +298,22 @@ module.exports = React.createClass({
                         }
                     </View>
                     <Text style={styles.lowSeprator} />
+                    <View style={styles.itemBgStyle} >
+                        <Text style={styles.headText}>职位</Text>
+                        { !this.state.isEditStatus ?
+                            <Text style={styles.contentText}>{this.state.name ? this.state.name : '请输入您的职位'}</Text>
+                            :
+                            <TextInput
+                                onChangeText={(text) => this.setState({ name: text })}
+                                onFocus={this.onTextInputFocus}
+                                underlineColorAndroid={'transparent'}
+                                defaultValue={this.state.name}
+                                placeholder={'请输入您的职位'}
+                                placeholderTextColor={'#BABABA'}
+                                style={styles.text_input} />
+                        }
+                    </View>
+                    <Text style={styles.lowSeprator} />
                     <TouchableOpacity
                         activeOpacity={!this.state.isEditStatus ? 1 : DEFAULT_OPACITY}
                         onPress={this.state.isEditStatus ? this.editPosition : null}>
@@ -327,61 +334,18 @@ module.exports = React.createClass({
                         </View>
                     </TouchableOpacity>
                     <Text style={styles.lowSeprator} />
-                    <View style={styles.itemBgStyle} >
-                        <Text style={styles.headText}>电话</Text>
-                        { !this.state.isEditStatus ?
-                            <Text style={styles.contentText}>{this.state.post ? this.state.post : '请填写您的职位'}</Text>
-                            :
-                            <TextInput
-                                onChangeText={(text) => this.setState({ post: text })}
-                                onFocus={this.onTextInputFocus}
-                                underlineColorAndroid={'transparent'}
-                                defaultValue={this.state.post}
-                                placeholder={'请输入您的电话'}
-                                placeholderTextColor={'#BABABA'}
-                                style={styles.text_input} />
-                        }
+                    <View style={styles.itemBgStyle}>
+                        <Text style={styles.headText}>指纹登陆</Text>
+                        <View style={styles.itemView}>
+                            <Text style={styles.contentSwitch}>
+                            </Text>
+                            <Switch
+                                onValueChange={this.onSwitchChange}
+                                onTintColor={'#f03b0a'}
+                                value={this.state.switchValue}
+                                style={styles.goSwitch} />
+                        </View>
                     </View>
-                    <Text style={styles.lowSeprator} />
-                    <TouchableOpacity
-                        activeOpacity={DEFAULT_OPACITY}
-                        onPress={this.editPassWord}>
-                        <View style={styles.itemBgStyle}>
-                            <Text style={styles.headText}>修改密码</Text>
-                            <View style={styles.itemView}>
-                                <Text style={styles.contentText}>
-                                    {'点击修改密码'}
-                                </Text>
-                                {
-                                    this.state.isEditStatus &&
-                                    <Image
-                                        resizeMode='contain'
-                                        source={app.img.common_go}
-                                        style={styles.goIcon} />
-                                }
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <Text style={styles.lowSeprator} />
-                    <TouchableOpacity
-                        activeOpacity={DEFAULT_OPACITY}
-                        onPress={this.editFingerPrint}>
-                        <View style={styles.itemBgStyle}>
-                            <Text style={styles.headText}>指纹登陆</Text>
-                            <View style={styles.itemView}>
-                                <Text style={styles.contentSwitch}>
-                                    {''}
-                                </Text>
-                                {
-                                    <Switch
-                                        onValueChange={this.onSwitchChange}
-                                        onTintColor={'#f03b0a'}
-                                        value={this.state.switchValue}
-                                        style={styles.goSwitch} />
-                                }
-                            </View>
-                        </View>
-                    </TouchableOpacity>
                     <Text style={styles.lowSeprator} />
                 </View>
                 <ActionSheet

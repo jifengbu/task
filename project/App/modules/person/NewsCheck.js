@@ -63,7 +63,7 @@ module.exports = React.createClass({
     getList () {
         const param = {
             type: '',
-            userId: app.personal.info.shopId,
+            userId: app.personal.info.userId,
             pageNo: 0,
             pageSize: CONSTANTS.PER_PAGE_COUNT,
         };

@@ -8,4 +8,3 @@ export TaskGroupModel from './TaskGroupModel';
 export ScheduleModel from './ScheduleModel';
 export ProgressModel from './ProgressModel';
 export PartmentModel from './PartmentModel';
-export RemindModel from './RemindModel';

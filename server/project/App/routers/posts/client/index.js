@@ -41,7 +41,7 @@ export finishSchedule from './schedule/finishSchedule'; // 完成日程
 
 // progress
 export getTaskProgressList from './progress/getTaskProgressList'; // 获取任务进度列表
-export remaindTask from './progress/remaindTask'; // 提醒任务
+export remindTask from './progress/remindTask'; // 提醒任务
 export updateTaskProgress from './progress/updateTaskProgress'; // 更新任务进度
 
 // client

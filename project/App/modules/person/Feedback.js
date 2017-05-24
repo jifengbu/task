@@ -19,7 +19,7 @@ module.exports = React.createClass({
             return;
         }
         const param = {
-            shopId: app.personal.info.shopId,
+            userId: app.personal.info.userId,
             content: this.state.content,
         };
         POST(app.route.ROUTE_SUBMIT_FEEDBACK, param, this.doSubmitSuccess);

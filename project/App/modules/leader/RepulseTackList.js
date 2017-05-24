@@ -26,22 +26,16 @@ module.exports = React.createClass({
         };
     },
     componentDidMount () {
-        let { taskType } = this.props;
-        console.log('===taskType===',taskType);
-        if (taskType) {
-            this.type = taskType;
-        }
-        this.getTaskListByType(this.type);
+        this.getTaskListByType();
     },
-    getTaskListByType(taskType) {
+    getTaskListByType() {
         const param = {
-            userID: app.personal.info.userID,
-            keyword: '',
-            type: taskType,
+            userId: app.personal.info.userId,
+            role: 'leader',
             pageNo: this.pageNo,
             pageSize: 10,
         };
-        POST(app.route.ROUTE_GET_TASK_LIST_BY_TYPE, param, this.getTaskListByTypeSuccess);
+        POST(app.route.ROUTE_GET_REJECT_TASK_LIST, param, this.getTaskListByTypeSuccess);
     },
     getTaskListByTypeSuccess (data) {
         if (data.success) {
@@ -120,7 +114,7 @@ const RowItem = React.createClass({
                   </Image>
                   <View style={styles.topView}>
                       <Text style={styles.title_text}>{'打回原因:'}</Text>
-                      <Text numberOfLines={2} style={styles.description}>{obj.description+'哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'}</Text>
+                      <Text numberOfLines={2} style={styles.description}>{obj.rejectPublishReason}</Text>
                   </View>
                   <View style={styles.line}/>
                   <View style={[styles.midView,{height: lineHeight}]}>

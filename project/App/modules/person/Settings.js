@@ -15,10 +15,12 @@ const About = require('./About.js');
 const UpdatePage = require('../update/UpdatePage');
 const Feedback = require('./Feedback');
 const ModifyPassword = require('./ModifyPassword.js');
+const EditPersonInfo = require('./EditPersonInfo.js');
 
 const { Button, WebviewMessageBox } = COMPONENTS;
 
 const CHILD_PAGES = [
+    { title:'个人信息', module: EditPersonInfo, img:app.img.common_point, info:'' },
     { title:'意见反馈', module: Feedback, img:app.img.common_point, info:'' },
     { title:'修改密码', module: ModifyPassword, img:app.img.common_point, info:'' },
 ];

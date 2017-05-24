@@ -30,7 +30,7 @@ module.exports = React.createClass({
     },
     getSingleTaskDetail () {
         const param = {
-            userID: app.personal.info.userID,
+            userId: app.personal.info.userId,
             taskId: this.props.taskId,
         };
         POST(app.route.ROUTE_GET_SINGLE_TASK_DETAIL, param, this.getSingleTaskDetailSuccess);

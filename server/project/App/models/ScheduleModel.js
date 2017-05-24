@@ -8,7 +8,7 @@ const scheduleSchema = new Schema({
     content: { type: String }, // 具体内容
     createTime: { type: Date, default: Date.now }, // 创建时间
     modifyTime: { type: Date, default: Date.now }, // 创建时间
-    remaindTime: { type: Date, default: Date.now }, // 提醒时间
+    remindTime: { type: Date, default: Date.now }, // 提醒时间
 });
 
 scheduleSchema.virtual('id').get(function () {
@@ -18,7 +18,7 @@ scheduleSchema.virtual('id').get(function () {
 const transform = {
     virtuals: true,
     transform: function (doc, ret, options) {
-        formatTime(ret, 'createTime, modifyTime, remaindTime');
+        formatTime(ret, 'createTime, modifyTime, remindTime');
         delete ret._id;
         delete ret.__v;
         return ret;

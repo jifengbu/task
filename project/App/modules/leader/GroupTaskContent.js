@@ -36,7 +36,7 @@ module.exports = React.createClass({
     },
     agreeTask(taskId) {
         const param = {
-            userID: app.personal.info.userID,
+            userId: app.personal.info.userId,
             taskId: taskId,
         };
         POST(app.route.ROUTE_AGREE_PUBLISH_TASK, param, this.doExamineSuccess);
@@ -48,7 +48,7 @@ module.exports = React.createClass({
     },
     doConfirm(taskId, content) {
         const param = {
-            userID: app.personal.info.userID,
+            userId: app.personal.info.userId,
             taskId: taskId,
             reason: content,
         };

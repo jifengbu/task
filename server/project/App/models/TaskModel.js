@@ -14,6 +14,7 @@ const taskSchema = new mongoose.Schema({
     content: { type: String }, // 内容
     audioList: [{ url: { type: Schema.Types.ObjectId, ref: 'Media' }, duration: { type: Number } }], // 音频列表
     imageList: [{ type: Schema.Types.ObjectId, ref: 'Media' }], // 图片列表
+    remindList: [{ type: Schema.Types.Mixed }], //提醒列表（如果为固定的为Number，自定义的为时间）
 
     type: { type: Number, default: 0 }, // 任务类型，根据taskType而定
     state: { type: Number, default: 1 }, // 任务状态，2^0：待审批，2^1：驳回审批，2^2：通过审批，2^3：待执行， 2^4：进行中，2^5：待完成审核，2^6：驳回完成审核，2^7：完成

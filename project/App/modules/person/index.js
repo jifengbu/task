@@ -38,7 +38,7 @@ module.exports = React.createClass({
                         <Image
                             resizeMode='stretch'
                             defaultSource={app.img.personal_head}
-                            source={app.img.common_head}
+                            source={app.img.personal_head}
                             style={styles.headStyle}
                             />
                     </TouchableOpacity>
@@ -105,13 +105,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     btnLogout: {
-        height: 46,
-        width: sr.w - 60,
-        marginLeft: 30,
-        marginTop: 80,
-        marginBottom: 100,
-        borderRadius: 6,
-        backgroundColor: '#A52A2A',
+        height: 40,
+        width: sr.w,
+        marginTop: 20,
+        marginBottom: 180,
+        borderRadius: 0,
+        backgroundColor: '#F1443E',
     },
     btnLogoutText: {
         fontSize: 18,

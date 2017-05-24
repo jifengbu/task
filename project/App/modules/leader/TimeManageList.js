@@ -38,7 +38,7 @@ module.exports = React.createClass({
     },
     getScheduleList(id) {
         const param = {
-            userId: app.personal.info.userID,
+            userId: app.personal.info.userId,
         };
         POST(app.route.ROUTE_GET_SCHEDULE_LIST, param, this.getScheduleListSuccess);
     },
@@ -58,7 +58,7 @@ module.exports = React.createClass({
     },
     finishSchedule(id) {
         const param = {
-            userId: app.personal.info.userID,
+            userId: app.personal.info.userId,
             scheduleId: id,
         };
         POST(app.route.ROUTE_FINISH_SCHEDULE, param, this.finishScheduleSuccess);
@@ -96,7 +96,7 @@ module.exports = React.createClass({
     modifySchedule(content,id) {
         const param = {
             scheduleId: id,
-            userId: app.personal.info.userID,
+            userId: app.personal.info.userId,
             content: content,
         };
         POST(app.route.ROUTE_MODIFY_SCHEDULE, param, this.modifyScheduleSuccess);
@@ -118,7 +118,7 @@ module.exports = React.createClass({
     },
     createSchedule(content) {
         const param = {
-            userId: app.personal.info.userID,
+            userId: app.personal.info.userId,
             content: content,
         };
         POST(app.route.ROUTE_CREATE_SCHEDULE, param, this.createScheduleSuccess);

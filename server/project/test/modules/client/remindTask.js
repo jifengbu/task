@@ -6,4 +6,4 @@ var param = {
     taskId: args[0],
 };
 
-post('/client/remaindTask', param);
+post('/client/remindTask', param);

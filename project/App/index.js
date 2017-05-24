@@ -36,6 +36,7 @@ const UpdateMgr = require('./manager/UpdateMgr.js');
 const SettingMgr = require('./manager/SettingMgr.js');
 const LoginMgr = require('./manager/LoginMgr.js');
 const WebsocketMgr = require('./manager/WebsocketMgr.js');
+const SocketMgr = require('./manager/SocketMgr.js');
 const { ProgressHud, DelayTouchableOpacity, Modal } = COMPONENTS;
 
 global.app = {
@@ -48,7 +49,7 @@ global.app = {
     setting: SettingMgr,
     updateMgr:UpdateMgr,
     login: LoginMgr,
-    socket: WebsocketMgr,
+    socket: SocketMgr,
     isandroid: Platform.OS === 'android',
 };
 
@@ -158,7 +159,7 @@ const NavigationBarRouteMapper = {
     },
     Title (route, navigator, index, navState) {
         const title = route.title || route.component.title;
-        const color = route.color || route.component.color || '#fddd34';
+        const color = route.color || route.component.color || 'white';
         if (typeof title === 'string') {
             return (
                 <View style={styles.titleContainer}>

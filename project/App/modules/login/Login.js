@@ -181,8 +181,7 @@ module.exports = React.createClass({
     doLoginSuccess (data) {
         if (data.success) {
             app.personal.info.phone = this.state.phone;
-            app.personal.info.userID = data.context.userId;
-            this.getClientList(data.context.userId);
+            app.personal.info.userId = data.context.userId;
             app.login.savePhone(this.state.phone);
             this.getPersonalInfo();
         } else {
@@ -196,14 +195,14 @@ module.exports = React.createClass({
     },
     getPersonalInfo () {
         const param = {
-            userID: app.personal.info.userID,
+            userId: app.personal.info.userId,
         };
         POST(app.route.ROUTE_GET_PERSONAL_INFO, param, this.getPersonalInfoSuccess, this.getPersonalInfoError);
     },
     getPersonalInfoSuccess (data) {
         if (data.success) {
             const context = data.context;
-            context['userID'] = app.personal.info.userID;
+            context['userId'] = app.personal.info.userId;
             context['phone'] = this.state.phone;
             app.personal.set(context);
             app.navigator.replace({
@@ -216,19 +215,6 @@ module.exports = React.createClass({
     },
     getPersonalInfoError (error) {
         app.dismissProgressHud();
-    },
-    getClientList(userID) {
-        const param = {
-            userID: userID,
-        };
-        POST(app.route.ROUTE_GET_CLIENT_LIST, param, this.getClientListSuccess);
-    },
-    getClientListSuccess(data) {
-        if (data.success) {
-            app.clientList = data.context.clientList;
-        } else {
-            Toast('获取数据错误，请稍后重试！');
-        }
     },
     showPassword () {
         this.setState({ showPassword: true });

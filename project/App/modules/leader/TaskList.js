@@ -21,7 +21,6 @@ module.exports = React.createClass({
     },
     getInitialState () {
         this.taskList = [];
-        this.type = '';
         this.pageNo = 1;
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
@@ -39,17 +38,15 @@ module.exports = React.createClass({
         // }
     },
     componentDidMount () {
-        let { taskType } = this.props;
-        console.log('===taskType===',taskType);
+        let { taskType,keyword } = this.props;
         if (taskType) {
-            this.type = taskType;
+            this.getTaskListByType(taskType,keyword);
         }
-        this.getTaskListByType(this.type);
     },
-    getTaskListByType(taskType) {
+    getTaskListByType(taskType,keyword) {
         const param = {
-            userID: app.personal.info.userID,
-            keyword: '',
+            userId: app.personal.info.userId,
+            keyword: keyword,
             type: taskType,
             pageNo: this.pageNo,
             pageSize: 10,

@@ -53,7 +53,7 @@ module.exports = React.createClass({
             return;
         }
         const param = {
-            shopId: app.personal.info.shopId,
+            userId: app.personal.info.userId,
             oldPassword,
             newPassword: newPassword1,
         };

@@ -25,10 +25,14 @@ module.exports = React.createClass({
         title: '单一任务',
     },
     getInitialState () {
+        this.clientList = [];
         this.tempClientList = [];
+        this.typeList = [];
+        this.tempTypeList = [];
         return {
             title: '',
             content: '',
+            taskType: '',
             tabIndex: 0,
             startTime: moment(),
             endTime: moment(),
@@ -39,10 +43,54 @@ module.exports = React.createClass({
             overlayShowMessageBox: false,
         };
     },
-    componentDidMount () {
-        _.forEach(app.clientList, (item) => {
-            this.tempClientList.push(item.name);
-        });
+    componentWillMount () {
+        this.listFlags = 0;
+    },
+    onWillFocus () {
+        if (!this.listFlags) {
+            this.getClientList();
+            this.getTaskTypeList();
+        }
+    },
+    getClientList() {
+        const param = {
+            userId: app.personal.info.userId,
+        };
+        POST(app.route.ROUTE_GET_CLIENT_LIST, param, this.getClientListSuccess);
+    },
+    getClientListSuccess(data) {
+        if (data.success) {
+            this.listFlags = 1;
+            const context = data.context;
+            if (context) {
+                this.clientList = data.context.clientList;
+                _.forEach(this.clientList, (item) => {
+                    this.tempClientList.push(item.name);
+                });
+            }
+        } else {
+            this.listFlags = 0;
+        }
+    },
+    getTaskTypeList() {
+        const param = {
+            userId: app.personal.info.userId,
+        };
+        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getTaskTypeListSuccess);
+    },
+    getTaskTypeListSuccess(data) {
+        if (data.success) {
+            this.listFlags = 1;
+            const context = data.context;
+            if (context) {
+                this.typeList = data.context.taskTypeList;
+                _.forEach(this.typeList, (item) => {
+                    this.tempTypeList.push(item.name);
+                });
+            }
+        } else {
+            this.listFlags = 0;
+        }
     },
     changeTab (tabIndex) {
         this.setState({ tabIndex });
@@ -97,7 +145,7 @@ module.exports = React.createClass({
         options.fileName = filePath.substr(filePath.lastIndexOf('/') + 1);
         options.mimeType = 'm4a';
         options.params = {
-            userID:app.personal.info.userID,
+            userId:app.personal.info.userId,
         };
         this.uploadOn = true;
         this.curUploadFile = filePath;
@@ -183,6 +231,11 @@ module.exports = React.createClass({
             this.setState({executor: value[0]});
         });
     },
+    showSelectType() {
+        Picker(this.tempTypeList, [this.tempTypeList[0]], '').then((value)=>{
+            this.setState({taskType: value[0]});
+        });
+    },
     showBigImage (localUrlImages, index) {
         // app.showModal(
         //     <AidBigImage
@@ -202,25 +255,44 @@ module.exports = React.createClass({
         this.setState({ remindList: obj});
     },
     doCreateTask() {
-        const {title, content} = this.state;
+        const {title, content, startTime, endTime, supervisor, executor, taskType, remindList} = this.state;
+        let supervisorId = '';
+        let executorId = '';
+        for (let item of this.clientList) {
+            supervisorId = item.name === supervisor? item.id:'';
+            executorId = item.name === executor? item.id:'';
+        }
+        if (!supervisorId) {
+            Toast('请选择监督人');
+            return;
+        }
+        if (!executorId) {
+            Toast('请选择执行人');
+            return;
+        }
+        const typeInfo = _.find(this.typeList, (item) => item.name === taskType);
+        if (!typeInfo) {
+            Toast('请选择任务类型');
+            return;
+        }
         const param = {
-            userID: app.personal.info.userID,
-            executorId: app.personal.info.userID,
-            supervisorId: app.personal.info.userID,
-            title: title,
-            content: content,
+            userId: app.personal.info.userId,
+            executorId,
+            supervisorId,
+            title,
+            content,
             audioList: [],
             imageList: [],
-            remindList: [],
-            type: [],
-            expectStartTime: this.state.startTime,
-            expectFinishTime: this.state.endTime,
+            remindList,
+            type: typeInfo.key,
+            expectStartTime: moment(startTime).format('YYYY-MM-DD HH:mm'),
+            expectFinishTime: moment(endTime).format('YYYY-MM-DD HH:mm'),
         };
-        POST(app.route.ROUTE_GET_SINGLE_TASK_DETAIL, param, this.getSingleTaskDetailSuccess);
+        POST(app.route.ROUTE_LEADER_CREATE_TASK, param, this.leaderCreateTaskSuccess);
     },
-    getSingleTaskDetailSuccess (data) {
+    leaderCreateTaskSuccess (data) {
         if (data.success) {
-            //
+            Toast('发布任务成功');
         } else {
             Toast('获取数据错误，请稍后重试！');
         }
@@ -323,7 +395,7 @@ module.exports = React.createClass({
                                 style={[styles.timeTextContainer, { marginLeft: 10 }]}
                                 >
                                 <Text style={styles.timeText}>
-                                    {this.getTimeText(this.state.startTime)}
+                                    {this.getTimeText(startTime)}
                                 </Text>
                                 <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
                             </TouchableOpacity>
@@ -348,7 +420,22 @@ module.exports = React.createClass({
                                 style={[styles.timeTextContainer, { marginLeft: 10 }]}
                                 >
                                 <Text style={styles.timeText}>
-                                    {this.getTimeText(this.state.endTime)}
+                                    {this.getTimeText(endTime)}
+                                </Text>
+                                <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={styles.chooseContainer}>
+                        <Text style={styles.menuText}>任务类型:</Text>
+                        <View style={styles.updownlside}>
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.showSelectType}
+                                style={styles.timeTextContainer}
+                                >
+                                <Text style={styles.timeText}>
+                                    {this.state.taskType||'请选择'}
                                 </Text>
                                 <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
                             </TouchableOpacity>
