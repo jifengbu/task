@@ -4,7 +4,7 @@ import { getMediaPath } from '../../../utils/';
 
 export default ({
     userId,
-}, file) => {
+}, { file }) => {
     return new Promise(async (resolve) => {
         const gridId = file.grid._id;
         const media = new MediaModel({

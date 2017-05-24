@@ -8,7 +8,6 @@ import fs from 'fs';
 
 import config from '../config';
 import routers from './routers';
-import { registerSocket } from './routers/sockets';
 
 const storage = {
     _handleFile (req, file, cb) {
@@ -51,10 +50,8 @@ app.use(express.static(path.resolve('public')));
 app.use(express.static(path.resolve('download')));
 
 // Routers
-app.use(routers);
-
-// socket.io
 const server = http.Server(app);
-registerSocket(server);
+app.use(routers(server));
+
 
 export default server;

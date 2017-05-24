@@ -26,10 +26,10 @@ post('/client/login', param).then((obj) => {
             }).on('connect_timeout', function (obj) {
                 console.error('connect to server timeout');
             }).on('reconnect', function (obj) {
-                console.log('magenta@reconnect to server');
+                console.log('reconnect to server');
             }).on('reconnect_failed', function (obj) {
                 console.error('reconnect to server failed');
-            }).on('USER_LOGIN_RS', function (obj) {
+            }).on('TEST_RS', function (obj) {
                 console.log(obj);
             });
         }

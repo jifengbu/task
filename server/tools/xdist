@@ -2,8 +2,8 @@
 
 source ~/command/common
 
-SERVER="120.25.96.74"
-# SERVER="192.168.1.126"
+# SERVER="120.25.96.74"
+SERVER="192.168.1.126"
 
 function genDistForProject() {
     pushd ../../${1}/project 1>/dev/null
@@ -11,8 +11,8 @@ function genDistForProject() {
     npm run dist
     vim -e -s config.js -c ":%s/${SERVER}/localhost/" -c ":wq"
     pushd ../dist 1>/dev/null
-    tar zcvf ${2}.tar.gz app.js main.css package.json public
-    mv ${2}.tar.gz ../../server/tools/dist
+    # tar zcvf ${2}.tar.gz app.js main.css package.json public
+    # mv ${2}.tar.gz ../../server/tools/dist
     popd 1>/dev/null
     popd 1>/dev/null
 }
