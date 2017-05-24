@@ -20,10 +20,16 @@ export removeTask from './task/removeTask'; // 删除单一任务
 
 export leaderCreateTask from './task/leaderCreateTask'; // 领导创建任务
 export secretaryCreateTask from './task/secretaryCreateTask'; // 秘书创建任务
-export getToExamineTaskList from './task/getToExamineTaskList'; // 获取待审核的任务列表
+export getApplyPublishTaskList from './task/getApplyPublishTaskList'; // 获取待审核发布的任务列表
 export agreePublishTask from './task/agreePublishTask'; // 同意发布任务
 export rejectPublishTask from './task/rejectPublishTask'; // 不同意发布任务
-export getRejectPublishTaskList from './task/getRejectPublishTaskList'; // 获取打回任务列表
+
+export applyFinishTask from './task/applyFinishTask'; // 申请完成任务
+export getApplyFinishTaskList from './task/getApplyFinishTaskList'; // 获取待审核完成的任务列表
+export agreeFinishTask from './task/agreeFinishTask'; // 同意完成任务
+export rejectFinishTask from './task/rejectFinishTask'; // 不同意完成任务
+
+export getRejectTaskList from './task/getRejectTaskList'; // 获取打回任务列表
 
 // schedule
 export createSchedule from './schedule/createSchedule'; // 创建日程

@@ -2,6 +2,7 @@ import { TaskGroupModel, TaskModel } from '../../../../models';
 import updateTaskProgress from '../progress/updateTaskProgress';
 
 export default async ({ userId, taskId }) => {
+    const doc = await TaskModel.findByIdAndUpdate(taskId, {state: 4, examineTime: Date.now()});
     const taskGroup = await TaskGroupModel.findById(doc.groupId)
     .select({
         taskList: 1,
