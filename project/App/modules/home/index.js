@@ -8,11 +8,11 @@ const Supervisor = require('../supervisor');
 module.exports = React.createClass({
     componentDidMount() {
         const component = {
-            '18085192480': Leader,
-            '18085192482': Secretary,
-            '18085192481': Supervisor,
-            '18085192483': Executor,
-        }[app.personal.info.phone];
+            '1': Executor,
+            '2': Leader,
+            '4': Secretary,
+            '8': Supervisor,
+        }[app.personal.info.authority];
         app.navigator.replace({
             component,
         });

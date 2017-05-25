@@ -1,4 +1,4 @@
-## 目录
+# 目录
 ##### 1. [上传文件(uploadFile)](#1-上传文件)
 ##### 2. [登录(login)](#2-登录)
 ##### 3. [注册(register)](#3-注册)
@@ -42,7 +42,6 @@
 ##### 41. [拒绝完成任务的通知(REJECT_FINISH_TASK_NF)](#41-拒绝完成任务的通知)
 
 ---
-
 
 ### 1. [上传文件](#1-上传文件uploadfile)
 - `uploadFile`
@@ -90,6 +89,7 @@ uploadErrorCallback () {
 ...
 ```
 
+---
 
 ### 2. [登录](#2-登录login)
 - `login`
@@ -220,7 +220,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
+| userId | ID | 用户Id |
 | authority | Number | [权限](#authority的说明) |
 
 ```js
@@ -248,7 +248,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
+| userId | ID | 用户Id |
 ```js
 {
     "success": true,
@@ -271,9 +271,9 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
-| executorId | String | 执行人Id |
-| supervisorId | String | 监督人Id |
+| userId | ID | 用户Id |
+| executorId | ID | 执行人Id |
+| supervisorId | ID | 监督人Id |
 | title | String | 标题 |
 | content | String | 内容 |
 | audioList | Array | [音频列表](#audiolist格式) |
@@ -318,8 +318,8 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
-| examinerId | String | 审核人Id |
+| userId | ID | 用户Id |
+| examinerId | ID | 审核人Id |
 | title | String | 标题 |
 | content | String | 内容 |
 | taskList | Array | 任务列表 |
@@ -328,8 +328,8 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| executorId | String | 执行人Id |
-| supervisorId | String | 监督人Id |
+| executorId | ID | 执行人Id |
+| supervisorId | ID | 监督人Id |
 | title | String | 标题 |
 | content | String | 内容 |
 | audioList | Array | [音频列表](#audiolist格式) |
@@ -630,10 +630,10 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
-| taskId | String | 任务Id |
-| executorId | String | 执行人Id |
-| supervisorId | String | 监督人Id |
+| userId | ID | 用户Id |
+| taskId | ID | 任务Id |
+| executorId | ID | 执行人Id |
+| supervisorId | ID | 监督人Id |
 | title | String | 标题 |
 | content | String | 内容 |
 | audioList | Array | [音频列表](#audiolist格式) |
@@ -712,7 +712,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
 | userId | ID | 用户Id |
-| taskId | String | 任务Id |
+| taskId | ID | 任务Id |
 | reason | String | 被打回的原因 |
 
 ```js
@@ -730,7 +730,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
 | userId | ID | 用户Id |
-| taskId | String | 任务Id |
+| taskId | ID | 任务Id |
 
 ```js
 {
@@ -747,7 +747,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
 | userId | ID | 用户Id |
-| taskId | String | 任务Id |
+| taskId | ID | 任务Id |
 
 ```js
 {
@@ -764,7 +764,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
 | userId | ID | 用户Id |
-| taskId | String | 任务Id |
+| taskId | ID | 任务Id |
 
 ```js
 {
@@ -781,7 +781,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
 | userId | ID | 用户Id |
-| taskId | String | 任务Id |
+| taskId | ID | 任务Id |
 | reason | String | 被打回的原因 |
 
 ```js
@@ -798,7 +798,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
+| userId | ID | 用户Id |
 | content | String | 日程内容 |
 
 ```js
@@ -815,8 +815,8 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
-| scheduleId | String | 日程Id |
+| userId | ID | 用户Id |
+| scheduleId | ID | 日程Id |
 
 ```js
 {
@@ -832,8 +832,8 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
-| scheduleId | String | 日程Id |
+| userId | ID | 用户Id |
+| scheduleId | ID | 日程Id |
 | content | String | 日程内容 |
 
 ```js
@@ -850,8 +850,8 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
-| scheduleId | String | 日程Id |
+| userId | ID | 用户Id |
+| scheduleId | ID | 日程Id |
 
 ```js
 {
@@ -867,7 +867,7 @@ authority为用户权限， 1：普通权限 2：拥有领导权限，4：拥有
 
 | 参数名称 | 参数类型  | 描述 |
 | :- |:-:| :-:|
-| userId | String | 用户Id |
+| userId | ID | 用户Id |
 | time | String | 日程时间 |
 
 ```js

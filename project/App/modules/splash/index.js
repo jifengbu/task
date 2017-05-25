@@ -100,8 +100,8 @@ module.exports = React.createClass({
                     height &&
                     <Swiper
                         paginationStyle={styles.paginationStyle}
-                        dot={<View style={{ backgroundColor:'#87E5D6', width: 8, height: 8, borderRadius: 4, marginLeft: 12, marginRight: 12, marginBottom }} />}
-                        activeDot={<View style={{ backgroundColor:'#1A7AE9', width: 18, height: 9, borderRadius: 6, marginLeft: 7, marginRight: 7, marginBottom }} />}
+                        dot={<View style={{ backgroundColor:'transparent', width: 8, height: 8, borderRadius: 4, marginLeft: 12, marginRight: 12, marginBottom }} />}
+                        activeDot={<View style={{ backgroundColor:'transparent', width: 18, height: 9, borderRadius: 6, marginLeft: 7, marginRight: 7, marginBottom }} />}
                         height={height}
                         loop={false}>
                         {
@@ -117,7 +117,6 @@ module.exports = React.createClass({
                                             <TouchableOpacity
                                                 style={styles.enterButtonContainer}
                                                 onPress={this.enterNextPage}>
-                                                <Image resizeMode='stretch' style={styles.enterButton} source={app.img.splash_start} />
                                             </TouchableOpacity>
                                         }
                                     </Image>
@@ -146,7 +145,7 @@ const styles = StyleSheet.create({
         width: 165,
         height: 40,
         left: (sr.w - 165) / 2,
-        bottom: 80,
+        bottom: 60,
         alignItems:'center',
         justifyContent: 'center',
     },

@@ -1,4 +1,11 @@
 #!/bin/bash
+# api.md制作规则
+# '#'用来定制目录
+# '##' 用来定制分类
+# '###' 用来定制api
+# '#####' 用来定制目录api
+# '######' 用来定制类型
+#
 source ~/command/common
 url="https://github.com/fov42550564/api/blob/master/api.md"
 
@@ -13,7 +20,7 @@ function genCatalog() {
     echo --- >> ${tmpfile}
     echo >> ${tmpfile}
 
-    vim -e -s -c ":g/^## 目录/, /---/d" -c "1s/^/## 目录/" -c ":r ${tmpfile}" -c ":wq" ${file}
+    vim -e -s -c ":g/^# 目录/, /---/d" -c "1s/^/# 目录/" -c ":r ${tmpfile}" -c ":wq" ${file}
 
     cp ${file} ${tmpfile}
     vim -e -s -c "/^### \|^- \`.*\`$" -c ":v//d" -c ":%s/.*\[\(.*\)\].*/\1/"  -c ":1,\$g/^/join" -c ":%s/ - \`\(.*\)\`/ \1/" -c "%s/\(.*\) \(.*\)/\='%s;^### .*\\\\['.submatch(1).'\\\\].*;### '.line('.').'. ['.submatch(1).'](#'.line('.').'-'.submatch(1).tolower(submatch(2)).');'/" -c ":wq" ${tmpfile}
