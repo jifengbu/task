@@ -11,8 +11,7 @@ function authenticatePassword (user, password) {
     });
 }
 
-export default async ({ phone, password }, {socket}) => {
-    socket.emit('TEST_RS', { username: 'fang', password: '123456' });
+export default async ({ phone, password }) => {
     const user = await AdminModel.findOne({ phone });
     if (!user) {
         return { success: false, msg: '该电话号码没有注册' };

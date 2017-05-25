@@ -9,13 +9,17 @@ var param = {
     password: '123456',
 };
 
+function log(obj) {
+    console.log(JSON.stringify(obj, null, 2));
+}
+
 post('/client/login', param).then((obj) => {
     if (obj.success) {
         client.userId = obj.context.userId;
         saveClient(client);
         if (args[0] === '--socket') {
-            console.log('ws://' + host + ':' + port);
-            var socket = io.connect('ws://' + host + ':' + port);
+            console.log('ws://' + host + ':' + port+'?userId='+client.userId, {path: apiRoot+'/socket'});
+            var socket = io.connect('ws://' + host + ':' + port+'?userId='+client.userId, {path: apiRoot+'/socket'});
             socket.on('connect', function (obj) {
                 console.log('connect to server');
                 socket.emit('TEST_RQ', { username: 'fang', password: '123456' });
@@ -29,9 +33,7 @@ post('/client/login', param).then((obj) => {
                 console.log('reconnect to server');
             }).on('reconnect_failed', function (obj) {
                 console.error('reconnect to server failed');
-            }).on('TEST_RS', function (obj) {
-                console.log(obj);
-            });
+            }).on(['AGREE_FINISH_TASK_NF'], log);
         }
     }
 });

@@ -27,7 +27,7 @@ export default async ({
         publishTime,
     });
 
-    const taskId = await createTask({
+    const task = await createTask({
         groupId: doc.id,
         publisherId: userId,
         examinerId: userId,
@@ -45,9 +45,10 @@ export default async ({
         publishTime,
     });
 
-    doc.taskList = [ taskId ];
+    doc.taskList = [ task.id ];
     await doc.save();
-    await updateTaskProgress(userId, taskId, '发布任务');
+    await updateTaskProgress(userId, task.id, '发布任务');
+    io.emitTo([doc.executorId, doc.supervisorId], 'AGREE_PUBLISH_TASK_NF', task);
 
     return { success: true };
 };

@@ -2,7 +2,7 @@ import { TaskGroupModel, TaskModel } from '../../../../models';
 import _ from 'lodash';
 import updateTaskProgress from '../progress/updateTaskProgress';
 
-export default async ({ userId, taskId, reason }) => {
+export default async ({ userId, taskId, reason }, { io }) => {
     const doc = await TaskModel.findByIdAndUpdate(taskId, { state: 64, rejectFinishReason: reason, examineFinishTime: Date.now() });
     const taskGroup = await TaskGroupModel.findById(doc.groupId)
     .select({
@@ -16,6 +16,7 @@ export default async ({ userId, taskId, reason }) => {
     taskGroup.state = _.reduce(taskGroup.taskList.map(o => o.state), (r, o) => r | o);
     await taskGroup.save();
     await updateTaskProgress(userId, taskId, '拒绝完成任务的申请');
+    io.emitTo(doc.executorId, 'REJECT_FINISH_TASK_NF', doc);
 
     return { success: true };
 };
