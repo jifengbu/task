@@ -16,6 +16,7 @@ const { Button, TaskStepList, DImage } = COMPONENTS;
 const moment = require('moment');
 const SingleTaskContent = require('./SingleTaskContent.js');
 const InputBoxUpdate = require('./InputBoxUpdate.js');
+const ModifyTask = require('./ModifyTask.js');
 
 module.exports = React.createClass({
     statics: {
@@ -95,7 +96,10 @@ module.exports = React.createClass({
                 break;
             }
             case 2: {
-
+                app.navigator.push({
+                    component: ModifyTask,
+                    passProps: {taskDetail: this.state.taskDetail}
+                })
                 break;
             }
             case 3: {

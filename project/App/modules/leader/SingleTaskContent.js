@@ -15,6 +15,7 @@ const {
 
 const InputBoxReject = require('./InputBoxReject.js');
 const ShowBigImage = require('./ShowBigImage.js');
+const remindData = require('../../data/remindData.js');
 
 const { Button, TaskStepList, DImage, DelayTouchableOpacity } = COMPONENTS;
 
@@ -56,13 +57,17 @@ module.exports = React.createClass({
                         <Text style={styles.taskTitle}>任务执行人：</Text>
                         <Text style={styles.taskContext}>{obj.executor.name}</Text>
                     </View>
+                    <View style={styles.taskTitleView}>
+                        <Text style={styles.taskType}>{'test暂时用'}</Text>
+                        <DImage resizeMode='stretch' source={app.img.home_triangle_icon} style={styles.typeImage}/>
+                    </View>
                 </View>
                 <View style={styles.taskTitleContainer}>
-                    <View style={styles.taskTitleView}>
+                    <View style={styles.taskTimeView}>
                         <Text style={styles.taskTitle}>开始时间：</Text>
                         <Text style={styles.taskContext}>{obj.expectStartTime}</Text>
                     </View>
-                    <View style={styles.taskTitleView}>
+                    <View style={styles.taskTimeView}>
                         <Text style={styles.taskTitle}>结束时间：</Text>
                         <Text style={styles.taskContext}>{obj.expectFinishTime}</Text>
                     </View>
@@ -102,18 +107,17 @@ module.exports = React.createClass({
                                 style={styles.clockImage} />
                             <Text style={styles.remindTitle}>{'任务提醒'}</Text>
                         </View>
-                        <Button onPress={this.goRemindSetting} style={styles.btnSet} textStyle={styles.btnSetText}>{'点击设置'}</Button>
                     </View>
                     <View style={styles.divisionLine}/>
                     {
-                        obj.imageList.map((item, i) => {
+                        obj.remindList.map((item, i) => {
                             return (
                                 <View key={i} style={styles.remindItem}>
                                     <DImage
                                         resizeMode='stretch'
                                         source={app.img.home_remind_check}
                                         style={styles.checkImage} />
-                                    <Text style={styles.remindItemTitle}>{'每天08:30提醒一次'}</Text>
+                                    <Text style={styles.remindItemTitle}>{remindData[item]}</Text>
                                 </View>
                             );
                         })
@@ -230,9 +234,24 @@ const styles = StyleSheet.create({
     },
     taskTitleContainer: {
         flexDirection: 'row',
-        marginTop: 15,
+        marginTop: 10,
     },
     taskTitleView: {
+        width: sr.w/3,
+        flexDirection: 'row',
+        marginLeft: 10,
+        alignItems: 'center',
+    },
+    taskType: {
+        fontSize: 15,
+        color: '#ea372f',
+        fontFamily: 'STHeitiSC-Medium',
+    },
+    typeImage: {
+        width: 16,
+        height: 8,
+    },
+    taskTimeView: {
         width: sr.w/2-30,
         flexDirection: 'row',
         marginLeft: 10,
@@ -310,19 +329,6 @@ const styles = StyleSheet.create({
         color: '#323232',
         marginLeft: 5,
         fontFamily: 'STHeitiSC-Medium',
-    },
-    btnSet: {
-        height: 25,
-        width: 70,
-        marginRight: 10,
-        alignSelf: 'center',
-        borderRadius: 6,
-        backgroundColor: '#f3433d',
-    },
-    btnSetText: {
-        fontSize: 13,
-        fontWeight: '600',
-        color: '#FFFFFF',
     },
     remindItem: {
         alignItems: 'center',

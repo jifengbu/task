@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
         width: sr.w - 56,
     },
     textStyleAnother: {
+        width: sr.w-80,
         fontSize: 13,
         color: '#666666',
         marginLeft: 20,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     btnStyle: {
         width: 40,
         height: 22,
-        marginRight: 20,
+        marginRight: 10,
         alignItems: 'center',
         justifyContent: 'center',
     },
