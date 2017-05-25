@@ -15,7 +15,8 @@ function genCatalog() {
     tmpfile=github/.__tmp.md
 
     cp ${file} ${tmpfile}
-    vim -e -s -c "/^### \|^- \`.*\`$" -c ":v//d" -c ":%s/.*\[\(.*\)\].*/\1/"  -c ":1,\$g/^/join" -c ":%s/ - \`\(.*\)\`/ \1/"  -c ":%s/\(.*\) \(.*\)/\='##### '.line('.').'. ['.submatch(1).'('.submatch(2).')](#'.line('.').'-'.submatch(1).')'/" -c ":wq" ${tmpfile}
+    vim -e -s -c "v/^### \|^## \|\(^### .*\n\)\@<=- \`.*\`/d"  -c ":%s/.*\[\(.*\)\].*/\1/" -c ":%s/\n- \`\(.*\)\`/@\1/" -c ":let i=1|g!/^##/s/\(.*\)@\(.*\)/\='##### '.i.'. ['.submatch(1).'('.submatch(2).')](#'.i.'-'.submatch(1).')'/|let i+=1" -c ":wq" ${tmpfile}
+
     echo >> ${tmpfile}
     echo --- >> ${tmpfile}
     echo >> ${tmpfile}
@@ -23,7 +24,7 @@ function genCatalog() {
     vim -e -s -c ":g/^# 目录/, /---/d" -c "1s/^/# 目录/" -c ":r ${tmpfile}" -c ":wq" ${file}
 
     cp ${file} ${tmpfile}
-    vim -e -s -c "/^### \|^- \`.*\`$" -c ":v//d" -c ":%s/.*\[\(.*\)\].*/\1/"  -c ":1,\$g/^/join" -c ":%s/ - \`\(.*\)\`/ \1/" -c "%s/\(.*\) \(.*\)/\='%s;^### .*\\\\['.submatch(1).'\\\\].*;### '.line('.').'. ['.submatch(1).'](#'.line('.').'-'.submatch(1).tolower(submatch(2)).');'/" -c ":wq" ${tmpfile}
+    vim -e -s -c "v/^### \|\(^### .*\n\)\@<=- \`.*\`/d"  -c ":%s/.*\[\(.*\)\].*/\1/" -c ":%s/\n- \`\(.*\)\`/@\1/" -c "%s/\(.*\) \(.*\)/\='%s;^### .*\\\\['.submatch(1).'\\\\].*;### '.line('.').'. ['.submatch(1).'](#'.line('.').'-'.submatch(1).tolower(submatch(2)).');'/" -c ":wq" ${tmpfile}
 
     cat ${tmpfile} | xargs -I bbbb vim -e -s -c "bbbb" -c "wq" ${file}
 
