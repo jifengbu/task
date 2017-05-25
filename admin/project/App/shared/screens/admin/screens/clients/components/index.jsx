@@ -33,6 +33,11 @@ const columns = [{
     dataIndex: 'partment',
     render: (data = {}) => data.name||'无',
 }, {
+    title: '拥有权限',
+    width: 250,
+    dataIndex: 'authority',
+    render: (data) => ({1: '普通权限', 2: '拥有领导权限', 4: '拥有综合部权限', 8: '拥有监督者权限'}[data]||'普通权限'),
+}, {
     title: '预留电话',
     dataIndex: 'reservePhone',
     render: (data) => (data || {}).join('; ')||'无',
@@ -49,6 +54,7 @@ export default class Clients extends React.Component {
                 phone: 1,
                 email: 1,
                 reservePhone: 1,
+                authority: 1,
                 partment: {
                     name: 1,
                 },

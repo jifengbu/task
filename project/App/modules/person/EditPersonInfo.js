@@ -17,7 +17,6 @@ const {
 const dismissKeyboard = require('dismissKeyboard');
 const moment = require('moment');
 const EditInformationBox = require('./EditInformationBox.js');
-const EditPassWord = require('./EditPassWord.js');
 const PersonalInfoMgr = require('../../manager/PersonalInfoMgr.js');
 const Subscribable = require('Subscribable');
 const Camera = require('@remobile/react-native-camera');
@@ -36,9 +35,6 @@ module.exports = React.createClass({
         rightButton: { title: '编辑', delayTime:1, handler: () => { app.scene.toggleEdit(); } },
     },
     componentWillMount () {
-        // this.addListenerOn(PersonalInfoMgr, 'USER_HEAD_CHANGE_EVENT', (param) => {
-        //     this.setState({ headImgSource: { uri: param.head } });
-        // });
     },
     onWillFocus(){
         this.haveFinger = LocalDataMgr.getValueFromKey('haveFinger');
@@ -64,7 +60,7 @@ module.exports = React.createClass({
         Picker.hide();
         dismissKeyboard();
         if (this.state.isEditStatus) {
-            const { headImg, name, position } = app.personal.info;
+            const { head, name, position } = app.personal.info;
             if (name != this.state.name ||position != this.state.position) {
                 this.updatePersnalInfo();
             } else {
@@ -82,7 +78,7 @@ module.exports = React.createClass({
     },
     showBox () {
         dismissKeyboard();
-        const { headImg, name, position } = app.personal.info;
+        const { name, position } = app.personal.info;
         if (name != this.state.name ||position != this.state.position) {
             this.showConfirmBox();
         } else {
@@ -101,15 +97,15 @@ module.exports = React.createClass({
         const info = app.personal.info;
         const position = info.position;
         const name = info.name;
-        let headImgSource = app.img.personal_add_header;
+        let head = app.img.personal_add_header;
         if (info.head) {
-            headImgSource = { uri: info.head };
+            head = { uri: info.head };
         }
         return {
             name: name,
             position: position,
             actionSheetVisible: false,
-            headImgSource: headImgSource,
+            head: head,
         };
     },
     onWillHide() {
@@ -119,7 +115,7 @@ module.exports = React.createClass({
         const info = app.personal.info;
         info.position = this.state.position;
         info.name = this.state.name;
-        info.headImg = this.state.headImgSource.uri || '';
+        info.head = this.state.head.uri || '';
         app.personal.set(info);
     },
     getPosition (trade) {
@@ -150,9 +146,12 @@ module.exports = React.createClass({
         }
         const param = {
             userId: app.personal.info.userId,
-            detail: detailsMap,
+            name: this.state.name,
+            position: this.state.position,
+            head: this.state.head,
+            phone: app.personal.info.phone,
         };
-        POST(app.route.ROUTE_UPDATE_PERSONAL_INFO, param, this.updatePersnalInfoSuccess, this.updatePersnalInfoError, true);
+        POST(app.route.ROUTE_MODIFY_PERSONAL_INFO, param, this.updatePersnalInfoSuccess, this.updatePersnalInfoError, true);
     },
     updatePersnalInfoSuccess (data) {
         if (data.success) {
@@ -211,39 +210,27 @@ module.exports = React.createClass({
             Toast('操作失败');
         }, options);
     },
-    uploadUserHead (filePath) {
-        // this.setState({ headImgSource: { uri: filePath } });
+    uploadUserHead(filePath) {
         const options = {};
         options.fileKey = 'file';
         options.fileName = filePath.substr(filePath.lastIndexOf('/') + 1);
-        options.mimeType = 'image/jpeg';
+        options.mimeType = 'image/png';
         options.params = {
-            userId:app.personal.info.userId,
+            userId: app.personal.info.userId,
         };
-        this.uploadOn = true;
-        UPLOAD(filePath, app.route.ROUTE_UPDATE_FILE, options, (progress) => console.log(progress),
-        this.uploadSuccessCallback, this.uploadErrorCallback, true);
+        UPLOAD(filePath, app.route.ROUTE_UPDATE_FILE, options, (progress) => console.log(progress), this.uploadSuccessCallback, this.uploadErrorCallback, true);
     },
     uploadSuccessCallback (data) {
         if (data.success) {
             const context = data.context;
-            app.personal.setUserHead(context.url);
+            this.setState({head: context.url});
+            app.personal.info.head = (context.url);
         } else {
-            Toast('上传失败');
-            // this.setState({ headImgSource: { uri: app.personal.info.headImg } });
+            Toast('上传头像失败');
         }
-        this.uploadOn = false;
     },
     uploadErrorCallback () {
-        this.uploadOn = false;
-        // this.setState({ headImgSource: { uri: app.personal.info.headImg } });
-    },
-    editPassWord() {
-        app.navigator.push({
-            component: EditPassWord,
-        });
-    },
-    editFingerPrint() {
+        Toast('上传头像失败');
     },
     onSwitchChange(value){
         this.setState({switchValue:value});
@@ -270,7 +257,7 @@ module.exports = React.createClass({
                             <DImage
                                 resizeMode='cover'
                                 defaultSource={app.img.personal_head}
-                                source={this.state.headImgSource}
+                                source={this.state.head}
                                 style={styles.headIcon} />
                             {
                                 this.state.isEditStatus &&
@@ -304,35 +291,15 @@ module.exports = React.createClass({
                             <Text style={styles.contentText}>{this.state.name ? this.state.name : '请输入您的职位'}</Text>
                             :
                             <TextInput
-                                onChangeText={(text) => this.setState({ name: text })}
+                                onChangeText={(text) => this.setState({ position: text })}
                                 onFocus={this.onTextInputFocus}
                                 underlineColorAndroid={'transparent'}
-                                defaultValue={this.state.name}
+                                defaultValue={this.state.position}
                                 placeholder={'请输入您的职位'}
                                 placeholderTextColor={'#BABABA'}
                                 style={styles.text_input} />
                         }
                     </View>
-                    <Text style={styles.lowSeprator} />
-                    <TouchableOpacity
-                        activeOpacity={!this.state.isEditStatus ? 1 : DEFAULT_OPACITY}
-                        onPress={this.state.isEditStatus ? this.editPosition : null}>
-                        <View style={styles.itemBgStyle}>
-                            <Text style={styles.headText}>职位</Text>
-                            <View style={styles.itemView}>
-                                <Text style={styles.contentText}>
-                                    {this.state.trade ? this.state.trade : '请选择您的职位'}
-                                </Text>
-                                {
-                                    this.state.isEditStatus &&
-                                    <Image
-                                        resizeMode='contain'
-                                        source={app.img.common_go}
-                                        style={styles.goIcon} />
-                                }
-                            </View>
-                        </View>
-                    </TouchableOpacity>
                     <Text style={styles.lowSeprator} />
                     <View style={styles.itemBgStyle}>
                         <Text style={styles.headText}>指纹登陆</Text>

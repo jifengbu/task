@@ -29,6 +29,7 @@ export default class ClientDetail extends React.Component {
             age: 1,
             sex: 1,
             birthday: 1,
+            authority: 1,
             partment: {
                 id: 1,
                 name: 1,
@@ -126,6 +127,7 @@ export default class ClientDetail extends React.Component {
                     return;
                 }
 
+                value.authority = value.authority*1;
                 value.partment = (client.partment || {}).id;
                 if (operType === 1) {
                     const temp = this.props.client;
@@ -133,6 +135,7 @@ export default class ClientDetail extends React.Component {
                         ...temp,
                         partment: (temp.partment || {}).id,
                     };
+
                     _.forIn(value, (v, k) => {
                         if (_.isEqual(origin[k], v)) {
                             delete value[k];
@@ -154,6 +157,7 @@ export default class ClientDetail extends React.Component {
                     phone: 1,
                     email: 1,
                     reservePhone: 1,
+                    authority: 1,
                     partment: {
                         name: 1,
                     },
@@ -204,7 +208,7 @@ export default class ClientDetail extends React.Component {
         const self = this;
         const { form, operType } = this.props;
         const { waiting, editing, client, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
-        const { name, phone, partment, birthday, head, email, age, sex, reservePhone } = client;
+        const { name, phone, authority, partment, birthday, head, email, age, sex, reservePhone } = client;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
             initialValue: name,
@@ -216,6 +220,12 @@ export default class ClientDetail extends React.Component {
             initialValue: phone,
             rules: [
                 { required: true, message: '请填写电话' },
+            ],
+        });
+        const authorityDecorator = getFieldDecorator('authority', {
+            initialValue: authority+'',
+            rules: [
+                { required: true, message: '请选择该用户拥有的权限' },
             ],
         });
         const formItemLayout = {
@@ -259,6 +269,20 @@ export default class ClientDetail extends React.Component {
                         {editing ? phoneDecorator(
                             <Input placeholder='请输入电话' />
                         ) : <span className={styles.value}>{phone}</span>}
+                    </FormItem>
+                    <FormItem
+                        {...formItemLayout}
+                        label='拥有权限'
+                        hasFeedback
+                        >
+                        {editing ? authorityDecorator(
+                            <Select placeholder='请选择该用户拥有的权限'>
+                                <Option value='1'>普通权限</Option>
+                                <Option value='2'>拥有领导权限</Option>
+                                <Option value='4'>拥有综合部权限</Option>
+                                <Option value='8'>拥有监督者权限</Option>
+                            </Select>
+                        ) : <span className={styles.value}>{{1: '普通权限', 2: '拥有领导权限', 4: '拥有综合部权限', 8: '拥有监督者权限'}[authority]||'普通权限'}</span>}
                     </FormItem>
                     <FormItem
                         {...formItemLayout}

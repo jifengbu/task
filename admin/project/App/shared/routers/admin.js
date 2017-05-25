@@ -48,6 +48,5 @@ export default [
         </Route>
         <Route name='adminStatistics' path='statistics' component={Statistics} onEnter={authenticate} />
         <Route name='adminFeedback' path='feedback' component={Feedback} onEnter={authenticate} />
-        <Route name='adminNotify' path='notify' component={Notify} onEnter={authenticate} />
     </Route>,
 ];

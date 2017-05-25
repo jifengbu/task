@@ -34,24 +34,12 @@ export default class Header extends React.Component {
                     <img className={styles.head_image} src='/img/common/head_image.png' />
                     <Menu className={styles.menu} mode='horizontal' selectedKeys={[current]} onClick={::this.handleMenuClick}>
                         <MenuItem key='0'>
-                            <Link to='/admin/notify'>
-                                新消息
+                            <Link to='/admin'>
+                                关于我们
                             </Link>
                         </MenuItem>
                         <MenuDivider key={'_0'} className={styles.line} />
                         <MenuItem key='1'>
-                            <Link to='/admin/applyPublishCard'>
-                                申请发卡
-                            </Link>
-                        </MenuItem>
-                        <MenuDivider key={'_1'} className={styles.line} />
-                        <MenuItem key='2'>
-                            <Link to='/admin/feedback'>
-                                意见反馈
-                            </Link>
-                        </MenuItem>
-                        <MenuDivider key={'_2'} className={styles.line} />
-                        <MenuItem key='3'>
                             <a href='/admin/logout'>
                                 退出
                             </a>

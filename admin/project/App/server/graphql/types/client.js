@@ -51,6 +51,7 @@ export const clientType = new GraphQLObjectType({
         head: { type: GraphQLString },
         age: { type: GraphQLInt },
         sex: { type: GraphQLInt },
+        authority: { type: GraphQLInt },
         birthday: { type: GraphQLString },
         reservePhone: { type: new GraphQLList(GraphQLString) },
         partment: { type: partmentType},
@@ -63,6 +64,7 @@ export const clientInputType = new GraphQLInputObjectType({
         clientId: { type: GraphQLID },
         name: { type: GraphQLString },
         phone: { type: GraphQLString },
+        authority: { type: GraphQLInt },
         partment: { type: GraphQLID },
     },
 });
