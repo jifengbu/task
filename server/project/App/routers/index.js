@@ -95,7 +95,7 @@ function registerSocketRouter (server, root, sockets) {
         console.log('io.emitTo:', users, msg, data);
         if (users) {
             users = _.isArray(users) ? users: [users];
-            users.forEach((userId)=>{
+            _.uniqBy(_.filter(users), (o)=>o.toString()).forEach((userId)=>{
                 const socket = _.find(io.sockets.sockets, (s)=>s.userId==userId);
                 socket && socket.emit(msg, data);
             });

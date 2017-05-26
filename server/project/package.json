@@ -9,6 +9,7 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
+    "ali-mns": "^2.6.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "fs-extra": "^1.0.0",
@@ -17,6 +18,7 @@
     "mongoose": "^4.7.2",
     "mongoose-auto-increment": "^5.0.1",
     "multer": "^1.2.1",
+    "node-schedule": "^1.2.3",
     "nodemailer": "^3.1.8",
     "passport-local-mongoose": "^4.0.0",
     "socket.io": "^2.0.1"

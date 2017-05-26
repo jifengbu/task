@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import _ from 'lodash';
 import { formatTime, getMediaPath } from '../utils';
 const Schema = mongoose.Schema;
 
@@ -37,11 +38,17 @@ const taskSchema = new mongoose.Schema({
 taskSchema.virtual('id').get(function () {
     return this._id;
 });
+taskSchema.virtual('publisher').get(function () {
+    return mongoose.Types.ObjectId.isValid(this.publisherId) ? undefined : this.publisherId;
+});
+taskSchema.virtual('examiner').get(function () {
+    return mongoose.Types.ObjectId.isValid(this.examinerId) ? undefined : this.examinerId;
+});
 taskSchema.virtual('executor').get(function () {
-    return this.executorId;
+    return mongoose.Types.ObjectId.isValid(this.executorId) ? undefined : this.executorId;
 });
 taskSchema.virtual('supervisor').get(function () {
-    return this.supervisorId;
+    return mongoose.Types.ObjectId.isValid(this.supervisorId) ? undefined : this.supervisorId;
 });
 
 const transform = {
@@ -52,8 +59,11 @@ const transform = {
         ret.imageList && (ret.imageList = ret.imageList.map((o) => getMediaPath(o)));
         delete ret._id;
         delete ret.__v;
-        delete ret.supervisorId;
-        delete ret.executorId;
+
+        ret.publisher && delete ret.publisherId;
+        ret.examiner && delete ret.examinerId;
+        ret.supervisor && delete ret.supervisorId;
+        ret.executor && delete ret.executorId;
         return ret;
     },
 };

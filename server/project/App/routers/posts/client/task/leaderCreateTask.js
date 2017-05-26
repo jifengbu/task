@@ -1,6 +1,8 @@
 import { TaskGroupModel } from '../../../../models';
 import createTask from './libs/createTask';
 import updateTaskProgress from '../progress/updateTaskProgress';
+import startScheduleSendSMS from './libs/startScheduleSendSMS';
+import startScheduleRemind from './libs/startScheduleRemind';
 
 export default async ({
     userId,
@@ -49,6 +51,8 @@ export default async ({
     await doc.save();
     await updateTaskProgress(userId, task.id, '发布任务');
     io.emitTo([doc.executorId, doc.supervisorId], 'AGREE_PUBLISH_TASK_NF', task);
+    startScheduleSendSMS(executorId, task.id); //发执行者定时
+    startScheduleRemind(executorId, taskId, remindList);
 
     return { success: true };
 };

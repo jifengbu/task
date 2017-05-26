@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import nodemailer from 'nodemailer';
+import AliMNS from "ali-mns";
 import { host, port, apiRoot } from '../../config';
 
 export function registerUser (model, user, password) {
@@ -87,6 +88,29 @@ export function formatTime (obj, ...keys) {
 }
 export function testPhone (phone) {
     return /^1\d{10}$/.test(phone);
+}
+export function sendSMS(phone, name) {
+    var config = {
+        accountId:"1655674191079028",//阿里主题中Endpoint的ID http(s)://123456789.mns.cn-hangzhou.aliyuncs.com/
+        keyId: "LTAIDCWU55tY90iW",//阿里消息服务所用的密钥ID
+        keySecret: "BzGypq8rCRo9OtuylgaCd10TMH6ZFi",//阿里消息服务所用的密钥值
+        topicName: "sms.topic-cn-hangzhou",//阿里消息服务主题名称
+    };
+    var attrs = {
+        DirectSMS: JSON.stringify(
+            {
+                FreeSignName:"贵阳千陌网络科技有限公司",//短信签名
+                TemplateCode:"SMS_68705076",//短信模板
+                Type:"singleContent",//单发
+                Receiver:phone,//接收人的手机号
+                SmsParams:JSON.stringify({name}),//短信具体参数: key为短信模板->短信内容的key
+            }
+        )
+    };
+    var account = new AliMNS.Account(config.accountId, config.keyId, config.keySecret);
+    var mns = new AliMNS.Topic(config.topicName, account);
+    mns.publishP("ali-mns",true,null,attrs).then(console.log, console.error);
+
 }
 export function sendFindPasswordMail (address, password) {
     const name = '刷我的卡';

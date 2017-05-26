@@ -2,6 +2,7 @@ import { TaskGroupModel, TaskModel } from '../../../../models';
 import _ from 'lodash';
 import updateTaskProgress from '../progress/updateTaskProgress';
 
+
 export default async ({ userId, taskId }, { io }) => {
     const doc = await TaskModel.findByIdAndUpdate(taskId, { state: 512, examineFinishTime: Date.now() });
     const taskGroup = await TaskGroupModel.findById(doc.groupId)
