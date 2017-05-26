@@ -14,13 +14,12 @@ const CareTaskList = require('./CareTaskList.js');
 const ExamineTaskList = require('./ExamineTaskList.js');
 const Statistics = require('./Statistics.js');
 const TimeManageList = require('./TimeManageList.js');
-const { DImage, Notifications } = COMPONENTS;
+const { DImage } = COMPONENTS;
 
 module.exports = React.createClass({
     getInitialState () {
         return {
             tabIndex: 0,
-            isNotification: true,
         };
     },
     changeTab (tabIndex) {
@@ -96,15 +95,6 @@ module.exports = React.createClass({
                         <TimeManageList />
                     }
                 </View>
-                {
-                    this.state.isNotification&&
-                    <Notifications
-                        doClose={() => this.setState({ isNotification:false })}
-                        doConfirm={() => {
-                            this.setState({ isNotification:false });
-                        }} >
-                    </Notifications>
-                }
             </View>
         );
     },

@@ -17,7 +17,9 @@ const AudioRecorder = require('../../native/index.js').AudioRecorder;
 const RemindSetting = require('./RemindSetting.js');
 const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('./RecordVoiceMessageBox.js');
-const ShowBigImage = require('./ShowBigImage.js');
+const fs = require('react-native-fs');
+const Camera = require('@remobile/react-native-camera');
+const ImagePicker = require('@remobile/react-native-image-picker');
 
 const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
@@ -26,10 +28,21 @@ module.exports = React.createClass({
         title: '单一任务',
     },
     getInitialState () {
+        this.fileInfo = {
+            voiceFileUrl:'',
+            voiceFilePath:'',
+            voiceTime:0,
+            voiceIsPlaly: false,
+        };
         this.clientList = [];
         this.tempClientList = [];
         this.typeList = [];
         this.tempTypeList = [];
+        this.uploadOn=false;
+        this.imgFileInfo = {
+            imgFileUrl:'',
+            imgFilePath:'',
+        };
         return {
             title: '',
             content: '',
@@ -40,10 +53,10 @@ module.exports = React.createClass({
             supervisor: '',
             executor: '',
             remindList: [],
-            netUrlImages: [],
-            uploadVoices: [],
             overlayShowLongPressMessageBox: false,
             overlayShowMessageBox: false,
+            voiceFileData:[],
+            imgFileData:[],
         };
     },
     componentWillMount () {
@@ -104,43 +117,58 @@ module.exports = React.createClass({
     showMessageBox () {
         this.setState({ overlayShowMessageBox: true });
     },
+    doDeleteVoice (index) {
+        this.setState({ overlayShowLongPressMessageBox: false });
+        AudioRecorder.playStop();
+        fs.unlink(his.state.voiceFileData[index].voiceFilePath);
+        _.remove(this.state.voiceFileData, (item) => this.state.voiceFileData[index].voiceFileUrl
+                == item.voiceFileUrl);
+
+    },
     recordVoice () {
+        if (this.uploadOn == true) {
+            Toast('正在上传中,稍候再录制');
+            return;
+        }
         // AudioRecorder.playStop();
-        // for (let i = 0; i < this.isPlaying.length; i++) {
-        //     this.isPlaying[i] = false;
-        // }
-        // this.setState({ isPlaying: this.isPlaying });
-        // const time = Date.now();
-        // const name = app.audioFileMgr.getFileNameFromTime(time);
-        // const filepath = app.audioFileMgr.getFilePathFromName(name);
-        // this.fileInfo = {
-        //     time: time,
-        //     name: name,
-        //     filepath: filepath,
-        // };
-        // AudioRecorder.record((result) => {
-        //
-        // }, (error) => {
-        //     Toast('录制音频文件失败，请稍后再试');
-        // }, filepath);
+        const time = Date.now();
+        const name = app.audioFileMgr.getFileNameFromTime(time);
+        this.fileInfo.voiceFilePath = app.audioFileMgr.getFilePathFromName(name);
+        AudioRecorder.record((result) => {
+
+        }, (error) => {
+            Toast('录制音频文件失败，请稍后再试');
+        }, this.fileInfo.voiceFilePath);
     },
     stopRecordVoice (voiceTime) {
-        // this.timeArray.push(voiceTime);
-        // this.setState({ voiceTime:voiceTime });
-        // AudioRecorder.stop((result) => {
-        //     // this.uploadVoice(this.fileInfo.filepath, voiceTime);
-        // }, (error) => {
-        //     Toast('录制音频文件失败，请稍后再试');
-        // });
+        this.fileInfo.voiceTime = voiceTime;
+        AudioRecorder.stop((result) => {
+            this.uploadVoice(this.fileInfo.voiceFilePath, voiceTime);
+        }, (error) => {
+            Toast('录制音频文件失败，请稍后再试');
+        });
         this.setState({ overlayShowMessageBox: false });
     },
     doGiveup () {
-        // AudioRecorder.stop((result) => {
-        //     fs.unlink(this.fileInfo.filepath);
-        // }, (error) => {
-        //     Toast('放弃录音失败，请稍后再试');
-        // });
+        AudioRecorder.stop((result) => {
+            fs.unlink(this.fileInfo.voiceFilePath);
+        }, (error) => {
+            Toast('放弃录音失败，请稍后再试');
+        });
         this.setState({ overlayShowMessageBox: false });
+    },
+    playVoice (index) {
+        AudioRecorder.playStop();
+        if (this.state.voiceFileData[index].voiceIsPlaly) {
+            this.state.voiceFileData[index].voiceIsPlaly = false;
+        } else {
+            this.state.voiceFileData[index].voiceIsPlaly = true;
+            AudioRecorder.play(filepath, (result) => {
+            }, (error) => {
+                Toast('无效音频');
+                this.state.voiceFileData[index].voiceIsPlaly = false;
+            });
+        }
     },
     uploadVoice (filePath, voiceTime) {
         const options = {};
@@ -148,15 +176,60 @@ module.exports = React.createClass({
         options.fileName = filePath.substr(filePath.lastIndexOf('/') + 1);
         options.mimeType = 'm4a';
         options.params = {
-            userId:app.personal.info.userId,
+            userID:app.personal.info.userID,
         };
         this.uploadOn = true;
-        this.curUploadFile = filePath;
         UPLOAD(filePath, app.route.ROUTE_UPDATE_FILE, options, (progress) => console.log(progress),
         this.uploadVoiceSuccessCallback.bind(null, voiceTime, filePath), this.uploadVoiceErrorCallback.bind(null, filePath), true);
     },
-    playVoice (filepath, index) {
-
+    uploadVoiceSuccessCallback (voiceTime, filePath, data) {
+        this.uploadOn = false;
+        if (data.success) {
+            this.fileInfo.voiceFileUrl = data.context.url;
+            if (this.fileInfo.voiceFileUrl != ''
+                && this.fileInfo.voiceFilePath != ''
+                && this.fileInfo.voiceIsPlaly != true
+                && this.fileInfo.voiceTime != 0 )
+            {
+                this.state.voiceFileData.push(this.fileInfo);
+            }
+            this.fileInfo = {
+                voiceFileUrl:'',
+                voiceFilePath:'',
+                voiceTime:0,
+                voiceIsPlaly: false,
+            };
+        } else {
+            Toast('上传失败');
+            this.fileInfo = {
+                voiceFileUrl:'',
+                voiceFilePath:'',
+                voiceTime:0,
+                voiceIsPlaly: false,
+            };
+        }
+    },
+    uploadVoiceErrorCallback (filePath) {
+        this.fileInfo = {
+            voiceFileUrl:'',
+            voiceFilePath:'',
+            voiceTime:0,
+            voiceIsPlaly: false,
+        };
+        this.uploadOn = false;
+    },
+    doGiveup () {
+        this.fileInfo = {
+            voiceFileUrl:'',
+            voiceFilePath:'',
+            voiceTime:0,
+            voiceIsPlaly: false,
+        };
+        AudioRecorder.stop((result) => {
+        }, (error) => {
+            Toast('放弃录音失败，请稍后再试');
+        });
+        this.setState({ overlayShowMessageBox: false });
     },
     showDataPicker(index) {
         let date = index===0 ? this.state.startTime : this.state.endTime;
@@ -240,12 +313,77 @@ module.exports = React.createClass({
         });
     },
     showBigImage (localUrlImages, index) {
-        app.showModal(
-            <ShowBigImage
-                doImageClose={app.closeModal}
-                defaultIndex={index}
-                defaultImageArray={imageArray} />
-        );
+        // app.showModal(
+        //     <AidBigImage
+        //         doImageClose={app.closeModal}
+        //         defaultIndex={index}
+        //         defaultImageArray={localUrlImages} />
+        // );
+    },
+    addPohotoImg (localUrlImages, index) {
+        if (this.uploadOn == true) {
+            Toast('正在上传中,稍候再增加');
+            return;
+        }
+        const options = { maximumImagesCount: 1, width: 400 };
+        const filePaths = [];
+        ImagePicker.getPictures(options, (results) => {
+            if (results.length > 0) {
+                for (let i = 0; i < results.length; i++) {
+                    const filePath = results[i];
+                    const item = {
+                        name: 'file',
+                        filename: filePath.substr(filePath.lastIndexOf('/') + 1),
+                        filepath: filePath,
+                        filetype: 'image/png',
+                    };
+                    filePaths.push(item);
+                }
+                this.uploadImg(filePaths[0].filepath);
+            }
+        }, (error) => {
+        });
+    },
+    uploadImg(filePath) {
+        this.imgFileInfo.imgFilePath = filePath;
+        const options = {};
+        options.fileKey = 'file';
+        options.fileName = filePath.substr(filePath.lastIndexOf('/') + 1);
+        options.mimeType = 'image/png';
+        options.params = {
+            userId: app.personal.info.userId,
+        };
+        this.uploadOn = true;
+        UPLOAD(filePath, app.route.ROUTE_UPDATE_FILE, options, (progress) => console.log(progress), this.uploadSuccessCallback, this.uploadErrorCallback, true);
+    },
+    uploadSuccessCallback (data) {
+        this.uploadOn = false;
+        if (data.success) {
+            this.imgFileInfo.imgFileUrl = data.context.url;
+            if (this.imgFileInfo.imgFileUrl != ''
+                && this.imgFileInfo.imgFilePath != '')
+            {
+                this.state.imgFileData.push(this.imgFileInfo);
+            }
+            this.imgFileInfo = {
+                imgFileUrl:'',
+                imgFilePath:'',
+            };
+        } else {
+            Toast('上传失败');
+            this.imgFileInfo = {
+                imgFileUrl:'',
+                imgFilePath:'',
+            };
+        }
+    },
+    uploadErrorCallback () {
+        this.uploadOn = false;
+        this.imgFileInfo = {
+            imgFileUrl:'',
+            imgFilePath:'',
+        };
+        Toast('上传失败');
     },
     goRemindSetting() {
         app.navigator.push({
@@ -301,7 +439,7 @@ module.exports = React.createClass({
         }
     },
     render () {
-        const {startTime, endTime, remindList, netUrlImages, uploadVoices} = this.state;
+        const {startTime, endTime, remindList} = this.state;
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
@@ -332,18 +470,18 @@ module.exports = React.createClass({
                         </TouchableOpacity>
                         <ScrollView horizontal style={styles.voiceContainer}>
                             {
-                                uploadVoices.map((item, i) => {
+                                this.state.voiceFileData && this.state.voiceFileData.map((item, i) => {
                                     return (
                                         <View key={i} style={[styles.audioContainer]}>
                                             <TouchableOpacity
                                                 key={i}
                                                 activeOpacity={0.6}
-                                                onPress={this.playVoice.bind(null, item, i)}
+                                                onPress={this.playVoice.bind(null, i)}
                                                 delayLongPress={1500}
                                                 onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
                                                 style={styles.audioPlay}>
                                                 <Image source={app.img.home_voice_say_play} style={styles.imagevoice} />
-                                                <Text style={styles.textTime} >{'26' + "''"}</Text>
+                                                <Text style={styles.textTime} >{item.voiceTime + "''"}</Text>
                                             </TouchableOpacity>
                                         </View>
                                     );
@@ -484,23 +622,23 @@ module.exports = React.createClass({
                             <DelayTouchableOpacity
                                 activeOpacity={0.6}
                                 style={styles.imageButtonView}
-                                onPress={this.showPohotoImg}>
+                                onPress={this.addPohotoImg}>
                                 <DImage resizeMode='cover' source={app.img.home_add_image_icon} style={styles.imagelogostyle} />
                             </DelayTouchableOpacity>
                             <ScrollView horizontal style={styles.imageContainer}>
                                 {
-                                    netUrlImages.map((item, i) => {
+                                    this.state.imgFileData && this.state.imgFileData.map((item, i) => {
                                         return (
                                             <TouchableHighlight
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
-                                                onPress={this.showBigImage.bind(null, netUrlImages, i)}
+                                                onPress={this.showBigImage}
                                                 onLongPress={this.showImageLongPressMessageBox}
                                                 style={styles.bigImageTouch}>
                                                 <Image
                                                     key={i}
                                                     resizeMode='stretch'
-                                                    source={{ uri: item }}
+                                                    source={{ uri: item.imgFileUrl }}
                                                     style={styles.imageStyletu}
                                                     />
                                             </TouchableHighlight>

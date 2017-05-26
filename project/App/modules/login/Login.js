@@ -17,6 +17,8 @@ const ForgetPassword = require('./ForgetPassword.js');
 const Register = require('./Register.js');
 const Home = require('../home/index.js');
 const LocalDataMgr = require('../../manager/LocalDataMgr.js');
+const SupervisionClientMgr = require('../../manager/SupervisionClientMgr.js');
+const ExecutorClientMgr = require('../../manager/ExecutorClientMgr.js');
 import { DeviceEventEmitter } from 'react-native';
 
 const { Button } = COMPONENTS;
@@ -205,6 +207,8 @@ module.exports = React.createClass({
             context['userId'] = app.personal.info.userId;
             context['phone'] = this.state.phone;
             app.personal.set(context);
+            this.getSupervisionClientList();
+            this.getExecutorClientList();
             app.navigator.replace({
                 component: Home,
             });
@@ -215,6 +219,32 @@ module.exports = React.createClass({
     },
     getPersonalInfoError (error) {
         app.dismissProgressHud();
+    },
+    getSupervisionClientList() {
+        const param = {
+            userId: app.personal.info.userId,
+            authority: 8,
+        };
+        POST(app.route.ROUTE_GET_CLIENT_LIST, param, this.getClientListSuccess.bind(null, 'supervision'));
+    },
+    getExecutorClientList() {
+        const param = {
+            userId: app.personal.info.userId,
+            authority: 4,
+        };
+        POST(app.route.ROUTE_GET_CLIENT_LIST, param, this.getClientListSuccess.bind(null, 'executor'));
+    },
+    getClientListSuccess(type, data) {
+        if (data.success) {
+            const context = data.context;
+            if (context) {
+                if (type==='supervision') {
+                    SupervisionClientMgr.setList(data.context.clientList);
+                } else if (type==='executor') {
+                    ExecutorClientMgr.setList(data.context.clientList);
+                }
+            }
+        }
     },
     showPassword () {
         this.setState({ showPassword: true });

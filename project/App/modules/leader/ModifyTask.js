@@ -19,6 +19,9 @@ const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('./RecordVoiceMessageBox.js');
 const ShowBigImage = require('./ShowBigImage.js');
 const remindData = require('../../data/remindData.js');
+const SupervisionClientMgr = require('../../manager/SupervisionClientMgr.js');
+const ExecutorClientMgr = require('../../manager/ExecutorClientMgr.js');
+const CustomRemindTimeMgr = require('../../manager/CustomRemindTimeMgr.js');
 
 const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
@@ -27,15 +30,16 @@ module.exports = React.createClass({
         title: '修改任务',
     },
     getInitialState () {
-        this.clientList = [];
-        this.tempClientList = [];
+        this.tempSupervisorClientList = [];
+        this.tempExecutorClientList = [];
         this.typeList = [];
         this.tempTypeList = [];
         const {title, content, type, expectStartTime, expectFinishTime, supervisor, executor, imageList, audioList, remindList} = this.props.taskDetail || {};
         return {
             title: title||'',
             content: content||'',
-            taskType: type||1,
+            taskTypeKey: type||1,
+            taskTypeName: '',
             tabIndex: 0,
             startTime: expectStartTime||moment(),
             endTime: expectFinishTime||moment(),
@@ -50,25 +54,15 @@ module.exports = React.createClass({
         };
     },
     componentDidMount () {
-        this.getClientList();
+        this.supervisorClientList = SupervisionClientMgr.getList()||[];
+        this.executorClientList = ExecutorClientMgr.getList()||[];
+        _.forEach(this.supervisorClientList, (item) => {
+            this.tempSupervisorClientList.push(item.name);
+        });
+        _.forEach(this.executorClientList, (item) => {
+            this.tempExecutorClientList.push(item.name);
+        });
         this.getTaskTypeList();
-    },
-    getClientList() {
-        const param = {
-            userId: app.personal.info.userId,
-        };
-        POST(app.route.ROUTE_GET_CLIENT_LIST, param, this.getClientListSuccess);
-    },
-    getClientListSuccess(data) {
-        if (data.success) {
-            const context = data.context;
-            if (context) {
-                this.clientList = data.context.clientList;
-                _.forEach(this.clientList, (item) => {
-                    this.tempClientList.push(item.name);
-                });
-            }
-        }
     },
     getTaskTypeList() {
         const param = {
@@ -84,6 +78,8 @@ module.exports = React.createClass({
                 _.forEach(this.typeList, (item) => {
                     this.tempTypeList.push(item.name);
                 });
+                const typeInfo = _.find(this.typeList, (item) => item.key == this.state.taskTypeKey);
+                this.setState({taskTypeName: typeInfo.name});
             }
         }
     },
@@ -217,18 +213,18 @@ module.exports = React.createClass({
         return moment(date).format('HH时mm分');
     },
     showSelectSuperVisor() {
-        Picker(this.tempClientList, [this.tempClientList[0]], '').then((value)=>{
+        Picker(this.tempSupervisorClientList, [this.state.supervisor], '').then((value)=>{
             this.setState({supervisor: value[0]});
         });
     },
     showSelectExecutor() {
-        Picker(this.tempClientList, [this.tempClientList[0]], '').then((value)=>{
+        Picker(this.tempExecutorClientList, [this.state.executor], '').then((value)=>{
             this.setState({executor: value[0]});
         });
     },
     showSelectType() {
-        Picker(this.tempTypeList, [this.tempTypeList[0]], '').then((value)=>{
-            this.setState({taskType: value[0]});
+        Picker(this.tempTypeList, [this.state.taskTypeName], '').then((value)=>{
+            this.setState({taskTypeName: value[0]});
         });
     },
     showBigImage (imageArray, index) {
@@ -246,15 +242,16 @@ module.exports = React.createClass({
         })
     },
     doRefreshRemind(obj) {
-        const { remindList } = this.state;
         this.setState({ remindList: obj.remindList, customRemind: obj.customRemind});
     },
     doCreateTask() {
-        const {title, content, startTime, endTime, supervisor, executor, taskType, remindList} = this.state;
+        const {title, content, startTime, endTime, supervisor, executor, taskTypeName, remindList} = this.state;
         let supervisorId = '';
         let executorId = '';
-        for (let item of this.clientList) {
+        for (let item of this.supervisorClientList) {
             supervisorId = item.name === supervisor? item.id:'';
+        }
+        for (let item of this.executorClientList) {
             executorId = item.name === executor? item.id:'';
         }
         if (!supervisorId) {
@@ -265,7 +262,7 @@ module.exports = React.createClass({
             Toast('请选择执行人');
             return;
         }
-        const typeInfo = _.find(this.typeList, (item) => item.name === taskType);
+        const typeInfo = _.find(this.typeList, (item) => item.name === taskTypeName);
         if (!typeInfo) {
             Toast('请选择任务类型');
             return;
@@ -288,6 +285,9 @@ module.exports = React.createClass({
     },
     leaderCreateTaskSuccess (data) {
         if (data.success) {
+            if (!!this.state.customRemind) {
+                app.customTime.setCustomTime(this.state.customRemind);
+            }
             Toast('发布任务成功');
         } else {
             Toast('获取数据错误，请稍后重试！');
@@ -298,7 +298,7 @@ module.exports = React.createClass({
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
-                <ScrollView style={styles.pageContainer}>
+                <ScrollView>
                     <View style={styles.childTaskContainer}>
                         <TextInput
                             underlineColorAndroid='transparent'
@@ -433,7 +433,7 @@ module.exports = React.createClass({
                                 style={styles.timeTextContainer}
                                 >
                                 <Text style={styles.timeText}>
-                                    {this.state.taskType||'请选择'}
+                                    {this.state.taskTypeName||'请选择'}
                                 </Text>
                                 <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
                             </TouchableOpacity>
@@ -539,10 +539,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
-    },
-    pageContainer: {
-        flex: 1,
-        marginBottom: 55,
     },
     tabContainer: {
         width:sr.w,

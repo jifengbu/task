@@ -18,7 +18,7 @@ const RemindItemView = require('./RemindItemView.js');
 
 const { Picker, Button, DImage } = COMPONENTS;
 
-const defaultRemindList = [
+let defaultRemindList = [
     {'key': '1', 'content':'每天提醒1次（早上8:00）', 'isOver': 0},
     {'key': '2', 'content':'每天提醒2次（早上8：00，下午13:00）', 'isOver': 0},
     {'key': '3', 'content':'任务结束的最后10天提醒（每天提醒一次 早上9:00）', 'isOver': 0},
@@ -35,17 +35,17 @@ module.exports = React.createClass({
         rightButton: { title: '完成', delayTime:1, handler: () => { app.scene.updateRemind(); } },
     },
     getInitialState () {
+        this.remindList = [];
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-        for (let item of this.props.remindList) {
-            for (let row of defaultRemindList) {
-                if (item ==row.key) {
-                    row.isOver = 1;
+        for (let x = 0; x < defaultRemindList.length; x++) {
+            for (let y = 0; y < this.props.remindList.length; y++) {
+                if (parseInt(defaultRemindList[x].key) == this.props.remindList[y]) {
+                    defaultRemindList[x].isOver = 1;
                 }
             }
         }
         return {
             customRemindList: [],
-            remindList: this.props.remindList,
             customRemindIsOver: false,
             startTime: moment(),
             defaultRemindList: defaultRemindList,
@@ -53,14 +53,14 @@ module.exports = React.createClass({
     },
     updateRemind () {
         Picker.hide();
-        let {remindList, customRemindIsOver, startTime, defaultRemindList} = this.state;
+        let {customRemindIsOver, startTime, defaultRemindList} = this.state;
         _.forEach(defaultRemindList, (item) => {
             if (item.isOver) {
-                remindList.push(item.content);
+                this.remindList.push(item.key);
             }
         });
         const params = {
-            remindList: this.state.remindList,
+            remindList: this.remindList,
             customRemind: customRemindIsOver?moment(startTime).format('YYYY-MM-DD HH:mm'):'',
         }
         this.props.doRefresh(params);

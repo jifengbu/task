@@ -24,7 +24,29 @@ module.exports = React.createClass({
         return {
             lineHeight: 0,
             isLookAll: false,
+            taskType: '',
         };
+    },
+    componentDidMount () {
+        this.getTaskTypeList();
+    },
+    getTaskTypeList() {
+        const param = {
+            userId: app.personal.info.userId,
+        };
+        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getTaskTypeListSuccess);
+    },
+    getTaskTypeListSuccess(data) {
+        if (data.success) {
+            const context = data.context;
+            if (context) {
+                this.typeList = data.context.taskTypeList;
+                const typeInfo = _.find(this.typeList, (item) => item.key == this.props.data.type);
+                if (typeInfo) {
+                    this.setState({taskType: typeInfo.name});
+                }
+            }
+        }
     },
     doLookAll () {
         this.setState({ isLookAll: !this.state.isLookAll });
@@ -44,7 +66,7 @@ module.exports = React.createClass({
         );
     },
     render () {
-        let {isLookAll} = this.state;
+        let {isLookAll, taskType} = this.state;
         const obj = this.props.data;
         return (
             <View style={styles.container}>
@@ -58,7 +80,7 @@ module.exports = React.createClass({
                         <Text style={styles.taskContext}>{obj.executor.name}</Text>
                     </View>
                     <View style={styles.taskTitleView}>
-                        <Text style={styles.taskType}>{'test暂时用'}</Text>
+                        <Text style={styles.taskType}>{taskType}</Text>
                         <DImage resizeMode='stretch' source={app.img.home_triangle_icon} style={styles.typeImage}/>
                     </View>
                 </View>

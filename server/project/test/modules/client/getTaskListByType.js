@@ -4,7 +4,7 @@ var args = process.argv.splice(2);
 
 var param = {
     userId,
-    type: 1,
+    type: args[0]||1,
     pageNo: 0,
     pageSize: 3,
 };

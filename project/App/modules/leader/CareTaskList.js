@@ -13,6 +13,18 @@ const {
 const Subscribable = require('Subscribable');
 const TaskSupervision = require('./TaskSupervision.js');
 const ExamineTask = require('./ExamineTask.js');
+const taskDetail= {
+                    "title": "测试任务",
+                    "content": "认真测试",
+                    "modifyTime": "2017-05-23 08:44:58",
+                    "expectStartTime": "2017-05-16 03:00:00",
+                    "expectFinishTime": "2017-05-16 03:00:00",
+                    "rejectPublishReason": "不合格",
+                    "rejectFinishReason": "不合格",
+                    "type": 1,
+                    "state": 1,
+                    "id": "5923860a5c1070c1e96defd2"
+                }
 
 module.exports = React.createClass({
     mixins: [Subscribable.Mixin],
@@ -39,6 +51,11 @@ module.exports = React.createClass({
     },
     componentDidMount () {
         this.getTaskListByType();
+        const params = {
+            taskDetail,
+            component: TaskSupervision,
+        }
+        app.showNotifications(params);
     },
     getTaskListByType(taskType) {
         const param = {

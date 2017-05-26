@@ -12,53 +12,76 @@ const {
 } = ReactNative;
 
 module.exports = React.createClass({
+    getDefaultProps () {
+        return {
+            isDismissible: false,
+            id: '',
+            title: '任务跟踪',
+            content: '欢迎试用任务跟踪app',
+        };
+    },
     getInitialState () {
         return {
             opacity: new Animated.Value(0),
         };
     },
-    doClose () {
-        this.closeModal(() => {
-            this.props.doClose();
-        });
-    },
-    doConfirm () {
-        this.closeModal(() => {
-            this.props.doConfirm();
-        });
-    },
+    // componentWillMount () {
+        // this._panResponder = PanResponder.create({
+        //     onStartShouldSetPanResponder: (e, gestureState) => true,
+        //     onPanResponderGrant: (e, gestureState) => {
+        //         this.closeNotification();
+        //     },
+        // });
+    // },
     componentDidMount () {
         Animated.timing(this.state.opacity, {
             toValue: 1,
             duration: 500,
         }).start();
     },
-    closeModal (callback) {
+    closeNotification () {
         Animated.timing(this.state.opacity, {
             toValue: 0,
             duration: 500,
-        }).start(() => {
-            callback();
+        }
+        ).start(() => {
+            app.removeNotifications();
+        });
+    },
+    seeMoreNotification () {
+        Animated.timing(this.state.opacity, {
+            toValue: 0,
+            duration: 500,
+        }
+        ).start(() => {
+            //push到特定的页面
+            const {taskDetail, component} = this.props;
+            app.navigator.push({
+                component: component,
+                passProps: {data: taskDetail}
+            });
+            app.removeNotifications();
         });
     },
     render () {
+        const {title, content} = this.props.taskDetail || {};
         return (
             <Animated.View style={styles.overlayContainer}>
                 <View style={styles.notificationContainer}>
                     <View style={styles.titleView}>
                         <Text style={styles.titleText}>
-                            {'中央经济会议'}
+                            {title}
                         </Text>
-                        <TouchableOpacity onPress={this.doClose} style={styles.touchCloseView}>
+                        <TouchableOpacity onPress={this.closeNotification} style={styles.touchCloseView}>
                             <Image
                                 resizeMode='contain'
                                 source={app.img.home_close_icon}
                                 style={styles.iconStyle} />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={this.doConfirm}>
+                    <TouchableOpacity onPress={this.seeMoreNotification}>
                         <Text numberOfLines={3} style={styles.describeText}>
-                            {(Platform.OS === 'android' ? '        ' : '\t') + '中央经济会议中央经济会议中央经济会议中央经济会议中央经济会议中央经济会议中央经济会议中央经济会议中央经济会议中央经济会议中央经济会议中央经济会议'}
+                            {(Platform.OS === 'android' ? '        ' : '\t') + content}
                         </Text>
                     </TouchableOpacity>
                 </View>

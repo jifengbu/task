@@ -21,6 +21,7 @@ module.exports = React.createClass({
         const param = {
             userId: app.personal.info.userId,
             content: this.state.content,
+            email: 'test@qq.com',
         };
         POST(app.route.ROUTE_SUBMIT_FEEDBACK, param, this.doSubmitSuccess);
     },

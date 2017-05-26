@@ -28,6 +28,8 @@ class Manager {
         })._on('reconnect_failed', (obj) => {
         })._on('USER_REGISTER_RS', (obj) => {
 
+        })._on('NEW_PUBLISH_TASK_NF', (obj) => {
+            this.emit('NEW_PUBLISH_TASK_EVENT', data);
         });
     }
     emit(type, data, notNeedCheckOnline) {

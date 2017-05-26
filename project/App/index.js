@@ -37,7 +37,8 @@ const SettingMgr = require('./manager/SettingMgr.js');
 const LoginMgr = require('./manager/LoginMgr.js');
 const WebsocketMgr = require('./manager/WebsocketMgr.js');
 const SocketMgr = require('./manager/SocketMgr.js');
-const { ProgressHud, DelayTouchableOpacity, Modal } = COMPONENTS;
+const CustomRemindTimeMgr = require('./manager/CustomRemindTimeMgr.js');
+const { ProgressHud, DelayTouchableOpacity, Modal, Notifications } = COMPONENTS;
 
 global.app = {
     route: Route,
@@ -50,6 +51,7 @@ global.app = {
     updateMgr:UpdateMgr,
     login: LoginMgr,
     socket: SocketMgr,
+    customTime: CustomRemindTimeMgr,
     isandroid: Platform.OS === 'android',
 };
 
@@ -190,6 +192,9 @@ module.exports = React.createClass({
             modalTitle: '',
             modalBackgroundColor: null,
             modalTouchHide: false,
+            notificationsShow: false,
+            taskDetail: {},
+            component: null,
             isOpen: false,
             selectedItem: 'About',
         };
@@ -234,6 +239,25 @@ module.exports = React.createClass({
                 modalShow: false,
             });
         };
+
+        app.showNotifications = (options = {}) => {
+            console.log('=============', options);
+            const { taskDetail, component } = options;
+            this.setState({
+                notificationsShow: true,
+                taskDetail: taskDetail,
+                component: component,
+            });
+        };
+        app.closeNotifications = () => {
+            this.refs.modal.closeModal();
+        };
+        app.removeNotifications = () => {
+            this.setState({
+                notificationsShow: false,
+            });
+        };
+
         app.update = () => {
             this.setState({});
         };
@@ -375,6 +399,10 @@ module.exports = React.createClass({
                     <Modal ref='modal' title={this.state.modalTitle} backgroundColor={this.state.modalBackgroundColor} modalTouchHide={this.state.modalTouchHide}>
                         {this.state.modalContent}
                     </Modal>
+                }
+                {
+                    this.state.notificationsShow &&
+                    <Notifications ref='notifications' taskDetail={this.state.taskDetail} component={this.state.component}/>
                 }
                 <ProgressHud
                     isVisible={this.state.is_hud_visible}
