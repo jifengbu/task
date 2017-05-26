@@ -1,10 +1,10 @@
 import { TaskModel, TaskReadedModel } from '../../../../models';
 export default async ({ userId, count = 10 }) => {
-    const list = await TaskReadedModel.find({userId}).sort({ readTimes: 'desc' }).limit(count);
+    const list = await TaskReadedModel.find({ userId }).sort({ readTimes: 'desc' }).limit(count);
     let docs = [];
     if (list) {
-        const taskIds = list.map(o=>o.taskId);
-        docs = await TaskModel.find({_id: {$in: taskIds}})
+        const taskIds = list.map(o => o.taskId);
+        docs = await TaskModel.find({ _id: { $in: taskIds } })
         .select({
             title: 1,
             content: 1,

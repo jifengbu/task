@@ -1,7 +1,7 @@
 import { ClientModel } from '../../../../models';
 
 export default async ({ userId, authority }) => {
-    const query = ClientModel.find({authority});
+    const query = ClientModel.find({ authority });
     const docs = await query
     .select({
         phone: 1,

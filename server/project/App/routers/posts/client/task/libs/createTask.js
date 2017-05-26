@@ -46,5 +46,5 @@ export default async ({
         ..._audioList.map((item) => ({ [item.url]: 1 })),
         ..._imageList.map((item) => ({ [item]: 1 })),
     );
-    return doc.id;
+    return doc;
 };

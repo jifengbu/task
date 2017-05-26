@@ -9,7 +9,7 @@ var param = {
     password: '123456',
 };
 
-function log(obj) {
+function log (obj) {
     console.log(JSON.stringify(obj, null, 2));
 }
 
@@ -18,8 +18,8 @@ post('/client/login', param).then((obj) => {
         client.userId = obj.context.userId;
         saveClient(client);
         if (args[0] === '--socket') {
-            console.log('ws://' + host + ':' + port+'?userId='+client.userId, {path: apiRoot+'/socket'});
-            var socket = io.connect('ws://' + host + ':' + port+'?userId='+client.userId, {path: apiRoot+'/socket'});
+            console.log('ws://' + host + ':' + port + '?userId=' + client.userId, { path: apiRoot + '/socket' });
+            var socket = io.connect('ws://' + host + ':' + port + '?userId=' + client.userId, { path: apiRoot + '/socket' });
             socket.on('connect', function (obj) {
                 console.log('connect to server');
                 socket.emit('TEST_RQ', { username: 'fang', password: '123456' });

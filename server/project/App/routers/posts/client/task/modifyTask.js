@@ -1,5 +1,6 @@
 import { TaskGroupModel, TaskModel } from '../../../../models';
 import _ from 'lodash';
+import moment from 'moment';
 import modifyTask from './libs/modifyTask';
 import { omitNil } from '../../../../utils';
 import { scheduleMgr } from '../../../../managers';
@@ -19,7 +20,7 @@ export default async ({
     type,
     expectStartTime,
     expectFinishTime,
-}) => {
+}, { io }) => {
     const modifyTime = Date.now();
     const oldTask = await modifyTask(omitNil({
         taskId,
@@ -44,7 +45,7 @@ export default async ({
             const startT = expectStartTime || oldTask.expectStartTime;
             const finishT = expectFinishTime || oldTask.expectFinishTime;
             scheduleMgr.removeSchedule(taskId);
-            startScheduleRemind(taskId, remindList||oldTask.remindList, startT, finishT);
+            startScheduleRemind(io, taskId, remindList || oldTask.remindList, startT, finishT);
         }
 
         const group = await TaskGroupModel.findById(oldTask.groupId);

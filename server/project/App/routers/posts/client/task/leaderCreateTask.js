@@ -16,7 +16,7 @@ export default async ({
     type,
     expectStartTime,
     expectFinishTime,
-}) => {
+}, { io }) => {
     const publishTime = Date.now();
     const doc = new TaskGroupModel({
         publisherId: userId,
@@ -51,8 +51,8 @@ export default async ({
     await doc.save();
     await updateTaskProgress(userId, task.id, '发布任务');
     io.emitTo([doc.executorId, doc.supervisorId], 'AGREE_PUBLISH_TASK_NF', task);
-    startScheduleSendSMS(executorId, task.id); //发执行者定时
-    startScheduleRemind(taskId, remindList, expectStartTime, expectFinishTime);
+    startScheduleSendSMS(executorId, task.id); // 发执行者定时
+    startScheduleRemind(io, task.id, remindList, expectStartTime, expectFinishTime);
 
     return { success: true };
 };

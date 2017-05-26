@@ -1,4 +1,5 @@
 import schedule from 'node-schedule';
+import moment from 'moment';
 import { TaskModel } from '../../../../../models';
 import { scheduleMgr } from '../../../../../managers';
 
@@ -10,20 +11,20 @@ import { scheduleMgr } from '../../../../../managers';
 // 6：任务结束的最后1天提醒（每天提醒2次早上8：00，下午13:00）
 // 7：任务执行的中间时期  提醒2天（早上8：00，下午13:00)
 
-async function remind(taskId, sch) {
+async function remind (io, taskId, sch) {
     const task = await TaskModel.findById(taskId);
     if (task.state === 128) {
         sch.cancel();
     }
-    io.emitTo([task.publisherId, task.examinerId, task.state>=32 && task.executorId, task.state>=32 && task.supervisorId], 'REMIND_TASK_NF', task);
+    io.emitTo([task.publisherId, task.examinerId, task.state >= 32 && task.executorId, task.state >= 32 && task.supervisorId], 'REMIND_TASK_NF', task);
 }
 
-export default async (taskId, remindList, startTime, EndTime) => {
-    for ( const index of remindList ) {
+export default async (io, taskId, remindList, startTime, EndTime) => {
+    for (const index of remindList) {
         startTime = moment(startTime);
         EndTime = moment(EndTime);
         if (index == 1) {
-            var rule = new schedule.RecurrenceRule();
+            const rule = new schedule.RecurrenceRule();
             rule.hour = 8;
             rule.minute = 0;
             const sch = schedule.scheduleJob(rule, () => {
@@ -31,7 +32,7 @@ export default async (taskId, remindList, startTime, EndTime) => {
             });
             scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 2) {
-            var rule = new schedule.RecurrenceRule();
+            const rule = new schedule.RecurrenceRule();
             rule.hour = [8, 13];
             rule.minute = 0;
             const sch = schedule.scheduleJob(rule, () => {
@@ -39,7 +40,7 @@ export default async (taskId, remindList, startTime, EndTime) => {
             });
             scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 3) {
-            var rule = new schedule.RecurrenceRule();
+            const rule = new schedule.RecurrenceRule();
             rule.hour = [9];
             rule.minute = 0;
             const start = EndTime.subtract(9, 'd').toDate();
@@ -49,7 +50,7 @@ export default async (taskId, remindList, startTime, EndTime) => {
             });
             scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 4) {
-            var rule = new schedule.RecurrenceRule();
+            const rule = new schedule.RecurrenceRule();
             rule.hour = [9];
             rule.minute = 0;
             const start = EndTime.subtract(5, 'd').toDate();
@@ -59,7 +60,7 @@ export default async (taskId, remindList, startTime, EndTime) => {
             });
             scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 5) {
-            var rule = new schedule.RecurrenceRule();
+            const rule = new schedule.RecurrenceRule();
             rule.hour = [9];
             rule.minute = 0;
             const start = EndTime.subtract(3, 'd').toDate();
@@ -69,7 +70,7 @@ export default async (taskId, remindList, startTime, EndTime) => {
             });
             scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 6) {
-            var rule = new schedule.RecurrenceRule();
+            const rule = new schedule.RecurrenceRule();
             rule.hour = [8, 13];
             rule.minute = 0;
             const start = EndTime.subtract(1, 'd').toDate();
@@ -79,12 +80,12 @@ export default async (taskId, remindList, startTime, EndTime) => {
             });
             scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 7) {
-            var rule = new schedule.RecurrenceRule();
+            const rule = new schedule.RecurrenceRule();
             rule.hour = [8, 13];
             rule.minute = 0;
-            const diffDay = Math.floor(EndTime.diff(startTime)/86400000/2);
-            const start = startTime.add(diffDay-1, 'd').toDate();
-            const end = EndTime.subtract(diffDay+1, 'd').toDate();
+            const diffDay = Math.floor(EndTime.diff(startTime) / 86400000 / 2);
+            const start = startTime.add(diffDay - 1, 'd').toDate();
+            const end = EndTime.subtract(diffDay + 1, 'd').toDate();
             const sch = schedule.scheduleJob(start, end, rule, () => {
                 remind(taskId, sch);
             });

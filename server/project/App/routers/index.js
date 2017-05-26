@@ -27,7 +27,7 @@ function registerPostRouter (root, posts, io) {
             router.post(url, async (req, res) => {
                 if (process.env.NODE_ENV === 'production') {
                     _.includes(LOG_FILTERS, api) || console.log(url + ' recv:', req.body, req.file || '');
-                    let result = await func(req.body, {file: req.file, io});
+                    let result = await func(req.body, { file: req.file, io });
                     _.includes(LOG_FILTERS, api) || console.log(url + ' send:', result);
                     if (typeof result === 'number') {
                         res.sendStatus(result);
@@ -36,7 +36,7 @@ function registerPostRouter (root, posts, io) {
                     }
                 } else {
                     _.includes(LOG_FILTERS, api) || console.log(url + ' recv:', req.body, req.file || '');
-                    let result = await DEBUG(func, req.body, {file: req.file, io});
+                    let result = await DEBUG(func, req.body, { file: req.file, io });
                     _.includes(LOG_FILTERS, api) || console.log(url + ' send:', result);
                     setTimeout(() => {
                         if (typeof result === 'number') {
@@ -90,13 +90,13 @@ function registerGetRouter (root, gets, io) {
 }
 
 function registerSocketRouter (server, root, sockets) {
-    const io = socket_io(server, {path: root+'/socket'});
+    const io = socket_io(server, { path: root + '/socket' });
     io.emitTo = (users, msg, data) => {
         console.log('io.emitTo:', users, msg, data);
         if (users) {
-            users = _.isArray(users) ? users: [users];
-            _.uniqBy(_.filter(users), (o)=>o.toString()).forEach((userId)=>{
-                const socket = _.find(io.sockets.sockets, (s)=>s.userId==userId);
+            users = _.isArray(users) ? users : [users];
+            _.uniqBy(_.filter(users), (o) => o.toString()).forEach((userId) => {
+                const socket = _.find(io.sockets.sockets, (s) => s.userId == userId);
                 socket && socket.emit(msg, data);
             });
         } else {
@@ -118,7 +118,7 @@ function registerSocketRouter (server, root, sockets) {
     return io;
 }
 
-export default function(server) {
+export default function (server) {
     const io = registerSocketRouter(server, apiRoot, sockets);
     registerPostRouter(apiRoot, posts, io);
     registerGetRouter(apiRoot, gets, io);
