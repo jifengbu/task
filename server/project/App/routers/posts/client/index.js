@@ -32,6 +32,9 @@ export rejectFinishTask from './task/rejectFinishTask'; // 不同意完成任务
 
 export getRejectTaskList from './task/getRejectTaskList'; // 获取打回任务列表
 
+//statics
+export getStatics from './task/getStatics'; // 获取统计信息
+
 // schedule
 export createSchedule from './schedule/createSchedule'; // 创建日程
 export modifySchedule from './schedule/modifySchedule'; // 修改日程
