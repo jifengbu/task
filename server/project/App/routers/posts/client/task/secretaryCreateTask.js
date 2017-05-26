@@ -2,6 +2,7 @@ import { TaskGroupModel } from '../../../../models';
 import _ from 'lodash';
 import createTask from './libs/createTask';
 import updateTaskProgress from '../progress/updateTaskProgress';
+import startScheduleSendSMS from './libs/startScheduleSendSMS';
 
 export default async ({
     userId,
@@ -27,6 +28,7 @@ export default async ({
 
     for (const item of taskList) {
         let task = await createTask({ ...item, groupId: doc.id, publishTime, publisherId: userId, examinerId });
+        startScheduleRemind(task.id, task.remindList, task.expectStartTime, task.expectFinishTime);
         await updateTaskProgress(userId, task.id, '发布任务');
         taskIdList.push(task.task);
     }

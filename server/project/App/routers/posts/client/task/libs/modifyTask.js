@@ -43,7 +43,6 @@ export default async ({
             ...(imageList ? _imageList : []).map((item) => ({ [item]: 1 })),
             ...(imageList ? doc.imageList : []).map((item) => ({ [item]: -1 })),
         );
-        return doc.groupId;
     }
-    return undefined;
+    return doc;
 };

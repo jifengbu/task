@@ -1,4 +1,5 @@
 import { TaskModel, TaskGroupModel, MediaModel } from '../../../../models';
+import { scheduleMgr } from '../../../../managers';
 
 export default async ({
     userId,
@@ -7,6 +8,7 @@ export default async ({
     const group = await TaskGroupModel.findById(taskId);
     if (group) {
         for (const task of group.taskList) {
+            scheduleMgr.removeSchedule(task);
             const doc = await TaskModel.findByIdAndRemove(task);
             if (doc) {
                 MediaModel._updateRef(

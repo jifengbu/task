@@ -2,7 +2,9 @@ import { TaskGroupModel, TaskModel } from '../../../../models';
 import _ from 'lodash';
 import modifyTask from './libs/modifyTask';
 import { omitNil } from '../../../../utils';
+import { scheduleMgr } from '../../../../managers';
 import updateTaskProgress from '../progress/updateTaskProgress';
+import startScheduleRemind from './libs/startScheduleRemind';
 
 export default async ({
     userId,
@@ -19,7 +21,7 @@ export default async ({
     expectFinishTime,
 }) => {
     const modifyTime = Date.now();
-    const groupId = await modifyTask(omitNil({
+    const oldTask = await modifyTask(omitNil({
         taskId,
         executorId,
         supervisorId,
@@ -33,9 +35,19 @@ export default async ({
         expectFinishTime,
         modifyTime,
     }));
+    if (oldTask) {
+        if (
+            (expectStartTime || expectFinishTime) &&
+            (moment(expectStartTime).isSame(oldTask.expectStartTime) ||
+            moment(expectFinishTime).isSame(oldTask.expectFinishTime))
+        ) {
+            const startT = expectStartTime || oldTask.expectStartTime;
+            const finishT = expectFinishTime || oldTask.expectFinishTime;
+            scheduleMgr.removeSchedule(taskId);
+            startScheduleRemind(taskId, remindList||oldTask.remindList, startT, finishT);
+        }
 
-    if (groupId) {
-        const group = await TaskGroupModel.findById(groupId);
+        const group = await TaskGroupModel.findById(oldTask.groupId);
         if (group.isSingleTask) {
             await group.update(omitNil({
                 title,

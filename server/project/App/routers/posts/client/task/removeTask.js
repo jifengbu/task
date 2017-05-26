@@ -1,9 +1,11 @@
 import { TaskModel, TaskGroupModel, MediaModel } from '../../../../models';
+import { scheduleMgr } from '../../../../managers';
 
 export default async ({
     userId,
     taskId,
 }) => {
+    scheduleMgr.removeSchedule(taskId);
     const task = await TaskModel.findById(taskId);
     if (task) {
         const group = await TaskGroupModel.findById(task.groupId);
@@ -21,5 +23,6 @@ export default async ({
         );
         await task.remove();
     }
+
     return { success: true };
 };

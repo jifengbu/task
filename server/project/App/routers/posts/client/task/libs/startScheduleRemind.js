@@ -1,5 +1,6 @@
 import schedule from 'node-schedule';
 import { TaskModel } from '../../../../../models';
+import { scheduleMgr } from '../../../../../managers';
 
 // 1：每天提醒1次（早上8:00）
 // 2：每天提醒2次（早上8：00，下午13:00）
@@ -9,7 +10,7 @@ import { TaskModel } from '../../../../../models';
 // 6：任务结束的最后1天提醒（每天提醒2次早上8：00，下午13:00）
 // 7：任务执行的中间时期  提醒2天（早上8：00，下午13:00)
 
-async function remind(sch, taskId) {
+async function remind(taskId, sch) {
     const task = await TaskModel.findById(taskId);
     if (task.state === 128) {
         sch.cancel();
@@ -26,15 +27,17 @@ export default async (taskId, remindList, startTime, EndTime) => {
             rule.hour = 8;
             rule.minute = 0;
             const sch = schedule.scheduleJob(rule, () => {
-                remind(sch, taskId);
+                remind(taskId, sch);
             });
+            scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 2) {
             var rule = new schedule.RecurrenceRule();
             rule.hour = [8, 13];
             rule.minute = 0;
             const sch = schedule.scheduleJob(rule, () => {
-                remind(sch, taskId);
+                remind(taskId, sch);
             });
+            scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 3) {
             var rule = new schedule.RecurrenceRule();
             rule.hour = [9];
@@ -42,8 +45,9 @@ export default async (taskId, remindList, startTime, EndTime) => {
             const start = EndTime.subtract(9, 'd').toDate();
             const end = EndTime.toDate();
             const sch = schedule.scheduleJob(start, end, rule, () => {
-                remind(sch, taskId);
+                remind(taskId, sch);
             });
+            scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 4) {
             var rule = new schedule.RecurrenceRule();
             rule.hour = [9];
@@ -51,8 +55,9 @@ export default async (taskId, remindList, startTime, EndTime) => {
             const start = EndTime.subtract(5, 'd').toDate();
             const end = EndTime.toDate();
             const sch = schedule.scheduleJob(start, end, rule, () => {
-                remind(sch, taskId);
+                remind(taskId, sch);
             });
+            scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 5) {
             var rule = new schedule.RecurrenceRule();
             rule.hour = [9];
@@ -60,8 +65,9 @@ export default async (taskId, remindList, startTime, EndTime) => {
             const start = EndTime.subtract(3, 'd').toDate();
             const end = EndTime.toDate();
             const sch = schedule.scheduleJob(start, end, rule, () => {
-                remind(sch, taskId);
+                remind(taskId, sch);
             });
+            scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 6) {
             var rule = new schedule.RecurrenceRule();
             rule.hour = [8, 13];
@@ -69,8 +75,9 @@ export default async (taskId, remindList, startTime, EndTime) => {
             const start = EndTime.subtract(1, 'd').toDate();
             const end = EndTime.toDate();
             const sch = schedule.scheduleJob(start, end, rule, () => {
-                remind(sch, taskId);
+                remind(taskId, sch);
             });
+            scheduleMgr.addSchedule(taskId, sch);
         } else if (index == 7) {
             var rule = new schedule.RecurrenceRule();
             rule.hour = [8, 13];
@@ -79,8 +86,9 @@ export default async (taskId, remindList, startTime, EndTime) => {
             const start = startTime.add(diffDay-1, 'd').toDate();
             const end = EndTime.subtract(diffDay+1, 'd').toDate();
             const sch = schedule.scheduleJob(start, end, rule, () => {
-                remind(sch, taskId);
+                remind(taskId, sch);
             });
+            scheduleMgr.addSchedule(taskId, sch);
         }
     }
 };

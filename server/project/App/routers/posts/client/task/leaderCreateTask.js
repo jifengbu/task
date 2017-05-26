@@ -52,7 +52,7 @@ export default async ({
     await updateTaskProgress(userId, task.id, '发布任务');
     io.emitTo([doc.executorId, doc.supervisorId], 'AGREE_PUBLISH_TASK_NF', task);
     startScheduleSendSMS(executorId, task.id); //发执行者定时
-    startScheduleRemind(executorId, taskId, remindList);
+    startScheduleRemind(taskId, remindList, expectStartTime, expectFinishTime);
 
     return { success: true };
 };
