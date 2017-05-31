@@ -13,7 +13,7 @@ import Echarts from 'native-echarts';
 module.exports = React.createClass({
     render () {
         const data = this.props.data;
-        const date = this.props.date;
+        const name = ['最关心任务','打回任务','审核任务','最新任务'];//this.props.name;
         const title = this.props.title;
         const option = {
             title : {
@@ -32,7 +32,7 @@ module.exports = React.createClass({
                 containLabel: true,
             },
             xAxis: {
-                data: [1,2,3,4],
+                data: name,
                 axisLine:{
                     lineStyle:{
                         color:'#DDDDDD',

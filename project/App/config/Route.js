@@ -50,4 +50,5 @@ module.exports = {
     ROUTE_GET_MOST_CARED_TASK_LIST: API_SERVER + 'getMostCaredTaskList', // 获取最关心任务
     ROUTE_GET_REJECT_TASK_LIST: API_SERVER + 'getRejectTaskList', // 获取打回任务
     ROUTE_GET_APPLY_FINISH_TASK_LIST: API_SERVER + 'getApplyFinishTaskList', // 获取审批完成任务
+    ROUTE_GET_STATICS: API_SERVER + 'getStatics', // 获取统计数据
 };

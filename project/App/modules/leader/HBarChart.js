@@ -13,7 +13,6 @@ import Echarts from 'native-echarts';
 module.exports = React.createClass({
     render () {
         const data = [1,2,3,4,5];//this.props.data;
-        const date = [1,2,3,4,5];//this.props.date;
         const option = {
             grid: {
                 left: '5%',

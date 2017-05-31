@@ -15,6 +15,7 @@ module.exports = React.createClass({
     render () {
         const title = this.props.title;
         const colors = ['#f03b0a', '#00c6bb'];
+        const data = this.props.data;
         const option = {
             title : {
                 text: title,

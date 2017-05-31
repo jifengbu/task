@@ -24,11 +24,69 @@ module.exports = React.createClass({
     onChangePage () {
         this.setState({});
     },
+    getInitialState () {
+        this.nameArr = [];
+        return {
+            dataDetail: null,
+        };
+    },
+    componentDidMount() {
+        this.getTaskTypeList();
+    },
+    getTaskTypeList() {
+        const param = {
+            userId: app.personal.info.userId,
+        };
+        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getPersonalInfoSuccess);
+    },
+    getPersonalInfoSuccess (data) {
+        if (data.success) {
+            let typeArr = [];
+            let nameArr = [];
+            const context = data.context;
+            if (context) {
+                for (var i = 0; i < context.taskTypeList.length; i++) {
+                    typeArr.push(taskTypeList[i].key);
+                    nameArr.push(taskTypeList[i].name);
+                }
+                this.nameArr = nameArr;
+                this.getStatics(typeArr);
+            }
+        } else {
+            app.dismissProgressHud();
+            Toast(data.msg);
+        }
+    },
+    getStatics(typeList) {
+        const param = {
+            userId: app.personal.info.userId,
+            typeList: typeList,
+        };
+        POST(app.route.ROUTE_GET_STATICS, param, this.getStaticsSuccess);
+    },
+    getStaticsSuccess (data) {
+        if (data.success) {
+            const context = data.context;
+            if (context) {
+                this.setState({dataDetail: context});
+            }
+        }
+    },
     render () {
+        const { dataDetail } = this.state;
+        let pieArr = [];
+        let barArr = [];
+        if (dataDetail) {
+            pieArr = [dataDetail.finishTask.month,dataDetail.finishTask.quarter,dataDetail.finishTask.year];
+            barArr = [dataDetail.publishTask.month,dataDetail.publishTask.quarter,dataDetail.publishTask.year];
+        }
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.topView}>
-                    <PieChart title={'任务完成率'}/>
+                    {
+                        dataDetail&&
+                        <PieChart title={'任务完成率'} data={dataDetail.mywork}/>
+                    }
                 </View>
                 <View style={styles.midView}>
                     {
@@ -44,7 +102,7 @@ module.exports = React.createClass({
                                   return (
                                       <View key={i} style={styles.heightView}>
                                           {
-                                             <BarChart title={item}/>
+                                             <BarChart title={item} data={barArr[i]} nama={this.nameArr}/>
                                           }
                                       </View>
                                   );
@@ -67,7 +125,7 @@ module.exports = React.createClass({
                                   return (
                                       <View key={i} style={styles.heightView}>
                                           {
-                                             <PieChart title={item}/>
+                                             <PieChart title={item} data={pieArr[i]}/>
                                           }
                                       </View>
                                   );
@@ -77,7 +135,11 @@ module.exports = React.createClass({
                     }
                 </View>
                 <View style={styles.topView}>
-                    <HBarChart />
+                    {
+                        dataDetail&&
+                        <HBarChart data={dataDetail.finishDetail}/>
+                    }
+
                 </View>
                 <View style={styles.empty}/>
             </ScrollView>
