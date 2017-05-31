@@ -19,6 +19,7 @@ module.exports = React.createClass({
         title: '任务列表',
     },
     getInitialState () {
+        this.pageNo = 1;
         this.taskList = [];
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
