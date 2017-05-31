@@ -208,7 +208,7 @@ export default class ClientDetail extends React.Component {
         const self = this;
         const { form, operType } = this.props;
         const { waiting, editing, client, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
-        const { name, phone, authority, partment, birthday, head, email, age, sex, reservePhone } = client;
+        const { name, phone, authority = 1, partment, birthday, head, email, age, sex, reservePhone } = client;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
             initialValue: name,

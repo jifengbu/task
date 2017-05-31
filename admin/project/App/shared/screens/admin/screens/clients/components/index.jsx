@@ -31,7 +31,7 @@ const columns = [{
     title: '部门',
     width: 250,
     dataIndex: 'partment',
-    render: (data = {}) => data.name||'无',
+    render: (data) => (data||{}).name||'无',
 }, {
     title: '拥有权限',
     width: 250,

@@ -9,6 +9,10 @@ export default async ({
     partment,
     authority,
 }) => {
+    const client = await ClientModel.findOne({phone});
+    if (client) {
+        return {msg: '该电话号码已经被人使用!'}
+    }
     const doc = await ClientModel.findByIdAndUpdate(clientId, omitNil({
         name,
         phone,
