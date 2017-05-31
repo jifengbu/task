@@ -33,7 +33,9 @@ post('/client/login', param).then((obj) => {
                 console.log('reconnect to server');
             }).on('reconnect_failed', function (obj) {
                 console.error('reconnect to server failed');
-            }).on(['AGREE_FINISH_TASK_NF'], log);
+            })
+            .on('AGREE_PUBLISH_TASK_NF', log)
+            .on('AGREE_FINISH_TASK_NF', log)
         }
     }
 });
