@@ -32,7 +32,7 @@ export rejectFinishTask from './task/rejectFinishTask'; // 不同意完成任务
 
 export getRejectTaskList from './task/getRejectTaskList'; // 获取打回任务列表
 
-//statics
+// statics
 export getStatics from './task/getStatics'; // 获取统计信息
 
 // schedule
