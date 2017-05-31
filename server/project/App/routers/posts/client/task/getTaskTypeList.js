@@ -4,7 +4,7 @@ export default async ({ userId }) => {
     const query = TaskTypeModel.find();
     const docs = await query
     .select({
-        type: 1,
+        key: 1,
         name: 1,
     });
 

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const schema = new mongoose.Schema({
-    type: { type: String }, // type
+    key: { type: String }, // key
     name: { type: String }, // 标题
 });
 

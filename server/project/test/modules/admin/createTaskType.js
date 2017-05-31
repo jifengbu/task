@@ -2,8 +2,8 @@ var { post, admin: { userId } } = require('../../utils');
 
 var param = {
     userId,
-    type: 1,
-    name: '类型1',
+    key: 2,
+    name: '加急任务',
 };
 
 post('/admin/createTaskType', param);
