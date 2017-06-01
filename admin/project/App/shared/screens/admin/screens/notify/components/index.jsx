@@ -71,7 +71,7 @@ export default class Notify extends React.Component {
         const pagination = (item, type) => ({
             total: item.count,
             showSizeChanger: false,
-            pageSize: 3,
+            pageSize: 10,
             current: currents[type],
             onChange (current) {
                 currents[type] = current;

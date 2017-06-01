@@ -20,4 +20,10 @@ module.exports = {
     createClient: server + 'createClient', // 创建人员
     modifyClient: server + 'modifyClient', // 修改人员信息
     removeClient: server + 'removeClient', // 删除人员
+
+    //任务类型
+    taskTypes: server + 'getTaskTypeList', // 获取任务类型列表
+    createTaskType: server + 'createTaskType', // 创建任务类型
+    modifyTaskType: server + 'modifyTaskType', // 创建任务类型
+    removeTaskType: server + 'removeTaskType', // 删除任务类型
 };

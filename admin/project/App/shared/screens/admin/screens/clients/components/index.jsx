@@ -91,7 +91,7 @@ export default class Clients extends React.Component {
             total: clients.count,
             showSizeChanger: false,
             current,
-            pageSize: 3,
+            pageSize: 10,
             onChange (current) {
                 self.setState({ current });
                 loadListPage(keyword, current - 1);

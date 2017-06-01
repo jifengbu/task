@@ -82,7 +82,7 @@ export default class Partments extends React.Component {
             total: partments.count,
             showSizeChanger: false,
             current,
-            pageSize: 3,
+            pageSize: 10,
             onChange (current) {
                 self.setState({ current });
                 loadListPage(keyword, current - 1);

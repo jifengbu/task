@@ -7,7 +7,7 @@ import _ from 'lodash';
 import SelectPartment from './components';
 
 @dataConnect(
-    (state) => ({ states: state.partments, pageSize: 3, keepLastKeepData: true }),
+    (state) => ({ states: state.partments, pageSize: 10, keepLastKeepData: true }),
     (dispatch) => ({}),
     (props) => ({
         fragments: SelectPartment.fragments,

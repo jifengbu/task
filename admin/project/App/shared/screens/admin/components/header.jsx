@@ -26,27 +26,33 @@ export default class Header extends React.Component {
                     <img src='/img/common/logo.png' className={styles.head} />
                     <div className={styles.infoContainer}>
                         <div className={styles.name}>
-                            贵州单用途预付卡管理平台
+                            经开区任务根据提醒管理平台
                         </div>
                     </div>
                 </div>
                 <div className={styles.right}>
                     <img className={styles.head_image} src='/img/common/head_image.png' />
                     <Menu className={styles.menu} mode='horizontal' selectedKeys={[current]} onClick={::this.handleMenuClick}>
-                        <MenuItem key='0'>
+                        <MenuItem key='2'>
                             <Link to='/admin'>
                                 关于我们
                             </Link>
                         </MenuItem>
-                        <MenuDivider key={'_0'} className={styles.line} />
+                        <MenuDivider key={'_2'} className={styles.line} />
                         <MenuItem key='1'>
+                            <Link to='/admin/tasktype'>
+                                任务类型
+                            </Link>
+                        </MenuItem>
+                        <MenuDivider key={'_1'} className={styles.line} />
+                        <MenuItem key='0'>
                             <a href='/admin/logout'>
                                 退出
                             </a>
                         </MenuItem>
                     </Menu>
                     <div className={styles.company}>
-                        贵州信合融通信息产业有限公司
+                        贵阳阡陌科技有限公司
                     </div>
                 </div>
             </div>

@@ -9,6 +9,7 @@ import Clients from 'screens/admin/screens/clients';
 import ClientDetail from 'screens/admin/screens/clients/screens/detail';
 import Statistics from 'screens/admin/screens/statistics';
 import Feedback from 'screens/admin/screens/feedback';
+import TaskType from 'screens/admin/screens/tasktype';
 import Notify from 'screens/admin/screens/notify';
 
 let firstEntry = true;
@@ -46,6 +47,7 @@ export default [
             <IndexRoute component={Clients} onEnter={authenticate} />
             <Route name='adminClientDetail' path='detail' component={ClientDetail} onEnter={authenticate} />
         </Route>
+        <Route name='adminTaskType' path='tasktype' component={TaskType} onEnter={authenticate} />
         <Route name='adminStatistics' path='statistics' component={Statistics} onEnter={authenticate} />
         <Route name='adminFeedback' path='feedback' component={Feedback} onEnter={authenticate} />
     </Route>,

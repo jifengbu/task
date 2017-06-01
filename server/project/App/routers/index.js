@@ -97,6 +97,9 @@ function registerSocketRouter (server, root, sockets) {
             users = _.isArray(users) ? users : [users];
             _.uniqBy(_.filter(users), (o) => o.toString()).forEach((userId) => {
                 const socket = _.find(io.sockets.sockets, (s) => s.userId === userId.toString());
+                if (socket) {
+                    console.log("=====================", userId );
+                }
                 socket && socket.emit(msg, data);
             });
         } else {

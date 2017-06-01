@@ -8,7 +8,7 @@ import _ from 'lodash';
 import Partments from './components';
 
 @dataConnect(
-    (state) => ({ pageSize: 3 }),
+    (state) => ({ pageSize: 10 }),
     (dispatch) => ({
         actions : bindActionCreators(partmentActions, dispatch),
     }),

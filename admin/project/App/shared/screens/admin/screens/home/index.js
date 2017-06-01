@@ -10,7 +10,7 @@ export default class Home extends React.Component {
                         <img className={styles.logo} src='/img/common/logo.png' />
                         <div>
                             <span className={styles.leftText1}>欢迎使用</span>
-                            <span className={styles.leftText2}> 商务厅管理端</span>
+                            <span className={styles.leftText2}> 经开区任务根据提醒管理平台 </span>
                         </div>
                     </div>
                 </div>

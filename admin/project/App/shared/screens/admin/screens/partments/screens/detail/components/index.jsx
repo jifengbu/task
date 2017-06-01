@@ -426,7 +426,7 @@ export default class PartmentDetail extends React.Component {
             total: members.length,
             showSizeChanger: false,
             current,
-            pageSize: 3,
+            pageSize: 10,
             onChange (current) {
                 self.setState({ current });
             },
@@ -435,7 +435,7 @@ export default class PartmentDetail extends React.Component {
             total: subors.length,
             showSizeChanger: false,
             current,
-            pageSize: 3,
+            pageSize: 10,
             onChange (current) {
                 self.setState({ current });
             },

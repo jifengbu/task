@@ -8,7 +8,7 @@ import _ from 'lodash';
 import Clients from './components';
 
 @dataConnect(
-    (state) => ({ pageSize: 3 }),
+    (state) => ({ pageSize: 10 }),
     (dispatch) => ({
         actions : bindActionCreators(clientActions, dispatch),
     }),

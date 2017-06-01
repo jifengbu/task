@@ -9,7 +9,7 @@ import Notify from './components';
         const { activeType } = state.router.location.state || { activeType: 'news' };
         return {
             activeType,
-            pageSize: 3,
+            pageSize: 10,
         };
     },
     (dispatch) => ({}),
