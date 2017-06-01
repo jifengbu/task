@@ -50,10 +50,10 @@ export default class SelectPartment extends React.Component {
             },
         },
     };
-    state = { keyword: '', selectedId: this.props.selectedId }
+    state = { keyword: '', selectedIds: this.props.selectedIds }
     componentWillReceiveProps (nextProps) {
-        if (this.props.selectedId != nextProps.selectedId) {
-            this.setState({ selectedId:  nextProps.selectedId });
+        if (this.props.selectedIds != nextProps.selectedIds) {
+            this.setState({ selectedIds:  nextProps.selectedIds });
         }
     }
     onSearch (keyword) {
@@ -63,8 +63,8 @@ export default class SelectPartment extends React.Component {
     }
     render () {
         const self = this;
-        const { current, keyword, selectedId } = this.state;
-        const { partments = {}, loadListPage, loading, loadingPage, onSelect } = this.props;
+        const { current, keyword, selectedIds } = this.state;
+        const { partments = {}, multi, loadListPage, loading, loadingPage, onSelect } = this.props;
         const pagination = {
             total: partments.count,
             showSizeChanger: false,
@@ -76,11 +76,11 @@ export default class SelectPartment extends React.Component {
             },
         };
         const rowSelection = {
-            type: 'radio',
-            selectedRowKeys: selectedId ? [ selectedId ] : [],
-            onSelect (record) {
-                self.setState({ selectedId: record.id });
-                onSelect(record);
+            type: multi ? 'checkbox' : 'radio',
+            selectedRowKeys: selectedIds,
+            onSelect (record, selected, selectedRows) {
+                self.setState({ selectedIds: _.map(selectedRows, o=>o.id) });
+                onSelect(selectedRows);
             },
         };
         return (

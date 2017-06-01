@@ -186,16 +186,16 @@ export default class ClientDetail extends React.Component {
             hasPartmentOkButton: false,
             partmentModalVisible: true,
             partmentTitle: '部门',
-            selectedPartmentId: partment.id,
+            selectedPartmentIds: partment.id,
         });
     }
     handleSelectPartmentCancel () {
         this.setState({ partmentModalVisible: false });
     }
     onSelectPartment(partment) {
-        const { selectedPartmentId, hasPartmentOkButton } = this.state;
+        const { selectedPartmentIds, hasPartmentOkButton } = this.state;
         this.tempPartment = partment;
-        if (!hasPartmentOkButton && selectedPartmentId !== partment.id) {
+        if (!hasPartmentOkButton && selectedPartmentIds !== partment.id) {
             this.setState({hasPartmentOkButton : true});
         }
     }
@@ -207,7 +207,7 @@ export default class ClientDetail extends React.Component {
     render () {
         const self = this;
         const { form, operType } = this.props;
-        const { waiting, editing, client, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
+        const { waiting, editing, client, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentIds } = this.state;
         const { name, phone, authority = 1, partment, birthday, head, email, age, sex, reservePhone } = client;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
@@ -353,7 +353,7 @@ export default class ClientDetail extends React.Component {
                 {
                     partmentModalVisible &&
                     <Modal title={'选择' + partmentTitle} visible={true} className={hasPartmentOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectPartmentCancel} onOk={::this.handleSelectPartmentOk}>
-                        <SelectPartment onSelect={::this.onSelectPartment} selectedId={selectedPartmentId}/>
+                        <SelectPartment onSelect={::this.onSelectPartment} selectedIds={selectedPartmentIds}/>
                     </Modal>
                 }
             </div>

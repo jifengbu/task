@@ -1,8 +1,18 @@
 import request from 'superagent';
-import omitBy from 'lodash/omitBy';
-import find from 'lodash/find';
-import isNil from 'lodash/isNil';
+import _ from 'lodash';
 import Q from 'q';
+
+
+function omitAll(obj) {
+    if (_.isPlainObject(obj)) {
+        return _.mapValues(obj, (o)=>omitAll(o));
+    } else if (_.isArray(obj)) {
+        return _.map(obj, (o)=> omitAll(o));
+    } else if (obj === null) {
+        return undefined;
+    }
+    return obj;
+}
 
 export default function doRequest ({ dispatch, query, variables, type, endpoint, headers, body, ...params }) {
     console.log('[relatejs]: doRequest', { dispatch, query, variables, type, endpoint, headers, body, ...params });
@@ -31,12 +41,13 @@ export default function doRequest ({ dispatch, query, variables, type, endpoint,
                 console.error('[relatejs]:', res.text);
                 deferred.reject(error);
             } else {
-                console.log('[relatejs]: body', res.body);
-                const { errors } = res.body;
-                if (errors && errors.length && find(errors, (item) => (item.message === 'unauthorized'))) {
+                const data = omitAll(res.body)
+                console.log('[relatejs]: body', data);
+                const { errors } = data;
+                if (errors && errors.length && _.find(errors, (item) => (item.message === 'unauthorized'))) {
                     window.location.href = '/admin/login';
                 } else {
-                    deferred.resolve(res.body);
+                    deferred.resolve(data);
                 }
             }
         });
@@ -45,7 +56,7 @@ export default function doRequest ({ dispatch, query, variables, type, endpoint,
             console.log('[relatejs]: start dispatch');
             promise = promise.then(({ data, errors }) => {
                 console.log('[relatejs]: dispatch', { type, data, errors, ...params });
-                dispatch({ type, data:omitBy(data, isNil), errors, ...params });
+                dispatch({ type, data, errors, ...params });
                 return data;
             });
         }

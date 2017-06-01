@@ -134,10 +134,10 @@ export default class PartmentDetail extends React.Component {
         suborCurrent: 1,
         clientModalVisible: false,
         hasClientOkButton: false,
-        clientTitle: '',
+        clientType: 0,
         partmentModalVisible: false,
         hasPartmentOkButton: false,
-        partmentTitle: '',
+        partmentType: 0,
         editing: this.props.operType === 0,
         partment: _.cloneDeep(this.props.partment) || (this.props.operType === 0 ? {
             phoneList: [],
@@ -309,13 +309,16 @@ export default class PartmentDetail extends React.Component {
             phoneList.splice(index, 0, '');
         }
         for (const i in phoneList) {
-            form.setFieldsValue({ ['descriptText' + i]:  phoneList[i].text || '' });
+            form.setFieldsValue({ ['phone' + i]:  phoneList[i] });
         }
         this.setState({ partment });
     }
     removePhoneItem (index) {
-        const { partment } = this.state;
-        partment.phoneList.splice(index, 1);
+        const { partment, partment: { phoneList } } = this.state;
+        phoneList.splice(index, 1);
+        for (const i in phoneList) {
+            form.setFieldsValue({ ['phone' + i]:  phoneList[i] });
+        }
         this.setState({ partment });
     }
     handleTextChange (index, event) {
@@ -342,67 +345,74 @@ export default class PartmentDetail extends React.Component {
         this.suborSelectd = { lastSelectIndex: index, lastCurrent: suborCurrent };
     }
     showSelectClient(type) {
-        this.clientType = type;
-        const { chargeMan = {} } = this.state.partment||{};
+        const { chargeMan = {}, members = [] } = this.state.partment||{};
         this.setState({
             hasClientOkButton: false,
             clientModalVisible: true,
-            clientTitle: type === 0 ? '负责人' : '部门成员',
-            selectedClientId: type === 0 ? chargeMan.id : '',
+            clientType: type,
+            selectedClientIds: type === 0 ? [chargeMan.id] : members.map(o=>o.id),
         });
     }
     handleSelectClientCancel () {
         this.setState({ clientModalVisible: false });
     }
-    onSelectClient(client) {
-        const { selectedClientId, hasClientOkButton } = this.state;
-        this.tempClient = client;
-        if (!hasClientOkButton && selectedClientId !== client.id) {
+    onSelectClient(selects) {
+        const { selectedClientIds, hasClientOkButton } = this.state;
+        this.tempClients = selects;
+        if (!hasClientOkButton && !_.isEqual(selectedClientIds, _.map(selects, o=>o.id))) {
             this.setState({hasClientOkButton : true});
+        } else if (hasClientOkButton) {
+            this.setState({hasClientOkButton : false});
         }
     }
     handleSelectClientOk () {
-        const { partment } = this.state;
-        if (this.clientType === 0) {
-            partment.chargeMan = this.tempClient;
+        const { partment, clientType } = this.state;
+        if (clientType === 0) {
+            partment.chargeMan = this.tempClients[0];
         } else {
-            partment.members.push(this.tempClient);
+            partment.members = _.reject(this.tempClients, o=>o.id===(partment.chargeMan||{}).id);
         }
         this.setState({ partment, clientModalVisible: false });
     }
     showSelectPartment(type) {
-        this.partmentType = type;
-        const { superior = {} } = this.state.partment||{};
+        const { superior = {}, subors = [] } = this.state.partment||{};
         this.setState({
             hasPartmentOkButton: false,
             partmentModalVisible: true,
-            partmentTitle: type === 0 ? '上级部门' : '下属部门',
-            selectedPartmentId: type === 0 ? superior.id : '',
+            partmentType: type,
+            selectedPartmentIds: type === 0 ? [superior.id] : subors.map(o=>o.id),
         });
     }
     handleSelectPartmentCancel () {
         this.setState({ partmentModalVisible: false });
     }
-    onSelectPartment(partment) {
-        const { selectedPartmentId, hasPartmentOkButton } = this.state;
-        this.tempPartment = partment;
-        if (!hasPartmentOkButton && selectedPartmentId !== partment.id) {
+    onSelectPartment(selects) {
+        const { selectedPartmentIds, hasPartmentOkButton } = this.state;
+        this.tempPartments = selects;
+        if (!hasPartmentOkButton && !_.isEqual(selectedPartmentIds,  _.map(selects, o=>o.id))) {
             this.setState({hasPartmentOkButton : true});
+        } else if (hasPartmentOkButton) {
+            this.setState({hasPartmentOkButton : false});
         }
     }
     handleSelectPartmentOk () {
-        const { partment } = this.state;
-        if (this.partmentType === 0) {
-            partment.superior = this.tempPartment;
+        const { partment, partmentType } = this.state;
+        const { partmentId } = this.props;
+        if (partmentType === 0) {
+            if (partmentId === this.tempPartments[0].id) {
+                notification.error({ description:'不能选择自己为上级部门' });
+                return;
+            }
+            partment.superior = this.tempPartments[0];
         } else {
-            partment.subors.push(this.tempPartment);
+            partment.subors = _.reject(this.tempPartments, o=>o.id===(partment.superior||{}).id||o.id===partmentId);
         }
         this.setState({ partment, partmentModalVisible: false });
     }
     render () {
         const self = this;
         const { form, operType } = this.props;
-        const { current, waiting, editing, partment, clientModalVisible, hasClientOkButton, clientTitle, selectedClientId, partmentModalVisible, hasPartmentOkButton, partmentTitle, selectedPartmentId } = this.state;
+        const { current, waiting, editing, partment, clientModalVisible, hasClientOkButton, clientType, selectedClientIds, partmentModalVisible, hasPartmentOkButton, partmentType, selectedPartmentIds } = this.state;
         const { name, descript, phoneList = [], superior, subors = [], members = [], chargeMan } = partment;
         const { getFieldDecorator, getFieldError, isFieldValidating } = form;
         const nameDecorator = getFieldDecorator('name', {
@@ -543,7 +553,7 @@ export default class PartmentDetail extends React.Component {
                                 editing &&
                                 <div className={styles.iconButtonInnerContainer}>
                                     <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectClient.bind(this, 1)}>
-                                        <ContentAdd />
+                                        <EditorModeEdit />
                                     </FloatingActionButton>
                                 </div>
                             }
@@ -588,7 +598,7 @@ export default class PartmentDetail extends React.Component {
                                 editing &&
                                 <div className={styles.iconButtonInnerContainer}>
                                     <FloatingActionButton className={styles.iconButton} onTouchTap={this.showSelectPartment.bind(this, 1)}>
-                                        <ContentAdd />
+                                        <EditorModeEdit />
                                     </FloatingActionButton>
                                 </div>
                             }
@@ -611,14 +621,14 @@ export default class PartmentDetail extends React.Component {
                 }
                 {
                     clientModalVisible &&
-                    <Modal title={'选择' + clientTitle} visible={true} className={hasClientOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectClientCancel} onOk={::this.handleSelectClientOk}>
-                        <SelectClient onSelect={::this.onSelectClient} selectedId={selectedClientId}/>
+                    <Modal title={'选择' + (clientType === 0 ? '负责人' : '部门成员')} visible={true} className={hasClientOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectClientCancel} onOk={::this.handleSelectClientOk}>
+                        <SelectClient onSelect={::this.onSelectClient} selectedIds={selectedClientIds} multi={clientType===1}/>
                     </Modal>
                 }
                 {
                     partmentModalVisible &&
-                    <Modal title={'选择' + partmentTitle} visible={true} className={hasPartmentOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectPartmentCancel} onOk={::this.handleSelectPartmentOk}>
-                        <SelectPartment onSelect={::this.onSelectPartment} selectedId={selectedPartmentId}/>
+                    <Modal title={'选择' + (partmentType === 0 ? '上级部门' : '下属部门')} visible={true} className={hasPartmentOkButton ? styles.clientModal : styles.clientModalNoButton} onCancel={::this.handleSelectPartmentCancel} onOk={::this.handleSelectPartmentOk}>
+                        <SelectPartment onSelect={::this.onSelectPartment} selectedIds={selectedPartmentIds} multi={partmentType===1}/>
                     </Modal>
                 }
             </div>

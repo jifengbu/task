@@ -79,9 +79,9 @@ export default async ({
             year: publishTaskInfo.slice(length * 2, length * 3),
         },
         finishTask: {
-            month: { finish: finishTaskInfo.mf, unfinish: finishTaskInfo.muf },
-            quarter: { finish: finishTaskInfo.qf, unfinish: finishTaskInfo.quf },
-            year: { finish: finishTaskInfo.yf, unfinish: finishTaskInfo.yuf },
+            month: { finish: finishTaskInfo.mf||0, unfinish: finishTaskInfo.muf||0 },
+            quarter: { finish: finishTaskInfo.qf||0, unfinish: finishTaskInfo.quf||0 },
+            year: { finish: finishTaskInfo.yf||0, unfinish: finishTaskInfo.yuf||0 },
         },
         finishDetail: finishDetail.map(o => { o.name = o._id; delete o._id; return o; }),
     } };
