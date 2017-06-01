@@ -12,53 +12,71 @@ import Echarts from 'native-echarts';
 
 module.exports = React.createClass({
     render () {
-        const data = [1,2,3,4,5];//this.props.data;
+        const { data } = this.props;
+        let xData = [];
+        let yData = [];
+        let height = sr.rs(95);
+        if (!!data) {
+            for (var i = 0; i < data.length; i++) {
+                let num = (data[i].unfinish*1+data[i].finish*1) ==0?0:Math.round(data[i].unfinish*100/(data[i].unfinish*1+data[i].finish*1));
+                xData.push(data[i].name);
+                yData.push(num);
+            }
+            height = sr.rs(95+data.length*25);
+        }
         const option = {
             grid: {
                 left: '5%',
-                right: '6%',
-                top: '3%',
+                right: '10%',
+                top: '15%',
+                bottom: '5%',
                 containLabel: true,
             },
-            // title : {
-            //     text: '世界人口总量',
-            //     subtext: '数据来自网络'
-            // },
-            // tooltip : {
-            //     trigger: 'axis'
-            // },
-            // legend: {
-            //     data:['2011年', '2012年']
-            // },
-            // toolbox: {
-            //     // show : true,
-            //     feature : {
-            //         mark : {show: true},
-            //         dataView : {show: true, readOnly: false},
-            //         magicType: {show: true, type: ['line', 'bar']},
-            //         restore : {show: true},
-            //         saveAsImage : {show: true}
-            //     }
-            // },
-            // calculable : true,
-            xAxis : [
-                {
-                    type : 'value',
-                    data : [0, 100],
-                    show: false,
+            title : {
+                text: '其他人任务完成比例',
+                x:'center',
+                y: 0,
+                textStyle: {
+                    color: 'gray',
+                    fontSize: 12,
                 }
-            ],
-            yAxis : [
-                {
-                    type : 'category',
-                    data : ['王小六','王小五','王小四','王小三','王晓易','王小二']
-                }
-            ],
+            },
+            xAxis: {
+                axisLine:{
+                    lineStyle:{
+                        color:'#DDDDDD',
+                    },
+                },
+                splitLine: {
+                    show: false
+                },
+                axisLabel: {
+                    formatter: '{value} %',
+                    textStyle: {
+                        color: '#AEAEAE',
+                    },
+                },
+            },
+            yAxis: {
+                name: '',
+                data: xData,
+                axisLine:{
+                    lineStyle:{
+                        color:'#DDDDDD',
+                    },
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#AEAEAE',
+                    },
+                },
+            },
             series : [
                 {
                     name:'2011年',
                     type:'bar',
-                    data:[50, 60, 70, 80, 90, 30],
+                    data:yData,
+                    barWidth: '50%',
                     itemStyle: {normal: {
                         label : {show: true, position: 'right'},
                         color: function(params) {
@@ -73,7 +91,7 @@ module.exports = React.createClass({
             ]
         };
         return (
-            <Echarts option={option} height={238} />
+            <Echarts option={option} height={height} />
         );
     },
 });

@@ -102,7 +102,7 @@ module.exports = React.createClass({
                                   return (
                                       <View key={i} style={styles.heightView}>
                                           {
-                                             <BarChart title={item} data={barArr[i]} nama={this.nameArr}/>
+                                             <BarChart title={item} data={barArr[i]} name={this.nameArr}/>
                                           }
                                       </View>
                                   );
@@ -134,12 +134,11 @@ module.exports = React.createClass({
                       </Swiper>
                     }
                 </View>
-                <View style={styles.topView}>
+                <View style={styles.btoView}>
                     {
                         dataDetail&&
                         <HBarChart data={dataDetail.finishDetail}/>
                     }
-
                 </View>
                 <View style={styles.empty}/>
             </ScrollView>
@@ -155,6 +154,10 @@ const styles = StyleSheet.create({
     topView: {
         width: sr.w,
         height: 165,
+        marginTop: 2,
+    },
+    btoView: {
+        width: sr.w,
         marginTop: 2,
     },
     midView: {

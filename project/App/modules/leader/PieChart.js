@@ -16,6 +16,12 @@ module.exports = React.createClass({
         const title = this.props.title;
         const colors = ['#f03b0a', '#00c6bb'];
         const data = this.props.data;
+        let dataArray = [];
+        if (data) {
+            let num = (data.finish*1+data.unfinish*1) ==0?0:Math.round(data.finish*100/(data.finish*1+data.unfinish*1));
+            let unNum = (data.finish*1+data.unfinish*1)==0?0:Math.round(data.unfinish*100/(data.finish*1+data.unfinish*1));
+            dataArray = [{name:'完成'+num+'%',value: this.props.data.finish},{name:'未完成'+unNum+'%',value:this.props.data.unfinish}];
+        }
         const option = {
             title : {
                 text: title,
@@ -42,10 +48,7 @@ module.exports = React.createClass({
                     type:'pie',
                     radius : ['30%','60%'],
                     center: ['50%', '60%'],
-                    data:[
-                        {value:3350, name:'直接访问'},
-                        {value:310, name:'邮件营销'},
-                    ],
+                    data:dataArray,
                 }
             ],
         };
@@ -53,7 +56,7 @@ module.exports = React.createClass({
             <View style={styles.container}>
                 <Echarts
                     option={option}
-                    height={165}
+                    height={sr.rs(165)}
                     width={sr.w} />
             </View>
         );
