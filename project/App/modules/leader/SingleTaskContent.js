@@ -147,7 +147,7 @@ module.exports = React.createClass({
                     <View style={styles.divisionLine}/>
                 </View>
                 {
-                    obj.imageList.length&&
+                    !!obj.imageList.length&&
                     <View style={styles.imageUpLoadContainer}>
                         <View style={styles.remindTitleLeftView}>
                             <DImage
@@ -181,7 +181,7 @@ module.exports = React.createClass({
                     </View>
                 }
                 {
-                    obj.audioList.length&&
+                    !!obj.audioList.length&&
                     <View style={styles.voiceUpside}>
                         <View style={styles.remindTitleLeftView}>
                             <DImage

@@ -92,7 +92,7 @@ module.exports = React.createClass({
                     userId,
                     taskId: id,
                 };
-                POST(app.route.ROUTE_REMAIND_TASK, param, this.doSuccess.bind(null, 1));
+                POST(app.route.ROUTE_REMIND_TASK, param, this.doSuccess.bind(null, 1));
                 break;
             }
             case 2: {

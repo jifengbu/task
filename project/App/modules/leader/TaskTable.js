@@ -99,6 +99,7 @@ module.exports = React.createClass({
                 <ScrollView
                     horizontal
                     scrollEnabled
+                    showsHorizontalScrollIndicator={false}
                     style={styles.tabContainer}>
                     {
                         taskArr.map((item, i) => {

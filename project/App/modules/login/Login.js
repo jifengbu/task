@@ -184,6 +184,7 @@ module.exports = React.createClass({
         if (data.success) {
             app.personal.info.phone = this.state.phone;
             app.personal.info.userId = data.context.userId;
+            app.socket.register(data.context.userId);
             app.login.savePhone(this.state.phone);
             this.getPersonalInfo();
         } else {

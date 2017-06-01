@@ -1,11 +1,13 @@
 'use strict';
-var io = require('socket.io-client');
+const EventEmitter = require('EventEmitter');
+const io = require('socket.io-client');
 
-class Manager {
-    register() {
-        this.socket = io.connect('ws://127.0.0.1:8888', {
+class Manager extends EventEmitter {
+    register(userId) {
+        this.socket = io.connect('ws://192.168.1.126:3000?userId='+userId, {
             connect_timeout: 3000,
             transports: ['websocket'],
+            path: '/api/socket',
         });
         this.socket._on = (type, callback) => {
             return this.socket.on(type, (obj) =>{
@@ -29,17 +31,19 @@ class Manager {
         })._on('USER_REGISTER_RS', (obj) => {
 
         })._on('NEW_PUBLISH_TASK_NF', (obj) => {
-            this.emit('NEW_PUBLISH_TASK_EVENT', data);
+            this.emit('NEW_PUBLISH_TASK_EVENT', obj);
+        })._on('AGREE_PUBLISH_TASK_NF', (obj) => {
+            this.emit('AGREE_PUBLISH_TASK_EVENT', obj);
         });
     }
-    emit(type, data, notNeedCheckOnline) {
-        console.log('send:', type, data);
-        if (!notNeedCheckOnline && !app.loginMgr.online) {
-            console.log('you are offline');
-            return;
-        }
-        this.socket.emit(type, data);
-    }
+    // emit(type, data) {
+    //     console.log('send:', type, data);
+    //     // if (!notNeedCheckOnline && !app.loginMgr.online) {
+    //     //     console.log('you are offline');
+    //     //     return;
+    //     // }
+    //     this.socket.emit(type, data);
+    // }
 }
 
 module.exports = new Manager();

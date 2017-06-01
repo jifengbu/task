@@ -46,8 +46,8 @@ module.exports = React.createClass({
             const context = data.context;
             if (context) {
                 for (var i = 0; i < context.taskTypeList.length; i++) {
-                    typeArr.push(taskTypeList[i].key);
-                    nameArr.push(taskTypeList[i].name);
+                    typeArr.push(context.taskTypeList[i].key);
+                    nameArr.push(context.taskTypeList[i].name);
                 }
                 this.nameArr = nameArr;
                 this.getStatics(typeArr);

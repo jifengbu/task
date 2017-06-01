@@ -21,7 +21,7 @@ module.exports = {
     ROUTE_MODIFY_PERSONAL_INFO: API_SERVER + 'modifyPersonalInfo', //  修改个人信息
     ROUTE_GET_TASK_PROGRESS_LIST: API_SERVER + 'getTaskProgressList', //  获取进度列表
     ROUTE_UPDATE_TASK_PROGRESS: API_SERVER + 'updateTaskProgress', //  更新任务进度
-    ROUTE_REMAIND_TASK: API_SERVER + 'remaindTask', //  提醒任务
+    ROUTE_REMIND_TASK: API_SERVER + 'remindTask', //  提醒任务
     ROUTE_REJECT_FINISH_TASK: API_SERVER + 'rejectFinishTask', //  打回完成发布任务
     ROUTE_AGREE_FINISH_TASK: API_SERVER + 'agreeFinishTask', //  同意完成任务的申请
     ROUTE_MODIFY_PASSWORD: API_SERVER + 'modifyPassword', //  修改个人密码

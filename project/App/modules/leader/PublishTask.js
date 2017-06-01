@@ -18,6 +18,8 @@ const RemindSetting = require('./RemindSetting.js');
 const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('./RecordVoiceMessageBox.js');
 const fs = require('react-native-fs');
+const SupervisionClientMgr = require('../../manager/SupervisionClientMgr.js');
+const ExecutorClientMgr = require('../../manager/ExecutorClientMgr.js');
 const Camera = require('@remobile/react-native-camera');
 const ImagePicker = require('@remobile/react-native-image-picker');
 
@@ -34,8 +36,8 @@ module.exports = React.createClass({
             voiceTime:0,
             voiceIsPlaly: false,
         };
-        this.clientList = [];
-        this.tempClientList = [];
+        this.tempSupervisorClientList = [];
+        this.tempExecutorClientList = [];
         this.typeList = [];
         this.tempTypeList = [];
         this.uploadOn=false;
@@ -62,31 +64,16 @@ module.exports = React.createClass({
     componentWillMount () {
         this.listFlags = 0;
     },
-    onWillFocus () {
-        if (!this.listFlags) {
-            this.getClientList();
-            this.getTaskTypeList();
-        }
-    },
-    getClientList() {
-        const param = {
-            userId: app.personal.info.userId,
-        };
-        POST(app.route.ROUTE_GET_CLIENT_LIST, param, this.getClientListSuccess);
-    },
-    getClientListSuccess(data) {
-        if (data.success) {
-            this.listFlags = 1;
-            const context = data.context;
-            if (context) {
-                this.clientList = data.context.clientList;
-                _.forEach(this.clientList, (item) => {
-                    this.tempClientList.push(item.name);
-                });
-            }
-        } else {
-            this.listFlags = 0;
-        }
+    componentDidMount() {
+        this.supervisorClientList = SupervisionClientMgr.getList()||[];
+        this.executorClientList = ExecutorClientMgr.getList()||[];
+        _.forEach(this.supervisorClientList, (item) => {
+            this.tempSupervisorClientList.push(item.name);
+        });
+        _.forEach(this.executorClientList, (item) => {
+            this.tempExecutorClientList.push(item.name);
+        });
+        this.getTaskTypeList();
     },
     getTaskTypeList() {
         const param = {
@@ -298,12 +285,12 @@ module.exports = React.createClass({
         return moment(date).format('HH时mm分');
     },
     showSelectSuperVisor() {
-        Picker(this.tempClientList, [this.tempClientList[0]], '').then((value)=>{
+        Picker(this.tempSupervisorClientList, [this.tempSupervisorClientList[0]], '').then((value)=>{
             this.setState({supervisor: value[0]});
         });
     },
     showSelectExecutor() {
-        Picker(this.tempClientList, [this.tempClientList[0]], '').then((value)=>{
+        Picker(this.tempExecutorClientList, [this.tempExecutorClientList[0]], '').then((value)=>{
             this.setState({executor: value[0]});
         });
     },
@@ -399,8 +386,10 @@ module.exports = React.createClass({
         const {title, content, startTime, endTime, supervisor, executor, taskType, remindList} = this.state;
         let supervisorId = '';
         let executorId = '';
-        for (let item of this.clientList) {
+        for (let item of this.supervisorClientList) {
             supervisorId = item.name === supervisor? item.id:'';
+        }
+        for (let item of this.executorClientList) {
             executorId = item.name === executor? item.id:'';
         }
         if (!supervisorId) {
@@ -416,6 +405,7 @@ module.exports = React.createClass({
             Toast('请选择任务类型');
             return;
         }
+        console.log('---typeInfo.key--',typeInfo.key,taskType,this.typeList);
         const param = {
             userId: app.personal.info.userId,
             executorId,

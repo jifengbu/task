@@ -114,11 +114,10 @@ export default class Partments extends React.Component {
                 </div>
                 <div className={styles.tableContainer}>
                     <Table
-                        rowKey={(record, key) => key}
                         loading={loadingPage}
                         columns={columns}
                         expandedRowRender={record => <p>{record.descript}</p>}
-                        dataSource={partments.partmentList}
+                        dataSource={_.map(partments.partmentList, (o, i)=>{o.key=i; return o})}
                         pagination={pagination}
                         rowClassName={::this.rowClassName}
                         onRowClick={::this.onRowClick}

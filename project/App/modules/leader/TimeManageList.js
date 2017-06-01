@@ -18,15 +18,7 @@ const moment = require('moment');
 
 module.exports = React.createClass({
     getInitialState () {
-        this.timeList = [{
-                'time':'12:00',
-                'content':'你想要。。。。。吃饭吗。。',
-                'isOver': 0,
-        },{
-                'time':'12:00',
-                'content':'你想要。。。。。吃饭吗。。你想要。。。。。吃饭吗。。',
-                'isOver': 1,
-        },];
+        this.timeList = [];
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
             dataSource: this.ds.cloneWithRows(this.timeList),

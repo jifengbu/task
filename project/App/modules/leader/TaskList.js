@@ -21,7 +21,7 @@ module.exports = React.createClass({
     },
     getInitialState () {
         this.taskList = [];
-        this.pageNo = 1;
+        this.pageNo = 0;
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
             dataSource: this.ds.cloneWithRows(this.taskList),
@@ -39,9 +39,22 @@ module.exports = React.createClass({
     },
     componentDidMount () {
         let { taskType,keyword } = this.props;
-        if (taskType) {
-            this.getTaskListByType(taskType,keyword);
+        this.getTaskListByType(taskType,keyword);
+    },
+    componentWillMount() {
+        this.registerEvents('AGREE_PUBLISH_TASK_EVENT');
+    },
+    registerEvents (name) {
+        this.addListenerOn(app.socket, name, (param) => {
+            this[name](param);
+        });
+    },
+    AGREE_PUBLISH_TASK_EVENT (task) {
+        const params = {
+            taskDetail: task,
+            component: TaskSupervision,
         }
+        app.showNotifications(params);
     },
     getTaskListByType(taskType,keyword) {
         const param = {

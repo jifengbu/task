@@ -37,16 +37,16 @@ module.exports = React.createClass({
         });
     },
     componentWillMount () {
-        this.registerEvents('NEW_PUBLISH_TASK_EVENT');
+        // this.registerEvents('NEW_PUBLISH_TASK_EVENT');
         // this.registerEvents('NEW_TASK_PUBLISH_EVENT');
         // this.registerEvents('TASK_LIST_UPDATE_EVENT');
     },
     NEW_PUBLISH_TASK_EVENT (task) {
-        this.list.unshift(task);
-        this.setState({dataSource: this.ds.cloneWithRows(this.list)});
-        app.addTaskBadge(1);
-        //更新badge
-        Toast('有新的任务申请，请尽快审核');
+        // this.list.unshift(task);
+        // this.setState({dataSource: this.ds.cloneWithRows(this.list)});
+        // app.addTaskBadge(1);
+        // //更新badge
+        // Toast('有新的任务申请，请尽快审核');
     },
     // NEW_TASK_PUBLISH_EVENT (task) {
     //     this.taskList.unshift(task);
