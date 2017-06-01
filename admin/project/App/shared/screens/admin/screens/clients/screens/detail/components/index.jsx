@@ -186,22 +186,24 @@ export default class ClientDetail extends React.Component {
             hasPartmentOkButton: false,
             partmentModalVisible: true,
             partmentTitle: '部门',
-            selectedPartmentIds: partment.id,
+            selectedPartmentIds: [partment.id],
         });
     }
     handleSelectPartmentCancel () {
         this.setState({ partmentModalVisible: false });
     }
-    onSelectPartment(partment) {
+    onSelectPartment(selects) {
         const { selectedPartmentIds, hasPartmentOkButton } = this.state;
-        this.tempPartment = partment;
-        if (!hasPartmentOkButton && selectedPartmentIds !== partment.id) {
-            this.setState({hasPartmentOkButton : true});
+        this.tempPartments = selects;
+        if (!_.isEqual(selectedPartmentIds,  _.map(selects, o=>o.id))) {
+            !hasPartmentOkButton && this.setState({hasPartmentOkButton : true});
+        } else if (hasPartmentOkButton) {
+            hasPartmentOkButton && this.setState({hasPartmentOkButton : false});
         }
     }
     handleSelectPartmentOk () {
         const { client } = this.state;
-        client.partment = this.tempPartment;
+        client.partment = this.tempPartments[0];
         this.setState({ client, partmentModalVisible: false });
     }
     render () {

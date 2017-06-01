@@ -41,6 +41,7 @@ export default class SelectPartment extends React.Component {
                 chargeMan: {
                     name: 1,
                     phone: 1,
+                    head: 1,
                 },
                 superior: {
                     name: 1,
@@ -64,7 +65,7 @@ export default class SelectPartment extends React.Component {
     render () {
         const self = this;
         const { current, keyword, selectedIds } = this.state;
-        const { partments = {}, multi, loadListPage, loading, loadingPage, onSelect } = this.props;
+        const { partments = {}, rejectIds, multi, loadListPage, loading, loadingPage, onSelect } = this.props;
         const pagination = {
             total: partments.count,
             showSizeChanger: false,
@@ -82,6 +83,9 @@ export default class SelectPartment extends React.Component {
                 self.setState({ selectedIds: _.map(selectedRows, o=>o.id) });
                 onSelect(selectedRows);
             },
+            getCheckboxProps: record => ({
+                disabled: _.includes(rejectIds, record.id),
+            }),
         };
         return (
             <div className={styles.container}>

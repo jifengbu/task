@@ -60,7 +60,7 @@ export default class SelectClient extends React.Component {
     render () {
         const self = this;
         const { current, keyword, selectedIds } = this.state;
-        const { clients = {}, multi, loadListPage, loading, loadingPage, onSelect } = this.props;
+        const { clients = {}, rejectIds, multi, loadListPage, loading, loadingPage, onSelect } = this.props;
         const pagination = {
             total: clients.count,
             showSizeChanger: false,
@@ -78,6 +78,9 @@ export default class SelectClient extends React.Component {
                 self.setState({ selectedIds: _.map(selectedRows, o=>o.id) });
                 onSelect(selectedRows);
             },
+            getCheckboxProps: record => ({
+                disabled: _.includes(rejectIds, record.id),
+            }),
         };
         return (
             <div className={styles.container}>
