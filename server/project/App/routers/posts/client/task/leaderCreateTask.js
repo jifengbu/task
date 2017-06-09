@@ -54,5 +54,7 @@ export default async ({
     startScheduleSendSMS(executorId, task.id); // 发执行者定时
     startScheduleRemind(io, task.id, remindList, expectStartTime, expectFinishTime);
 
-    return { success: true };
+    return { success: true ,context: {
+        taskId: task.id,
+    } };
 };

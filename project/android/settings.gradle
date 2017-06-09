@@ -34,3 +34,9 @@ project(':react-native-picker').projectDir = new File(settingsDir, '../App/node_
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(settingsDir, '../App/node_modules/react-native-fs/android')
 
+include ':react-native-image-picker'
+project(':react-native-image-picker').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-image-picker/android')
+
+include ':react-native-audio'
+project(':react-native-audio').projectDir = new File(settingsDir, '../App/node_modules/@remobile/react-native-audio/android')
+

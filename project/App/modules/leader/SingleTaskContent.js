@@ -13,6 +13,7 @@ const {
     TouchableOpacity,
 } = ReactNative;
 
+const Audio = require('@remobile/react-native-audio');
 const InputBoxReject = require('./InputBoxReject.js');
 const ShowBigImage = require('./ShowBigImage.js');
 const remindData = require('../../data/remindData.js');
@@ -21,10 +22,12 @@ const { Button, TaskStepList, DImage, DelayTouchableOpacity } = COMPONENTS;
 
 module.exports = React.createClass({
     getInitialState () {
+        this.isPlaying = _.fill(Array(this.props.data.audioList.length), false);
         return {
             lineHeight: 0,
             isLookAll: false,
             taskType: '',
+            isPlaying: this.isPlaying,
         };
     },
     componentDidMount () {
@@ -64,6 +67,79 @@ module.exports = React.createClass({
                 defaultIndex={index}
                 defaultImageArray={imageArray} />
         );
+    },
+    componentWillUnmount () {
+        clearInterval(this.intervalID);
+        this.intervalID = null;
+        if (this.player) {
+            this.voiceStop();
+        }
+    },
+    voiceStop () {
+        this.player.stop();
+        this.player.release();
+        this.player = null;
+    },
+    isPlayer () {
+        if (this.player) {
+            this.voiceStop();
+            this.isPlaying[this.isPlayingIndex] = false;
+            this.setState({ isPlaying: this.isPlaying });
+        }
+    },
+    playVoice(url, index) {
+        if (!url || url === 'null') {
+            Toast('音频地址为空');
+            return;
+        }
+        if (this.player && this.isPlaying[index]) {
+            this.voiceStop();
+            this.isPlaying[index] = false;
+            this.setState({ isPlaying: this.isPlaying });
+        } else {
+            const tempIsPlaying = _.find(this.isPlaying, (item) => item == true);
+            if (tempIsPlaying && tempIsPlaying != null) {
+                if (this.player != null) {
+                    this.player.stop();
+                    this.player.release();
+                }
+                this.player = null;
+                this.isPlaying[this.tempIndex] = false;
+                this.setState({ isPlaying: this.isPlaying });
+                this.player = new Audio(url, (error) => {
+                    if (!error) {
+                        this.isPlaying[index] = true;
+                        this.setState({ isPlaying: this.isPlaying });
+                        this.tempIndex = index;
+                        this.player != null && this.player.play(() => {
+                            this.player.release();
+                            this.player = null;
+                            this.isPlaying[index] = false;
+                            this.setState({ isPlaying: this.isPlaying });
+                        });
+                    } else {
+                        Toast('播放失败');
+                    }
+                });
+            } else {
+                this.player = new Audio(url, (error) => {
+                    if (!error) {
+                        this.isPlaying[index] = true;
+                        this.setState({ isPlaying: this.isPlaying });
+                        this.tempIndex = index;
+                        this.player != null && this.player.play(() => {
+                            this.player.release();
+                            this.player = null;
+                            this.isPlaying[index] = false;
+                            this.setState({ isPlaying: this.isPlaying });
+                        });
+                    } else {
+                        Toast('播放失败');
+                    }
+                });
+            }
+        }
+        this.isPlayingIndex = index;
     },
     render () {
         let {isLookAll, taskType} = this.state;
@@ -198,8 +274,9 @@ module.exports = React.createClass({
                                             <TouchableOpacity
                                                 activeOpacity={0.6}
                                                 delayLongPress={1500}
+                                                onPress={this.playVoice.bind(null, item.url, i, item.duration)}
                                                 style={styles.audioPlay}>
-                                                <Image source={app.img.home_voice_say_play} style={styles.imageVoice} />
+                                                <Image source={this.state.isPlaying[i]?app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imageVoice} />
                                                 <Text style={styles.textTime} >{item.duration + "''"}</Text>
                                             </TouchableOpacity>
                                         </View>

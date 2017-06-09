@@ -95,7 +95,7 @@ module.exports = React.createClass({
     },
     getStateFromPersonalInfo () {
         const info = app.personal.info;
-        const position = info.position;
+        const position = info.post;
         const name = info.name;
         let head = app.img.personal_add_header;
         if (info.head) {
@@ -113,7 +113,7 @@ module.exports = React.createClass({
     },
     setPersonalInfo () {
         const info = app.personal.info;
-        info.position = this.state.position;
+        info.post = this.state.position;
         info.name = this.state.name;
         info.head = this.state.head.uri || '';
         app.personal.set(info);
@@ -148,7 +148,7 @@ module.exports = React.createClass({
             userId: app.personal.info.userId,
             name: this.state.name,
             position: this.state.position,
-            head: this.state.head,
+            userHead: this.state.head.uri,
             phone: app.personal.info.phone,
         };
         POST(app.route.ROUTE_MODIFY_PERSONAL_INFO, param, this.updatePersnalInfoSuccess, this.updatePersnalInfoError, true);
@@ -223,7 +223,7 @@ module.exports = React.createClass({
     uploadSuccessCallback (data) {
         if (data.success) {
             const context = data.context;
-            this.setState({head: context.url});
+            this.setState({head: { uri: context.url }});
             app.personal.info.head = (context.url);
         } else {
             Toast('上传头像失败');
@@ -288,7 +288,7 @@ module.exports = React.createClass({
                     <View style={styles.itemBgStyle} >
                         <Text style={styles.headText}>职位</Text>
                         { !this.state.isEditStatus ?
-                            <Text style={styles.contentText}>{this.state.name ? this.state.name : '请输入您的职位'}</Text>
+                            <Text style={styles.contentText}>{this.state.position ? this.state.position : '请输入您的职位'}</Text>
                             :
                             <TextInput
                                 onChangeText={(text) => this.setState({ position: text })}

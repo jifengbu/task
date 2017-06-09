@@ -10,6 +10,7 @@ export default async ({
     sex,
     userHead,
     birthday,
+    position,
 }) => {
     let _userHead = getMediaId(userHead);
     let age = birthday ? Math.floor(moment().diff(moment(birthday)) / YEAR_TIME) : undefined;
@@ -17,8 +18,7 @@ export default async ({
         name: userName,
         sex,
         head: _userHead,
-        birthday,
-        age,
+        post:position,
     }));
     if (!doc) {
         return { success: false, msg: '修改失败' };

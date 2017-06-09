@@ -1,7 +1,7 @@
 import { ClientModel } from '../../../../models';
 import { getMediaId } from '../../../../utils';
 
-export default async (app, socket, {
+export default async (io, socket, {
     username,
     password,
 }) => {

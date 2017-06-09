@@ -21,30 +21,6 @@
 		32265DB61E601A25004F01C3 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32265DAE1E601A11004F01C3 /* libRCTCameraRoll.a */; };
 		32B7BD671E95F1520087D835 /* libRCTBEEPickerManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32B7BD461E95F13E0087D835 /* libRCTBEEPickerManager.a */; };
 		32B7BD6E1E95F2430087D835 /* libRCTSqlite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32B7BD6D1E95F23A0087D835 /* libRCTSqlite.a */; };
-		32FC24FC1E5C58CE00E67A5F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC24E21E5C58CE00E67A5F /* AppDelegate.m */; };
-		32FC24FD1E5C58CE00E67A5F /* icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24E41E5C58CE00E67A5F /* icon-40.png */; };
-		32FC24FE1E5C58CE00E67A5F /* icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24E51E5C58CE00E67A5F /* icon-40@2x.png */; };
-		32FC24FF1E5C58CE00E67A5F /* icon-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24E61E5C58CE00E67A5F /* icon-50.png */; };
-		32FC25001E5C58CE00E67A5F /* icon-50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24E71E5C58CE00E67A5F /* icon-50@2x.png */; };
-		32FC25011E5C58CE00E67A5F /* icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24E81E5C58CE00E67A5F /* icon-60.png */; };
-		32FC25021E5C58CE00E67A5F /* icon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24E91E5C58CE00E67A5F /* icon-60@2x.png */; };
-		32FC25031E5C58CE00E67A5F /* icon-60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24EA1E5C58CE00E67A5F /* icon-60@3x.png */; };
-		32FC25041E5C58CE00E67A5F /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24EB1E5C58CE00E67A5F /* icon-72.png */; };
-		32FC25051E5C58CE00E67A5F /* icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24EC1E5C58CE00E67A5F /* icon-72@2x.png */; };
-		32FC25061E5C58CE00E67A5F /* icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24ED1E5C58CE00E67A5F /* icon-76.png */; };
-		32FC25071E5C58CE00E67A5F /* icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24EE1E5C58CE00E67A5F /* icon-76@2x.png */; };
-		32FC25081E5C58CE00E67A5F /* icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24EF1E5C58CE00E67A5F /* icon-small.png */; };
-		32FC25091E5C58CE00E67A5F /* icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24F01E5C58CE00E67A5F /* icon-small@2x.png */; };
-		32FC250A1E5C58CE00E67A5F /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24F11E5C58CE00E67A5F /* icon.png */; };
-		32FC250B1E5C58CE00E67A5F /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24F21E5C58CE00E67A5F /* icon@2x.png */; };
-		32FC250C1E5C58CE00E67A5F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24F31E5C58CE00E67A5F /* Info.plist */; };
-		32FC250D1E5C58CE00E67A5F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC24F41E5C58CE00E67A5F /* main.m */; };
-		32FC250E1E5C58CE00E67A5F /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24F61E5C58CE00E67A5F /* Default-568h@2x~iphone.png */; };
-		32FC250F1E5C58CE00E67A5F /* Default-667h.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24F71E5C58CE00E67A5F /* Default-667h.png */; };
-		32FC25101E5C58CE00E67A5F /* Default-736h.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24F81E5C58CE00E67A5F /* Default-736h.png */; };
-		32FC25111E5C58CE00E67A5F /* Default@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24F91E5C58CE00E67A5F /* Default@2x~iphone.png */; };
-		32FC25121E5C58CE00E67A5F /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24FA1E5C58CE00E67A5F /* Default~iphone.png */; };
-		32FC25131E5C58CE00E67A5F /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 32FC24FB1E5C58CE00E67A5F /* splash.png */; };
 		32FC25B91E5C656300E67A5F /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FC25B81E5C655700E67A5F /* libRCTSplashScreen.a */; };
 		32FC25D81E5C6AE900E67A5F /* libRCTToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FC25BF1E5C6A4000E67A5F /* libRCTToast.a */; };
 		32FC25D91E5C6AEF00E67A5F /* libRCTCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FC25C51E5C6A8100E67A5F /* libRCTCordova.a */; };
@@ -57,7 +33,34 @@
 		32FC26E01E5D297600E67A5F /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FC26DF1E5D297600E67A5F /* CoreTelephony.framework */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		D2629A501ED2C4350052DD4F /* RCTUtilsModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D2629A4F1ED2C4350052DD4F /* RCTUtilsModule.m */; };
+		88A67BC71EE7DE1600EA527C /* libRCTImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A67B6E1EE7D8FD00EA527C /* libRCTImagePicker.a */; };
+		88A67E2E1EE92E1E00EA527C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A67E0F1EE92E1E00EA527C /* AppDelegate.m */; };
+		88A67E2F1EE92E1E00EA527C /* icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E111EE92E1E00EA527C /* icon-40.png */; };
+		88A67E301EE92E1E00EA527C /* icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E121EE92E1E00EA527C /* icon-40@2x.png */; };
+		88A67E311EE92E1E00EA527C /* icon-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E131EE92E1E00EA527C /* icon-50.png */; };
+		88A67E321EE92E1E00EA527C /* icon-50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E141EE92E1E00EA527C /* icon-50@2x.png */; };
+		88A67E331EE92E1E00EA527C /* icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E151EE92E1E00EA527C /* icon-60.png */; };
+		88A67E341EE92E1E00EA527C /* icon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E161EE92E1E00EA527C /* icon-60@2x.png */; };
+		88A67E351EE92E1E00EA527C /* icon-60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E171EE92E1E00EA527C /* icon-60@3x.png */; };
+		88A67E361EE92E1E00EA527C /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E181EE92E1E00EA527C /* icon-72.png */; };
+		88A67E371EE92E1E00EA527C /* icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E191EE92E1E00EA527C /* icon-72@2x.png */; };
+		88A67E381EE92E1E00EA527C /* icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E1A1EE92E1E00EA527C /* icon-76.png */; };
+		88A67E391EE92E1E00EA527C /* icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E1B1EE92E1E00EA527C /* icon-76@2x.png */; };
+		88A67E3A1EE92E1E00EA527C /* icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E1C1EE92E1E00EA527C /* icon-small.png */; };
+		88A67E3B1EE92E1E00EA527C /* icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E1D1EE92E1E00EA527C /* icon-small@2x.png */; };
+		88A67E3C1EE92E1E00EA527C /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E1E1EE92E1E00EA527C /* icon.png */; };
+		88A67E3D1EE92E1E00EA527C /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E1F1EE92E1E00EA527C /* icon@2x.png */; };
+		88A67E3E1EE92E1E00EA527C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E201EE92E1E00EA527C /* Info.plist */; };
+		88A67E3F1EE92E1E00EA527C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A67E211EE92E1E00EA527C /* main.m */; };
+		88A67E401EE92E1E00EA527C /* AudioRecorderAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A67E251EE92E1E00EA527C /* AudioRecorderAPI.m */; };
+		88A67E411EE92E1E00EA527C /* RCTUtilsModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A67E261EE92E1E00EA527C /* RCTUtilsModule.m */; };
+		88A67E421EE92E1E00EA527C /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E281EE92E1E00EA527C /* Default-568h@2x~iphone.png */; };
+		88A67E431EE92E1E00EA527C /* Default-667h.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E291EE92E1E00EA527C /* Default-667h.png */; };
+		88A67E441EE92E1E00EA527C /* Default-736h.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E2A1EE92E1E00EA527C /* Default-736h.png */; };
+		88A67E451EE92E1E00EA527C /* Default@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E2B1EE92E1E00EA527C /* Default@2x~iphone.png */; };
+		88A67E461EE92E1E00EA527C /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E2C1EE92E1E00EA527C /* Default~iphone.png */; };
+		88A67E471EE92E1E00EA527C /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A67E2D1EE92E1E00EA527C /* splash.png */; };
+		88A67EC01EEA2AB200EA527C /* libRCTAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A67E9C1EEA2A8500EA527C /* libRCTAudio.a */; };
 		D2629A521ED2C6520052DD4F /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2629A511ED2C6520052DD4F /* LocalAuthentication.framework */; };
 /* End PBXBuildFile section */
 
@@ -328,6 +331,20 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		88A67B6D1EE7D8FD00EA527C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88A67B5D1EE7D8FC00EA527C /* RCTImagePicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 32A87DD71BF427700048D713;
+			remoteInfo = RCTImagePicker;
+		};
+		88A67E9B1EEA2A8500EA527C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88A67E931EEA2A8400EA527C /* RCTAudio.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 32D980DD1BE9F11C00FA27E5;
+			remoteInfo = RCTAudio;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -345,31 +362,6 @@
 		32265DAF1E601A14004F01C3 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		32B7BD3D1E95F13E0087D835 /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBEEPickerManager.xcodeproj; path = "../App/node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; };
 		32B7BD681E95F23A0087D835 /* RCTSqlite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSqlite.xcodeproj; path = "../App/node_modules/@remobile/react-native-sqlite/ios/RCTSqlite.xcodeproj"; sourceTree = "<group>"; };
-		32FC24E11E5C58CE00E67A5F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		32FC24E21E5C58CE00E67A5F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		32FC24E41E5C58CE00E67A5F /* icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40.png"; sourceTree = "<group>"; };
-		32FC24E51E5C58CE00E67A5F /* icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40@2x.png"; sourceTree = "<group>"; };
-		32FC24E61E5C58CE00E67A5F /* icon-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-50.png"; sourceTree = "<group>"; };
-		32FC24E71E5C58CE00E67A5F /* icon-50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-50@2x.png"; sourceTree = "<group>"; };
-		32FC24E81E5C58CE00E67A5F /* icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60.png"; sourceTree = "<group>"; };
-		32FC24E91E5C58CE00E67A5F /* icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60@2x.png"; sourceTree = "<group>"; };
-		32FC24EA1E5C58CE00E67A5F /* icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60@3x.png"; sourceTree = "<group>"; };
-		32FC24EB1E5C58CE00E67A5F /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72.png"; sourceTree = "<group>"; };
-		32FC24EC1E5C58CE00E67A5F /* icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72@2x.png"; sourceTree = "<group>"; };
-		32FC24ED1E5C58CE00E67A5F /* icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-76.png"; sourceTree = "<group>"; };
-		32FC24EE1E5C58CE00E67A5F /* icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-76@2x.png"; sourceTree = "<group>"; };
-		32FC24EF1E5C58CE00E67A5F /* icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small.png"; sourceTree = "<group>"; };
-		32FC24F01E5C58CE00E67A5F /* icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small@2x.png"; sourceTree = "<group>"; };
-		32FC24F11E5C58CE00E67A5F /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		32FC24F21E5C58CE00E67A5F /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
-		32FC24F31E5C58CE00E67A5F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		32FC24F41E5C58CE00E67A5F /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		32FC24F61E5C58CE00E67A5F /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
-		32FC24F71E5C58CE00E67A5F /* Default-667h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h.png"; sourceTree = "<group>"; };
-		32FC24F81E5C58CE00E67A5F /* Default-736h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h.png"; sourceTree = "<group>"; };
-		32FC24F91E5C58CE00E67A5F /* Default@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~iphone.png"; sourceTree = "<group>"; };
-		32FC24FA1E5C58CE00E67A5F /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
-		32FC24FB1E5C58CE00E67A5F /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		32FC25B31E5C655600E67A5F /* RCTSplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSplashScreen.xcodeproj; path = "../App/node_modules/@remobile/react-native-splashscreen/ios/RCTSplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		32FC25BA1E5C6A4000E67A5F /* RCTToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToast.xcodeproj; path = "../App/node_modules/@remobile/react-native-toast/ios/RCTToast.xcodeproj"; sourceTree = "<group>"; };
 		32FC25C01E5C6A8000E67A5F /* RCTCordova.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCordova.xcodeproj; path = "../App/node_modules/@remobile/react-native-cordova/ios/RCTCordova.xcodeproj"; sourceTree = "<group>"; };
@@ -383,7 +375,36 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		D2629A4F1ED2C4350052DD4F /* RCTUtilsModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTUtilsModule.m; path = native/RCTUtilsModule.m; sourceTree = "<group>"; };
+		88A67B5D1EE7D8FC00EA527C /* RCTImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImagePicker.xcodeproj; path = "../App/node_modules/@remobile/react-native-image-picker/ios/RCTImagePicker.xcodeproj"; sourceTree = "<group>"; };
+		88A67E0E1EE92E1E00EA527C /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		88A67E0F1EE92E1E00EA527C /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		88A67E111EE92E1E00EA527C /* icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40.png"; sourceTree = "<group>"; };
+		88A67E121EE92E1E00EA527C /* icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40@2x.png"; sourceTree = "<group>"; };
+		88A67E131EE92E1E00EA527C /* icon-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-50.png"; sourceTree = "<group>"; };
+		88A67E141EE92E1E00EA527C /* icon-50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-50@2x.png"; sourceTree = "<group>"; };
+		88A67E151EE92E1E00EA527C /* icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60.png"; sourceTree = "<group>"; };
+		88A67E161EE92E1E00EA527C /* icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60@2x.png"; sourceTree = "<group>"; };
+		88A67E171EE92E1E00EA527C /* icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60@3x.png"; sourceTree = "<group>"; };
+		88A67E181EE92E1E00EA527C /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72.png"; sourceTree = "<group>"; };
+		88A67E191EE92E1E00EA527C /* icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72@2x.png"; sourceTree = "<group>"; };
+		88A67E1A1EE92E1E00EA527C /* icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-76.png"; sourceTree = "<group>"; };
+		88A67E1B1EE92E1E00EA527C /* icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-76@2x.png"; sourceTree = "<group>"; };
+		88A67E1C1EE92E1E00EA527C /* icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small.png"; sourceTree = "<group>"; };
+		88A67E1D1EE92E1E00EA527C /* icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small@2x.png"; sourceTree = "<group>"; };
+		88A67E1E1EE92E1E00EA527C /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		88A67E1F1EE92E1E00EA527C /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		88A67E201EE92E1E00EA527C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88A67E211EE92E1E00EA527C /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		88A67E241EE92E1E00EA527C /* AudioRecorderAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecorderAPI.h; sourceTree = "<group>"; };
+		88A67E251EE92E1E00EA527C /* AudioRecorderAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderAPI.m; sourceTree = "<group>"; };
+		88A67E261EE92E1E00EA527C /* RCTUtilsModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTUtilsModule.m; sourceTree = "<group>"; };
+		88A67E281EE92E1E00EA527C /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
+		88A67E291EE92E1E00EA527C /* Default-667h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h.png"; sourceTree = "<group>"; };
+		88A67E2A1EE92E1E00EA527C /* Default-736h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h.png"; sourceTree = "<group>"; };
+		88A67E2B1EE92E1E00EA527C /* Default@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~iphone.png"; sourceTree = "<group>"; };
+		88A67E2C1EE92E1E00EA527C /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
+		88A67E2D1EE92E1E00EA527C /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
+		88A67E931EEA2A8400EA527C /* RCTAudio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAudio.xcodeproj; path = "../App/node_modules/@remobile/react-native-audio/ios/RCTAudio.xcodeproj"; sourceTree = "<group>"; };
 		D2629A511ED2C6520052DD4F /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -392,6 +413,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88A67EC01EEA2AB200EA527C /* libRCTAudio.a in Frameworks */,
+				88A67BC71EE7DE1600EA527C /* libRCTImagePicker.a in Frameworks */,
 				D2629A521ED2C6520052DD4F /* LocalAuthentication.framework in Frameworks */,
 				32FC26E01E5D297600E67A5F /* CoreTelephony.framework in Frameworks */,
 				32FC25DE1E5C6DAC00E67A5F /* libz.tbd in Frameworks */,
@@ -540,59 +563,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		32FC24E01E5C58CE00E67A5F /* TaskTrack */ = {
-			isa = PBXGroup;
-			children = (
-				D2629A281ED2C4110052DD4F /* native */,
-				32FC24E11E5C58CE00E67A5F /* AppDelegate.h */,
-				32FC24E21E5C58CE00E67A5F /* AppDelegate.m */,
-				32FC24E31E5C58CE00E67A5F /* icons */,
-				32FC24F31E5C58CE00E67A5F /* Info.plist */,
-				32FC24F41E5C58CE00E67A5F /* main.m */,
-				32FC24F51E5C58CE00E67A5F /* splash */,
-			);
-			name = TaskTrack;
-			path = GHwgh;
-			sourceTree = "<group>";
-		};
-		32FC24E31E5C58CE00E67A5F /* icons */ = {
-			isa = PBXGroup;
-			children = (
-				32FC24E41E5C58CE00E67A5F /* icon-40.png */,
-				32FC24E51E5C58CE00E67A5F /* icon-40@2x.png */,
-				32FC24E61E5C58CE00E67A5F /* icon-50.png */,
-				32FC24E71E5C58CE00E67A5F /* icon-50@2x.png */,
-				32FC24E81E5C58CE00E67A5F /* icon-60.png */,
-				32FC24E91E5C58CE00E67A5F /* icon-60@2x.png */,
-				32FC24EA1E5C58CE00E67A5F /* icon-60@3x.png */,
-				32FC24EB1E5C58CE00E67A5F /* icon-72.png */,
-				32FC24EC1E5C58CE00E67A5F /* icon-72@2x.png */,
-				32FC24ED1E5C58CE00E67A5F /* icon-76.png */,
-				32FC24EE1E5C58CE00E67A5F /* icon-76@2x.png */,
-				32FC24EF1E5C58CE00E67A5F /* icon-small.png */,
-				32FC24F01E5C58CE00E67A5F /* icon-small@2x.png */,
-				32FC24F11E5C58CE00E67A5F /* icon.png */,
-				32FC24F21E5C58CE00E67A5F /* icon@2x.png */,
-			);
-			path = icons;
-			sourceTree = "<group>";
-		};
-		32FC24F51E5C58CE00E67A5F /* splash */ = {
-			isa = PBXGroup;
-			children = (
-				32FC24F61E5C58CE00E67A5F /* Default-568h@2x~iphone.png */,
-				32FC24F71E5C58CE00E67A5F /* Default-667h.png */,
-				32FC24F81E5C58CE00E67A5F /* Default-736h.png */,
-				32FC24F91E5C58CE00E67A5F /* Default@2x~iphone.png */,
-				32FC24FA1E5C58CE00E67A5F /* Default~iphone.png */,
-				32FC24FB1E5C58CE00E67A5F /* splash.png */,
-			);
-			path = splash;
-			sourceTree = "<group>";
-		};
 		32FC25A31E5C64F500E67A5F /* RemobileLibraries */ = {
 			isa = PBXGroup;
 			children = (
+				88A67E931EEA2A8400EA527C /* RCTAudio.xcodeproj */,
+				88A67B5D1EE7D8FC00EA527C /* RCTImagePicker.xcodeproj */,
 				32B7BD681E95F23A0087D835 /* RCTSqlite.xcodeproj */,
 				321A5F191E6BBF4E00A48489 /* RCTSmartKeyboard.xcodeproj */,
 				32FC25F41E5D1AC900E67A5F /* RCTCamera.xcodeproj */,
@@ -739,7 +714,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				32FC24E01E5C58CE00E67A5F /* TaskTrack */,
+				88A67E0D1EE92E1E00EA527C /* TaskTrack */,
 				32FC25A31E5C64F500E67A5F /* RemobileLibraries */,
 				32FC25B21E5C650000E67A5F /* VendorLibraries */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -758,12 +733,87 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D2629A281ED2C4110052DD4F /* native */ = {
+		88A67B5E1EE7D8FC00EA527C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D2629A4F1ED2C4350052DD4F /* RCTUtilsModule.m */,
+				88A67B6E1EE7D8FD00EA527C /* libRCTImagePicker.a */,
 			);
-			name = native;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		88A67E0D1EE92E1E00EA527C /* TaskTrack */ = {
+			isa = PBXGroup;
+			children = (
+				88A67E0E1EE92E1E00EA527C /* AppDelegate.h */,
+				88A67E0F1EE92E1E00EA527C /* AppDelegate.m */,
+				88A67E101EE92E1E00EA527C /* icons */,
+				88A67E201EE92E1E00EA527C /* Info.plist */,
+				88A67E211EE92E1E00EA527C /* main.m */,
+				88A67E221EE92E1E00EA527C /* native */,
+				88A67E271EE92E1E00EA527C /* splash */,
+			);
+			path = TaskTrack;
+			sourceTree = "<group>";
+		};
+		88A67E101EE92E1E00EA527C /* icons */ = {
+			isa = PBXGroup;
+			children = (
+				88A67E111EE92E1E00EA527C /* icon-40.png */,
+				88A67E121EE92E1E00EA527C /* icon-40@2x.png */,
+				88A67E131EE92E1E00EA527C /* icon-50.png */,
+				88A67E141EE92E1E00EA527C /* icon-50@2x.png */,
+				88A67E151EE92E1E00EA527C /* icon-60.png */,
+				88A67E161EE92E1E00EA527C /* icon-60@2x.png */,
+				88A67E171EE92E1E00EA527C /* icon-60@3x.png */,
+				88A67E181EE92E1E00EA527C /* icon-72.png */,
+				88A67E191EE92E1E00EA527C /* icon-72@2x.png */,
+				88A67E1A1EE92E1E00EA527C /* icon-76.png */,
+				88A67E1B1EE92E1E00EA527C /* icon-76@2x.png */,
+				88A67E1C1EE92E1E00EA527C /* icon-small.png */,
+				88A67E1D1EE92E1E00EA527C /* icon-small@2x.png */,
+				88A67E1E1EE92E1E00EA527C /* icon.png */,
+				88A67E1F1EE92E1E00EA527C /* icon@2x.png */,
+			);
+			path = icons;
+			sourceTree = "<group>";
+		};
+		88A67E221EE92E1E00EA527C /* native */ = {
+			isa = PBXGroup;
+			children = (
+				88A67E231EE92E1E00EA527C /* audioRecorder */,
+				88A67E261EE92E1E00EA527C /* RCTUtilsModule.m */,
+			);
+			path = native;
+			sourceTree = "<group>";
+		};
+		88A67E231EE92E1E00EA527C /* audioRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				88A67E241EE92E1E00EA527C /* AudioRecorderAPI.h */,
+				88A67E251EE92E1E00EA527C /* AudioRecorderAPI.m */,
+			);
+			path = audioRecorder;
+			sourceTree = "<group>";
+		};
+		88A67E271EE92E1E00EA527C /* splash */ = {
+			isa = PBXGroup;
+			children = (
+				88A67E281EE92E1E00EA527C /* Default-568h@2x~iphone.png */,
+				88A67E291EE92E1E00EA527C /* Default-667h.png */,
+				88A67E2A1EE92E1E00EA527C /* Default-736h.png */,
+				88A67E2B1EE92E1E00EA527C /* Default@2x~iphone.png */,
+				88A67E2C1EE92E1E00EA527C /* Default~iphone.png */,
+				88A67E2D1EE92E1E00EA527C /* splash.png */,
+			);
+			path = splash;
+			sourceTree = "<group>";
+		};
+		88A67E941EEA2A8400EA527C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				88A67E9C1EEA2A8500EA527C /* libRCTAudio.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -826,6 +876,10 @@
 					ProjectRef = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
 				},
 				{
+					ProductGroup = 88A67E941EEA2A8400EA527C /* Products */;
+					ProjectRef = 88A67E931EEA2A8400EA527C /* RCTAudio.xcodeproj */;
+				},
+				{
 					ProductGroup = 32B7BD3E1E95F13E0087D835 /* Products */;
 					ProjectRef = 32B7BD3D1E95F13E0087D835 /* RCTBEEPickerManager.xcodeproj */;
 				},
@@ -852,6 +906,10 @@
 				{
 					ProductGroup = 00C302BC1ABCB91800DB3ED1 /* Products */;
 					ProjectRef = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
+				},
+				{
+					ProductGroup = 88A67B5E1EE7D8FC00EA527C /* Products */;
+					ProjectRef = 88A67B5D1EE7D8FC00EA527C /* RCTImagePicker.xcodeproj */;
 				},
 				{
 					ProductGroup = 78C398B11ACF4ADC00677621 /* Products */;
@@ -1184,6 +1242,20 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		88A67B6E1EE7D8FD00EA527C /* libRCTImagePicker.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTImagePicker.a;
+			remoteRef = 88A67B6D1EE7D8FD00EA527C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		88A67E9C1EEA2A8500EA527C /* libRCTAudio.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTAudio.a;
+			remoteRef = 88A67E9B1EEA2A8500EA527C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1191,28 +1263,28 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32FC25111E5C58CE00E67A5F /* Default@2x~iphone.png in Resources */,
-				32FC250C1E5C58CE00E67A5F /* Info.plist in Resources */,
-				32FC24FD1E5C58CE00E67A5F /* icon-40.png in Resources */,
-				32FC25061E5C58CE00E67A5F /* icon-76.png in Resources */,
-				32FC25051E5C58CE00E67A5F /* icon-72@2x.png in Resources */,
-				32FC24FE1E5C58CE00E67A5F /* icon-40@2x.png in Resources */,
-				32FC25081E5C58CE00E67A5F /* icon-small.png in Resources */,
-				32FC250F1E5C58CE00E67A5F /* Default-667h.png in Resources */,
-				32FC25131E5C58CE00E67A5F /* splash.png in Resources */,
-				32FC250E1E5C58CE00E67A5F /* Default-568h@2x~iphone.png in Resources */,
-				32FC25001E5C58CE00E67A5F /* icon-50@2x.png in Resources */,
-				32FC25031E5C58CE00E67A5F /* icon-60@3x.png in Resources */,
-				32FC25121E5C58CE00E67A5F /* Default~iphone.png in Resources */,
-				32FC25021E5C58CE00E67A5F /* icon-60@2x.png in Resources */,
-				32FC25101E5C58CE00E67A5F /* Default-736h.png in Resources */,
-				32FC250A1E5C58CE00E67A5F /* icon.png in Resources */,
-				32FC25071E5C58CE00E67A5F /* icon-76@2x.png in Resources */,
-				32FC25091E5C58CE00E67A5F /* icon-small@2x.png in Resources */,
-				32FC25041E5C58CE00E67A5F /* icon-72.png in Resources */,
-				32FC24FF1E5C58CE00E67A5F /* icon-50.png in Resources */,
-				32FC25011E5C58CE00E67A5F /* icon-60.png in Resources */,
-				32FC250B1E5C58CE00E67A5F /* icon@2x.png in Resources */,
+				88A67E451EE92E1E00EA527C /* Default@2x~iphone.png in Resources */,
+				88A67E3E1EE92E1E00EA527C /* Info.plist in Resources */,
+				88A67E2F1EE92E1E00EA527C /* icon-40.png in Resources */,
+				88A67E381EE92E1E00EA527C /* icon-76.png in Resources */,
+				88A67E371EE92E1E00EA527C /* icon-72@2x.png in Resources */,
+				88A67E301EE92E1E00EA527C /* icon-40@2x.png in Resources */,
+				88A67E3A1EE92E1E00EA527C /* icon-small.png in Resources */,
+				88A67E431EE92E1E00EA527C /* Default-667h.png in Resources */,
+				88A67E471EE92E1E00EA527C /* splash.png in Resources */,
+				88A67E421EE92E1E00EA527C /* Default-568h@2x~iphone.png in Resources */,
+				88A67E321EE92E1E00EA527C /* icon-50@2x.png in Resources */,
+				88A67E351EE92E1E00EA527C /* icon-60@3x.png in Resources */,
+				88A67E461EE92E1E00EA527C /* Default~iphone.png in Resources */,
+				88A67E341EE92E1E00EA527C /* icon-60@2x.png in Resources */,
+				88A67E441EE92E1E00EA527C /* Default-736h.png in Resources */,
+				88A67E3C1EE92E1E00EA527C /* icon.png in Resources */,
+				88A67E391EE92E1E00EA527C /* icon-76@2x.png in Resources */,
+				88A67E3B1EE92E1E00EA527C /* icon-small@2x.png in Resources */,
+				88A67E361EE92E1E00EA527C /* icon-72.png in Resources */,
+				88A67E311EE92E1E00EA527C /* icon-50.png in Resources */,
+				88A67E331EE92E1E00EA527C /* icon-60.png in Resources */,
+				88A67E3D1EE92E1E00EA527C /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1240,9 +1312,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2629A501ED2C4350052DD4F /* RCTUtilsModule.m in Sources */,
-				32FC250D1E5C58CE00E67A5F /* main.m in Sources */,
-				32FC24FC1E5C58CE00E67A5F /* AppDelegate.m in Sources */,
+				88A67E3F1EE92E1E00EA527C /* main.m in Sources */,
+				88A67E2E1EE92E1E00EA527C /* AppDelegate.m in Sources */,
+				88A67E401EE92E1E00EA527C /* AudioRecorderAPI.m in Sources */,
+				88A67E411EE92E1E00EA527C /* RCTUtilsModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1260,8 +1333,9 @@
 					"$(SRCROOT)/../App/node_modules/@remobile/react-native-splashscreen/ios/RCTSplashScreen",
 					"$(SRCROOT)/../App/node_modules/@remobile/react-native-update/ios/RCTUpdate",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../App/node_modules/@remobile/react-native-cordova/ios/RCTCordova",
 				);
-				INFOPLIST_FILE = GHwgh/Info.plist;
+				INFOPLIST_FILE = TaskTrack/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1271,6 +1345,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qm.tasktrack;
 				PRODUCT_NAME = TaskTrack;
+				USER_HEADER_SEARCH_PATHS = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1285,8 +1360,9 @@
 					"$(SRCROOT)/../App/node_modules/@remobile/react-native-splashscreen/ios/RCTSplashScreen",
 					"$(SRCROOT)/../App/node_modules/@remobile/react-native-update/ios/RCTUpdate",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../App/node_modules/@remobile/react-native-cordova/ios/RCTCordova",
 				);
-				INFOPLIST_FILE = GHwgh/Info.plist;
+				INFOPLIST_FILE = TaskTrack/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1296,6 +1372,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qm.tasktrack;
 				PRODUCT_NAME = TaskTrack;
+				USER_HEADER_SEARCH_PATHS = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1317,6 +1394,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1358,6 +1436,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;

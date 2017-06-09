@@ -18,10 +18,10 @@ const RemindSetting = require('./RemindSetting.js');
 const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('./RecordVoiceMessageBox.js');
 const fs = require('react-native-fs');
-const SupervisionClientMgr = require('../../manager/SupervisionClientMgr.js');
-const ExecutorClientMgr = require('../../manager/ExecutorClientMgr.js');
 const Camera = require('@remobile/react-native-camera');
 const ImagePicker = require('@remobile/react-native-image-picker');
+const remindData = require('../../data/remindData.js');
+const ShowBigImage = require('./ShowBigImage.js');
 
 const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
@@ -55,6 +55,7 @@ module.exports = React.createClass({
             supervisor: '',
             executor: '',
             remindList: [],
+            customRemind: '',
             overlayShowLongPressMessageBox: false,
             overlayShowMessageBox: false,
             voiceFileData:[],
@@ -65,8 +66,8 @@ module.exports = React.createClass({
         this.listFlags = 0;
     },
     componentDidMount() {
-        this.supervisorClientList = SupervisionClientMgr.getList()||[];
-        this.executorClientList = ExecutorClientMgr.getList()||[];
+        this.supervisorClientList = app.supervisionClient.getList()||[];
+        this.executorClientList = app.executorClient.getList()||[];
         _.forEach(this.supervisorClientList, (item) => {
             this.tempSupervisorClientList.push(item.name);
         });
@@ -136,24 +137,27 @@ module.exports = React.createClass({
         });
         this.setState({ overlayShowMessageBox: false });
     },
-    doGiveup () {
-        AudioRecorder.stop((result) => {
-            fs.unlink(this.fileInfo.voiceFilePath);
-        }, (error) => {
-            Toast('放弃录音失败，请稍后再试');
+    playVoice (filepath, index) {
+        let {voiceFileData} = this.state;
+        _.forEach(voiceFileData, (item) => {
+            item.voiceIsPlaly = false;
         });
-        this.setState({ overlayShowMessageBox: false });
-    },
-    playVoice (index) {
+        setTimeout(()=>{
+            this.setState(voiceFileData);
+        }, 200);
         AudioRecorder.playStop();
-        if (this.state.voiceFileData[index].voiceIsPlaly) {
-            this.state.voiceFileData[index].voiceIsPlaly = false;
+        if (voiceFileData[index].voiceIsPlaly) {
+            voiceFileData[index].voiceIsPlaly = false;
         } else {
-            this.state.voiceFileData[index].voiceIsPlaly = true;
+            voiceFileData[index].voiceIsPlaly = true;
+            this.setState({voiceFileData});
             AudioRecorder.play(filepath, (result) => {
+                voiceFileData[index].voiceIsPlaly = false;
+                this.setState({voiceFileData});
             }, (error) => {
                 Toast('无效音频');
-                this.state.voiceFileData[index].voiceIsPlaly = false;
+                voiceFileData[index].voiceIsPlaly = false;
+                this.setState({voiceFileData});
             });
         }
     },
@@ -179,6 +183,7 @@ module.exports = React.createClass({
                 && this.fileInfo.voiceTime != 0 )
             {
                 this.state.voiceFileData.push(this.fileInfo);
+                this.setState({voiceFileData: this.state.voiceFileData});
             }
             this.fileInfo = {
                 voiceFileUrl:'',
@@ -300,14 +305,14 @@ module.exports = React.createClass({
         });
     },
     showBigImage (localUrlImages, index) {
-        // app.showModal(
-        //     <AidBigImage
-        //         doImageClose={app.closeModal}
-        //         defaultIndex={index}
-        //         defaultImageArray={localUrlImages} />
-        // );
+        app.showModal(
+            <ShowBigImage
+                doImageClose={app.closeModal}
+                defaultIndex={index}
+                defaultImageArray={localUrlImages} />
+        );
     },
-    addPohotoImg (localUrlImages, index) {
+    addPohotoImg () {
         if (this.uploadOn == true) {
             Toast('正在上传中,稍候再增加');
             return;
@@ -350,7 +355,9 @@ module.exports = React.createClass({
             if (this.imgFileInfo.imgFileUrl != ''
                 && this.imgFileInfo.imgFilePath != '')
             {
-                this.state.imgFileData.push(this.imgFileInfo);
+                let {imgFileData} = this.state;
+                imgFileData.push(this.imgFileInfo);
+                this.setState({imgFileData});
             }
             this.imgFileInfo = {
                 imgFileUrl:'',
@@ -375,15 +382,14 @@ module.exports = React.createClass({
     goRemindSetting() {
         app.navigator.push({
             component: RemindSetting,
-            passProps:{ doRefresh:this.doRefreshRemind },
+            passProps:{ doRefresh:this.doRefreshRemind, selects: this.state.remindList, customRemind: this.state.customRemind },
         })
     },
     doRefreshRemind(obj) {
-        const { remindList } = this.state;
-        this.setState({ remindList: obj});
+        this.setState({ remindList: obj.remindList, customRemind: obj.customRemind});
     },
     doCreateTask() {
-        const {title, content, startTime, endTime, supervisor, executor, taskType, remindList} = this.state;
+        const {title, content, startTime, endTime, supervisor, executor, taskType, remindList, imgFileData, voiceFileData} = this.state;
         let supervisorId = '';
         let executorId = '';
         for (let item of this.supervisorClientList) {
@@ -405,31 +411,60 @@ module.exports = React.createClass({
             Toast('请选择任务类型');
             return;
         }
-        console.log('---typeInfo.key--',typeInfo.key,taskType,this.typeList);
+        let imageList = [];
+        for (let item of imgFileData ) {
+            imageList.push(item.imgFileUrl);
+        }
+        let audioList = [];
+        for (let item of voiceFileData ) {
+            let parameter = {
+                url: item.voiceFileUrl,
+                duration: item.voiceTime,
+            };
+            audioList.push(parameter);
+        }
         const param = {
             userId: app.personal.info.userId,
             executorId,
             supervisorId,
             title,
             content,
-            audioList: [],
-            imageList: [],
+            audioList,
+            imageList,
             remindList,
             type: typeInfo.key,
             expectStartTime: moment(startTime).format('YYYY-MM-DD HH:mm'),
             expectFinishTime: moment(endTime).format('YYYY-MM-DD HH:mm'),
         };
-        POST(app.route.ROUTE_LEADER_CREATE_TASK, param, this.leaderCreateTaskSuccess);
+        POST(app.route.ROUTE_LEADER_CREATE_TASK, param, this.leaderCreateTaskSuccess.bind(null,content,title));
+
     },
-    leaderCreateTaskSuccess (data) {
+    leaderCreateTaskSuccess (content,title,data) {
         if (data.success) {
+            if (data.context) {
+                if (!!this.state.customRemind) {
+                    app.customTime.setCustomTime(this.state.customRemind,data.context.taskId,content,title,1);
+                }
+            }
+            this.setState({
+                title: '',
+                content: '',
+                supervisor: '',
+                executor: '',
+                taskType: '',
+                voiceFileData: [],
+                imgFileData: [],
+                remindList: [],
+                startTime: moment().format('YYYY-MM-DD HH:mm'),
+                endTime: moment().format('YYYY-MM-DD HH:mm'),
+            });
             Toast('发布任务成功');
         } else {
             Toast('获取数据错误，请稍后重试！');
         }
     },
     render () {
-        const {startTime, endTime, remindList} = this.state;
+        const {startTime, endTime, remindList, customRemind, voiceFileData, imgFileData} = this.state;
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
@@ -460,17 +495,17 @@ module.exports = React.createClass({
                         </TouchableOpacity>
                         <ScrollView horizontal style={styles.voiceContainer}>
                             {
-                                this.state.voiceFileData && this.state.voiceFileData.map((item, i) => {
+                                !!voiceFileData.length && voiceFileData.map((item, i) => {
                                     return (
                                         <View key={i} style={[styles.audioContainer]}>
                                             <TouchableOpacity
                                                 key={i}
                                                 activeOpacity={0.6}
-                                                onPress={this.playVoice.bind(null, i)}
+                                                onPress={this.playVoice.bind(null, item.voiceFilePath, i)}
                                                 delayLongPress={1500}
                                                 onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
                                                 style={styles.audioPlay}>
-                                                <Image source={app.img.home_voice_say_play} style={styles.imagevoice} />
+                                                <Image source={voiceFileData[i].voiceIsPlaly ? app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imagevoice} />
                                                 <Text style={styles.textTime} >{item.voiceTime + "''"}</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -593,10 +628,24 @@ module.exports = React.createClass({
                                             resizeMode='stretch'
                                             source={app.img.home_remind_check}
                                             style={styles.checkImage} />
-                                        <Text style={styles.remindItemTitle}>{item}</Text>
+                                        <Text style={styles.remindItemTitle}>{remindData[item]}</Text>
                                     </View>
                                 );
                             })
+                        }
+                        {
+                            !!customRemind&&
+                            <View style={styles.remindItem}>
+                                <DImage
+                                    resizeMode='stretch'
+                                    source={app.img.home_remind_check}
+                                    style={styles.checkImage} />
+                                <Text style={styles.remindItemTitle}>{customRemind}</Text>
+                            </View>
+                        }
+                        {
+                            (remindList.length===0 && customRemind === '') &&
+                            <Text style={styles.remindTipText}>无任务提醒，是否设置</Text>
                         }
                         <View style={[styles.divisionLine, {marginTop: 5}]}/>
                     </View>
@@ -617,18 +666,18 @@ module.exports = React.createClass({
                             </DelayTouchableOpacity>
                             <ScrollView horizontal style={styles.imageContainer}>
                                 {
-                                    this.state.imgFileData && this.state.imgFileData.map((item, i) => {
+                                    !!imgFileData.length && imgFileData.map((item, i) => {
                                         return (
                                             <TouchableHighlight
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
-                                                onPress={this.showBigImage}
+                                                onPress={this.showBigImage.bind(null, this.state.imgFileData, i)}
                                                 onLongPress={this.showImageLongPressMessageBox}
                                                 style={styles.bigImageTouch}>
                                                 <Image
                                                     key={i}
                                                     resizeMode='stretch'
-                                                    source={{ uri: item.imgFileUrl }}
+                                                    source={{ uri: item.imgFilePath }}
                                                     style={styles.imageStyletu}
                                                     />
                                             </TouchableHighlight>
@@ -878,9 +927,17 @@ const styles = StyleSheet.create({
         height: 20,
     },
     remindItemTitle: {
+        width: sr.w-60,
         fontSize: 12,
         color: '#323232',
         marginLeft: 5,
+        lineHeight: 15,
+    },
+    remindTipText: {
+        marginVertical: 10,
+        fontSize: 14,
+        color: '#323232',
+        alignSelf: 'center',
     },
     imageUpLoadContainer: {
         width: sr.w,

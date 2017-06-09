@@ -13,18 +13,7 @@ const {
 const Subscribable = require('Subscribable');
 const TaskSupervision = require('./TaskSupervision.js');
 const ExamineTask = require('./ExamineTask.js');
-const taskDetail= {
-                    "title": "测试任务",
-                    "content": "认真测试",
-                    "modifyTime": "2017-05-23 08:44:58",
-                    "expectStartTime": "2017-05-16 03:00:00",
-                    "expectFinishTime": "2017-05-16 03:00:00",
-                    "rejectPublishReason": "不合格",
-                    "rejectFinishReason": "不合格",
-                    "type": 1,
-                    "state": 1,
-                    "id": "5923860a5c1070c1e96defd2"
-                }
+const UpdateTimeMgr = require('../../manager/UpdateTimeMgr.js');
 
 module.exports = React.createClass({
     mixins: [Subscribable.Mixin],
@@ -39,23 +28,22 @@ module.exports = React.createClass({
             dataSource: this.ds.cloneWithRows(this.taskList),
         };
     },
+    UpdateTimeBack(id) {
+        const date = _.find(this.taskList, (item) => item.id === id);
+        if (date) {
+            date.isUpdate = false;
+        }
+        this.setState({dataSource: this.ds.cloneWithRows(this.taskList),})
+    },
     onPress(data) {
+        UpdateTimeMgr.setListTime(data.id, data.modifyTime);
         app.navigator.push({
             component: TaskSupervision,
-            passProps: {data}
+            passProps: {data,UpdateTimeBack: this.UpdateTimeBack.bind(null,data.id)}
         });
-        // if (!_.includes(data.readed, app.personal.info.phone)) {
-        //     app.socket.sendData('UPDATE_READED_RQ', {id: data.id});
-        //     app.subTaskBadge(1);
-        // }
     },
     componentDidMount () {
         this.getTaskListByType();
-        const params = {
-            taskDetail,
-            component: TaskSupervision,
-        }
-        app.showNotifications(params);
     },
     getTaskListByType(taskType) {
         const param = {
@@ -70,6 +58,16 @@ module.exports = React.createClass({
             const context = data.context;
             if (context) {
                 this.taskList = context.taskList;
+                if (this.taskList.length != 0) {
+                    for (var i = 0; i < this.taskList.length; i++) {
+                        let updateTime = UpdateTimeMgr.getListTimes(this.taskList[i].id);
+                        if (updateTime != this.taskList[i].modifyTime) {
+                            this.taskList[i]['isUpdate'] = true;
+                        } else {
+                            this.taskList[i]['isUpdate'] = false;
+                        }
+                    }
+                }
                 this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
             }
         } else {
@@ -112,7 +110,7 @@ module.exports = React.createClass({
                     </View>
                 </View>
                 {
-                    !_.includes(obj.readed, app.personal.info.phone) &&
+                    !!obj.isUpdate&&
                     <Image
                         resizeMode='stretch'
                         source={app.img.leader_title_label}

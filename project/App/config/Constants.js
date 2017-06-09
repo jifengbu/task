@@ -19,7 +19,7 @@ const TEST_CONFIG = {
 };
 
 // web服务器 依次是本地服务器，本地测试服务器, 测试服务器， 正式服务器
-const BASE_SERVERS = ['192.168.1.126:3000', '120.25.96.74:3000', 'www.gyyxjqd.com'];
+const BASE_SERVERS = ['192.168.1.222:4000', '120.25.96.74:3000', 'www.gyyxjqd.com'];
 const BASE_SERVER = CONFIG.ISSUE ? BASE_SERVERS[2] : TEST_CONFIG.ISSUE ? BASE_SERVERS[1] : BASE_SERVERS[TEST_CONFIG.BASE_SERVER_INDEX];
 
 module.exports = {

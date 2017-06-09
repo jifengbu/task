@@ -13,6 +13,7 @@ const {
 const Subscribable = require('Subscribable');
 const TaskSupervision = require('./TaskSupervision.js');
 const ExamineTask = require('./ExamineTask.js');
+const UpdateTimeMgr = require('../../manager/UpdateTimeMgr.js');
 
 module.exports = React.createClass({
     mixins: [Subscribable.Mixin],
@@ -27,10 +28,18 @@ module.exports = React.createClass({
             dataSource: this.ds.cloneWithRows(this.taskList),
         };
     },
+    UpdateTimeBack(id) {
+        const date = _.find(this.taskList, (item) => item.id === id);
+        if (date) {
+            date.isUpdate = false;
+        }
+        this.setState({dataSource: this.ds.cloneWithRows(this.taskList),})
+    },
     onPress(data) {
+        UpdateTimeMgr.setListTime(data.id, data.modifyTime);
         app.navigator.push({
             component: TaskSupervision,
-            passProps: {data}
+            passProps: {data,UpdateTimeBack: this.UpdateTimeBack.bind(null,data.id)}
         });
         // if (!_.includes(data.readed, app.personal.info.phone)) {
         //     app.socket.sendData('UPDATE_READED_RQ', {id: data.id});
@@ -53,6 +62,16 @@ module.exports = React.createClass({
             const context = data.context;
             if (context) {
                 this.taskList = context.taskList;
+                if (this.taskList.length != 0) {
+                    for (var i = 0; i < this.taskList.length; i++) {
+                        let updateTime = UpdateTimeMgr.getListTimes(this.taskList[i].id);
+                        if (updateTime != this.taskList[i].modifyTime) {
+                            this.taskList[i]['isUpdate'] = true;
+                        } else {
+                            this.taskList[i]['isUpdate'] = false;
+                        }
+                    }
+                }
                 this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
             }
         } else {
@@ -95,7 +114,7 @@ module.exports = React.createClass({
                     </View>
                 </View>
                 {
-                    !_.includes(obj.readed, app.personal.info.phone) &&
+                    !!obj.isUpdate&&
                     <Image
                         resizeMode='stretch'
                         source={app.img.leader_title_label}

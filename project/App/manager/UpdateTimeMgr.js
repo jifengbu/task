@@ -20,9 +20,8 @@ class Manager extends EventEmitter {
                 const infoStr = await AsyncStorage.getItem(ITEM_NAME);
                 list = JSON.parse(infoStr);
             } catch (e) {
-                list = [];
             }
-            this.list = list;
+            this.list = list || [];
         });
     }
     set (list) {

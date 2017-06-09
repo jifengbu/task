@@ -14,6 +14,7 @@ const TimerMixin = require('react-timer-mixin');
 const SplashScreen = require('@remobile/react-native-splashscreen');
 const Login = require('../login/Login.js');
 const Home = require('../home/index.js');
+const PersonalInfoMgr = require('../../manager/PersonalInfoMgr.js');
 
 module.exports = React.createClass({
     mixins: [TimerMixin],
@@ -54,25 +55,54 @@ module.exports = React.createClass({
     },
     enterNextPage () {
         app.updateMgr.setNeedShowSplash(false);
-        this.enterLoginPage();
-        // if (this.state.renderSplashType === 1) {
-        //     this.enterLoginPage();
-        // } else {
-        //     this.enterHomePage();
-        // }
+        if (app.personal.needLogin) {
+            this.enterLoginPage();
+        } else {
+            app.utils.until(
+                () => app.socketconnect,
+                this.check,
+                () => {
+                    app.socket.login(app.personal.info.phone,(obj)=>{
+                        if (obj.success) {
+                            this.changeToHomePage()
+                        } else {
+                            this.changeToLoginPage();
+                        }
+                    });
+
+                }
+            );
+        }
+    },
+    check(cb) {
+        if (this.timeTick > 5000) {
+            this.changeToLoginPage();
+        } else {
+            setTimeout(cb, 100);
+            this.timeTick += 100;
+        }
     },
     changeToNextPage () {
-        this.changeToLoginPage();
-        // if (app.personal.needLogin) {
-        //     this.changeToLoginPage();
-        // } else {
-        //     app.socket.register(app.personal.info.phone);
-        //     app.utils.until(
-        //         () => app.socket.connected,
-        //         (cb) => setTimeout(cb, 100),
-        //         () => this.changeToHomePage()
-        //     );
-        // }
+        if (app.personal.needLogin) {
+            this.changeToLoginPage();
+        } else {
+            this.timeTick = 0;
+            app.utils.until(
+                () => app.socketconnect,
+                this.check,
+                (err) => {
+                    app.socket.login({phone:app.personal.info.phone},(obj)=>{
+                        if (obj.success) {
+                            this.changeToHomePage()
+                        } else {
+                            this.changeToLoginPage();
+                        }
+                    });
+
+                }
+            );
+
+        }
     },
     componentDidMount () {
         app.utils.until(

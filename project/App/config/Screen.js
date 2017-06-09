@@ -36,4 +36,5 @@ module.exports = {
     pr: pxielRatio,
     s: (w) => { return w * width / SCREEN_WIDTH_BASE; },
     rs: (w) => { return w * SCREEN_WIDTH_BASE / width; },
+    ws: (w) => { return w * width / SCREEN_WIDTH_BASE; },
 };

@@ -27,7 +27,7 @@ module.exports = React.createClass({
                         {data.content}
                     </Text>
                     {
-                        this.props.data.isOver === 0 ?
+                        !this.props.selected?
                             <TouchableOpacity
                                 onPress={this.doComplete}
                                 style={styles.btnStyle}>

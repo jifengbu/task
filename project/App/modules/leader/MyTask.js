@@ -22,6 +22,12 @@ module.exports = React.createClass({
             tabIndex: 0,
         };
     },
+    onWillFocus() {
+        app.toggleNavigationBar(false);
+    },
+    onWillHide() {
+        app.toggleNavigationBar(true);
+    },
     changeTab (tabIndex) {
         this.setState({ tabIndex });
     },
@@ -177,6 +183,6 @@ const styles = StyleSheet.create({
     listStyle: {
         width: sr.w,
         marginTop: 47,
-        height: 356,
+        flex: 1,
     },
 });

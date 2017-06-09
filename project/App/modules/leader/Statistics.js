@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     empty: {
         width: sr.w,
         height: 60,
+        backgroundColor: '#FFFFFF'
     },
     paginationStyle: {
         width: sr.w,

@@ -13,10 +13,14 @@ const {
 import TabNavigator from 'react-native-tab-navigator';
 import Badge from 'react-native-smart-badge'
 
+const Subscribable = require('Subscribable');
 const PublishTask = require('./PublishTask.js');
 const TaskTable = require('./TaskTable.js');
 const MyTask = require('./MyTask.js');
 const Person = require('../person');
+const TaskSupervision = require('./TaskSupervision.js');
+const ExamineTask = require('./ExamineTask.js');
+const CustomRemind = require('../../manager/CustomRemindTimeMgr.js');
 
 const INIT_ROUTE_INDEX = 0;
 const ROUTE_STACK = [
@@ -64,7 +68,6 @@ const HomeTabBar = React.createClass({
     },
     componentDidMount () {
         app.dismissProgressHud();
-        app.toggleNavigationBar(true);
     },
     getInitialState () {
         return {
@@ -124,11 +127,67 @@ const HomeTabBar = React.createClass({
 });
 
 module.exports = React.createClass({
+    mixins: [Subscribable.Mixin],
     getInitialState () {
         return {
             isOpen: false,
             selectedItem: 'About',
         };
+    },
+    componentWillMount () {
+        this.registerEvents('NEW_PUBLISH_TASK_EVENT');
+        this.registerEvents('APPLY_FINISH_TASK_EVENT');
+        this.registerEvents('REMIND_TASK_EVENT');
+        this.addListenerOn(CustomRemind, 'TIMING_TASK_EVENT', (param) => {
+            this.TIMING_TASK_EVENT(param);
+        });
+    },
+    componentDidMount() {
+        app.customTime.setTiming();
+    },
+    registerEvents (name) {
+        this.addListenerOn(app.socket, name, (param) => {
+            this[name](param);
+        });
+    },
+    TIMING_TASK_EVENT (task) {
+        let data = null;
+        if (!!task) {
+            for (var i = 0; i < task.timeText.length; i++) {
+                data = task.timeText[i];
+                const params = {
+                    type: task.type,
+                    taskDetail: data,
+                    component: TaskSupervision,
+                }
+                app.showNotifications(params);
+            }
+        }
+
+    },
+    NEW_PUBLISH_TASK_EVENT (task) {
+        const params = {
+            type: 1,
+            taskDetail: task,
+            component: ExamineTask,
+        }
+        app.showNotifications(params);
+    },
+    APPLY_FINISH_TASK_EVENT (task) {
+        const params = {
+            type: 1,
+            taskDetail: task,
+            component: ExamineTask,
+        }
+        app.showNotifications(params);
+    },
+    REMIND_TASK_EVENT (task) {
+        Toast('提醒的通知');
+        // const params = {
+        //     taskDetail: task,
+        //     component: ExamineTask,
+        // }
+        // app.showNotifications(params);
     },
     getChildScene () {
         return this.scene;
@@ -199,7 +258,7 @@ const styles = StyleSheet.create({
         width: sr.w,
         position: 'absolute',
         left: 0,
-        top: sr.ch-60,
+        bottom: 0,
     },
     titleStyle: {
         fontSize:12,

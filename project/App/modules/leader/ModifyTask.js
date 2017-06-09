@@ -19,9 +19,6 @@ const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('./RecordVoiceMessageBox.js');
 const ShowBigImage = require('./ShowBigImage.js');
 const remindData = require('../../data/remindData.js');
-const SupervisionClientMgr = require('../../manager/SupervisionClientMgr.js');
-const ExecutorClientMgr = require('../../manager/ExecutorClientMgr.js');
-const CustomRemindTimeMgr = require('../../manager/CustomRemindTimeMgr.js');
 
 const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
@@ -34,7 +31,7 @@ module.exports = React.createClass({
         this.tempExecutorClientList = [];
         this.typeList = [];
         this.tempTypeList = [];
-        const {title, content, type, expectStartTime, expectFinishTime, supervisor, executor, imageList, audioList, remindList} = this.props.taskDetail || {};
+        const {title, content, type, expectStartTime, expectFinishTime, supervisor, executor, imageList, audioList, remindList, id} = this.props.taskDetail || {};
         return {
             title: title||'',
             content: content||'',
@@ -48,14 +45,14 @@ module.exports = React.createClass({
             remindList: remindList,
             netUrlImages: imageList,
             uploadVoices: audioList,
-            customRemind: '',
+            customRemind: app.customTime.getCustomTimes(id),
             overlayShowLongPressMessageBox: false,
             overlayShowMessageBox: false,
         };
     },
     componentDidMount () {
-        this.supervisorClientList = SupervisionClientMgr.getList()||[];
-        this.executorClientList = ExecutorClientMgr.getList()||[];
+        this.supervisorClientList = app.supervisionClient.getList()||[];
+        this.executorClientList = app.executorClient.getList()||[];
         _.forEach(this.supervisorClientList, (item) => {
             this.tempSupervisorClientList.push(item.name);
         });
@@ -238,7 +235,11 @@ module.exports = React.createClass({
     goRemindSetting() {
         app.navigator.push({
             component: RemindSetting,
-            passProps:{ doRefresh:this.doRefreshRemind,  remindList: this.state.remindList},
+            passProps:{
+                doRefresh:this.doRefreshRemind,
+                selects: this.state.remindList,
+                customRemind: this.state.customRemind
+            },
         })
     },
     doRefreshRemind(obj) {
@@ -281,14 +282,15 @@ module.exports = React.createClass({
             expectStartTime: moment(startTime).format('YYYY-MM-DD HH:mm'),
             expectFinishTime: moment(endTime).format('YYYY-MM-DD HH:mm'),
         };
-        POST(app.route.ROUTE_LEADER_CREATE_TASK, param, this.leaderCreateTaskSuccess);
+        POST(app.route.ROUTE_LEADER_CREATE_TASK, param, this.leaderCreateTaskSuccess.bind(null,this.props.taskDetail.id,content,title));
     },
-    leaderCreateTaskSuccess (data) {
+    leaderCreateTaskSuccess (id,content,title,data) {
         if (data.success) {
             if (!!this.state.customRemind) {
-                app.customTime.setCustomTime(this.state.customRemind);
+                app.customTime.setCustomTime(this.state.customRemind,id,content,title,1);
             }
             Toast('发布任务成功');
+            app.navigator.pop();
         } else {
             Toast('获取数据错误，请稍后重试！');
         }
@@ -472,7 +474,7 @@ module.exports = React.createClass({
                                     resizeMode='stretch'
                                     source={app.img.home_remind_check}
                                     style={styles.checkImage} />
-                                <Text style={styles.remindItemTitle}>{customRemind}</Text>
+                                <Text style={styles.remindItemTitle}>{`${customRemind}  提醒我`}</Text>
                             </View>
                         }
                         <View style={[styles.divisionLine, {marginTop: 5}]}/>
@@ -751,9 +753,11 @@ const styles = StyleSheet.create({
         height: 20,
     },
     remindItemTitle: {
+        width: sr.w-60,
         fontSize: 12,
         color: '#323232',
         marginLeft: 5,
+        lineHeight: 15,
     },
     imageUpLoadContainer: {
         width: sr.w,

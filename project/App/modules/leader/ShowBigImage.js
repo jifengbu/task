@@ -22,9 +22,9 @@ module.exports = React.createClass({
         const tempImageArray1 = [];
         this.props.defaultImageArray.map((item, i) => {
             if (i >= this.props.defaultIndex) {
-                tempImageArray1.push(item);
+                tempImageArray1.push(!!item.imgFilePath?item.imgFilePath:item);
             } else {
-                tempImageArray.push(item);
+                tempImageArray.push(!!item.imgFilePath?item.imgFilePath:item);
             }
         });
         const imageArray = tempImageArray1.concat(tempImageArray);

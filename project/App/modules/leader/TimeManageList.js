@@ -53,14 +53,13 @@ module.exports = React.createClass({
             userId: app.personal.info.userId,
             scheduleId: id,
         };
-        POST(app.route.ROUTE_FINISH_SCHEDULE, param, this.finishScheduleSuccess);
+        POST(app.route.ROUTE_FINISH_SCHEDULE, param, this.finishScheduleSuccess.bind(null,id));
     },
-    finishScheduleSuccess (data) {
+    finishScheduleSuccess (id,data) {
         if (data.success) {
-
-        } else {
-            app.dismissProgressHud();
-            Toast(data.msg);
+            let item = _.find(this.timeList,(item)=>item.id === id);
+            item.state = 1;
+            this.setState({dataSource: this.ds.cloneWithRows(this.timeList)});
         }
     },
     doDelete(id) {
@@ -71,14 +70,13 @@ module.exports = React.createClass({
         const param = {
             scheduleId: id,
         };
-        POST(app.route.ROUTE_REMOVE_SCHEDULE, param, this.removeScheduleSuccess);
+        POST(app.route.ROUTE_REMOVE_SCHEDULE, param, this.removeScheduleSuccess.bind(null,id));
     },
-    removeScheduleSuccess (data) {
+    removeScheduleSuccess (id,data) {
         if (data.success) {
-
-        } else {
-            app.dismissProgressHud();
-            Toast(data.msg);
+            let item = _.find(this.timeList,(item)=>item.id === id);
+            _.remove(this.timeList, (o) => o == item);
+            this.setState({dataSource: this.ds.cloneWithRows(this.timeList)});
         }
     },
     doSave(content,id) {
@@ -91,14 +89,13 @@ module.exports = React.createClass({
             userId: app.personal.info.userId,
             content: content,
         };
-        POST(app.route.ROUTE_MODIFY_SCHEDULE, param, this.modifyScheduleSuccess);
+        POST(app.route.ROUTE_MODIFY_SCHEDULE, param, this.modifyScheduleSuccess.bind(null,content,id));
     },
-    modifyScheduleSuccess (data) {
+    modifyScheduleSuccess (content,id,data) {
         if (data.success) {
-
-        } else {
-            app.dismissProgressHud();
-            Toast(data.msg);
+            let item = _.find(this.timeList,(item)=>item.id === id);
+            item.content = content;
+            this.setState({dataSource: this.ds.cloneWithRows(this.timeList)});
         }
     },
     setAlert() {
@@ -117,7 +114,7 @@ module.exports = React.createClass({
     },
     createScheduleSuccess (data) {
         if (data.success) {
-
+            this.getScheduleList();
         }
     },
     doUpdate(obj) {
@@ -147,6 +144,23 @@ module.exports = React.createClass({
                 />
         );
     },
+    renderFooter () {
+        return (
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    onPress={this.addTimeItem}
+                    style={styles.buttonStyle}>
+                    <Image
+                        resizeMode='stretch'
+                        source={app.img.leader_item_add}
+                        style={styles.buttonImageStyle} />
+                    <Text style={styles.buttonTextStyle}>
+                        新增
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        );
+    },
     render () {
         const {dataSource} = this.state;
         return (
@@ -163,19 +177,6 @@ module.exports = React.createClass({
                     renderSeparator={this.renderSeparator}
                     renderFooter={this.renderFooter}
                     />
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        onPress={this.addTimeItem}
-                        style={styles.buttonStyle}>
-                        <Image
-                            resizeMode='stretch'
-                            source={app.img.leader_item_add}
-                            style={styles.buttonImageStyle} />
-                        <Text style={styles.buttonTextStyle}>
-                            新增
-                        </Text>
-                    </TouchableOpacity>
-                </View>
             </View>
         );
     },
@@ -207,8 +208,8 @@ const styles = StyleSheet.create({
     },
     listStyle: {
         alignSelf:'stretch',
+        marginBottom: 60,
         backgroundColor: '#FFFFFF',
-        // height: sr.h -150,
     },
     separator: {
         height: 1,

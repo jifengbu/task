@@ -22,6 +22,11 @@ module.exports = React.createClass({
     statics: {
         title: '任务详情',
         index: 0,
+        leftButton: {  handler: ()=>{app.scene.goBack()}},
+    },
+    goBack() {
+        app.navigator.pop();
+        this.props.UpdateTimeBack&&this.props.UpdateTimeBack();
     },
     getInitialState () {
         return {
@@ -30,6 +35,10 @@ module.exports = React.createClass({
         };
     },
     componentDidMount () {
+        this.getSingleTaskDetail();
+        this.getTaskProgressList();
+    },
+    onWillFocus () {
         this.getSingleTaskDetail();
         this.getTaskProgressList();
     },
@@ -98,7 +107,7 @@ module.exports = React.createClass({
             case 2: {
                 app.navigator.push({
                     component: ModifyTask,
-                    passProps: {taskDetail: this.state.taskDetail}
+                    passProps: {taskDetail: this.state.taskDetail,isPop: true}
                 })
                 break;
             }
@@ -107,7 +116,11 @@ module.exports = React.createClass({
                     userId,
                     taskId: id,
                 };
-                POST(app.route.ROUTE_AGREE_FINISH_TASK, param, this.doSuccess.bind(null, 3));
+                if (app.personal.info.authority === 2) {
+                    POST(app.route.ROUTE_AGREE_FINISH_TASK, param, this.doSuccess.bind(null, 3));
+                } else {
+                    POST(app.route.ROUTE_APPLY_FINISH_TASK, param, this.doSuccess.bind(null, 3));
+                }
                 break;
             }
             case 4: {
@@ -116,7 +129,6 @@ module.exports = React.createClass({
                     taskId: id,
                 };
                 POST(app.route.ROUTE_REJECT_FINISH_TASK, param, this.doSuccess.bind(null, 4));
-                break;
                 break;
             }
             default:
@@ -143,7 +155,11 @@ module.exports = React.createClass({
                 case 2:
                     break;
                 case 3:
-                    Toast('同意该任务结束');
+                    if (app.personal.info.authority === 2) {
+                        Toast('同意该任务结束');
+                    } else {
+                        Toast('申请任务发送成功');
+                    }
                     break;
                 case 4:
                     Toast('驳回该任务结束');
@@ -159,9 +175,13 @@ module.exports = React.createClass({
         const { index, taskDetail, ProgressList } = this.state;
         const menuAdminArray = ['任务更新', '任务提醒', '任务变更'];
         const {state} = this.props.data;
-        if (state != 1 && state != 2) {
+        // 1：待审批，2：驳回审批，4：通过审批，8：待执行， 16：进行中，32：待完成审核，64：驳回完成审核，128：完成
+        if (state == 32) {
             menuAdminArray.push('确认结束');
             menuAdminArray.push('驳回结束');
+        }
+        if (app.personal.info.authority != 8) {
+            menuAdminArray.push('申请结束');
         }
         const { title, expectFinishTime } = this.state.taskDetail || {};
         return (

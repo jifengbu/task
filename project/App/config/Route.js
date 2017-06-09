@@ -27,6 +27,8 @@ module.exports = {
     ROUTE_MODIFY_PASSWORD: API_SERVER + 'modifyPassword', //  修改个人密码
     ROUTE_UPDATE_FILE: API_SERVER + 'uploadFile', //  上传文件
     ROUTE_SUBMIT_FEEDBACK: API_SERVER + 'submitFeedback', //  意见反馈
+    ROUTE_APPLY_FINISH_TASK: API_SERVER + 'applyFinishTask', //  申请完成任务
+    ROUTE_SECRETARY_CREATE_TASK: API_SERVER + 'secretaryCreateTask', //  申请完成任务
 
     // 网页地址
     ROUTE_USER_LICENSE: API_SERVER + 'protocals/user.html', // 用户协议

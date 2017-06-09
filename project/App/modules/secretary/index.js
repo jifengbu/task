@@ -12,16 +12,18 @@ const {
 
 import TabNavigator from 'react-native-tab-navigator';
 import Badge from 'react-native-smart-badge'
-
-const SecretaryTask = require('./SecretaryTask.js');
-const TaskList = require('./TaskList.js');
+const Subscribable = require('Subscribable');
+const TaskTable = require('./TaskTable.js');
+const MyTask = require('./MyTask.js');
+const publishTask = require('./publishTask.js');
 const Person = require('../person');
 
 const INIT_ROUTE_INDEX = 0;
 const ROUTE_STACK = [
-    { index: 0, component: SecretaryTask },
-    { index: 1, component: TaskList },
-    { index: 2, component: Person },
+    { index: 0, component: MyTask },
+    { index: 1, component: TaskTable },
+    { index: 2, component: publishTask },
+    { index: 3, component: Person },
 ];
 
 
@@ -63,7 +65,6 @@ const HomeTabBar = React.createClass({
     },
     componentDidMount () {
         app.dismissProgressHud();
-        app.toggleNavigationBar(true);
     },
     getInitialState () {
         return {
@@ -76,9 +77,10 @@ const HomeTabBar = React.createClass({
     },
     render () {
         const menus = [
-            { index: 0, title: '申请任务', icon: app.img.card_consumption_normal, selected: app.img.card_consumption_press },
-            { index: 1, title: '任务列表', icon: app.img.card_card_issuing_normal, selected: app.img.card_card_issuing_press },
-            { index: 2, title: '客户', icon: app.img.card_customer_mormal, selected: app.img.card_customer_press },
+            { index: 0, title: '我的任务', icon: app.img.home_my_task_norm, selected: app.img.home_my_task_pressed },
+            { index: 1, title: '任务列表', icon: app.img.home_task_list_norm, selected: app.img.home_task_list_pressed },
+            { index: 2, title: '新建任务', icon: app.img.home_add_task_norm, selected: app.img.home_add_task_pressed },
+            { index: 3, title: '个人信息', icon: app.img.home_add_task_norm, selected: app.img.home_add_task_pressed },
         ];
         const TabNavigatorItems = menus.map((item) => {
             return (
@@ -122,6 +124,7 @@ const HomeTabBar = React.createClass({
 });
 
 module.exports = React.createClass({
+    mixins: [Subscribable.Mixin],
     statics: {
         title: ROUTE_STACK[INIT_ROUTE_INDEX].component.title,
         leftButton: ROUTE_STACK[INIT_ROUTE_INDEX].component.leftButton,
@@ -132,6 +135,54 @@ module.exports = React.createClass({
             isOpen: false,
             selectedItem: 'About',
         };
+    },
+    componentWillMount () {
+        this.registerEvents('AGREE_PUBLISH_TASK_EVENT');
+        this.registerEvents('REJECT_PUBLISH_TASK_EVENT');
+        this.registerEvents('REJECT_FINISH_TASK_EVENT');
+        this.registerEvents('AGREE_FINISH_TASK_EVENT');
+        this.registerEvents('REMIND_TASK_EVENT');
+    },
+    registerEvents (name) {
+        this.addListenerOn(app.socket, name, (param) => {
+            this[name](param);
+        });
+    },
+    AGREE_PUBLISH_TASK_EVENT (task) {
+        const params = {
+            taskDetail: task,
+            component: TaskSupervision,
+        }
+        app.showNotifications(params);
+    },
+    REJECT_PUBLISH_TASK_EVENT (task) {
+        const params = {
+            taskDetail: task,
+            component: ExamineTask,
+        }
+        app.showNotifications(params);
+    },
+    REJECT_FINISH_TASK_EVENT (task) {
+        const params = {
+            taskDetail: task,
+            component: ExamineTask,
+        }
+        app.showNotifications(params);
+    },
+    AGREE_FINISH_TASK_EVENT (task) {
+        const params = {
+            taskDetail: task,
+            component: ExamineTask,
+        }
+        app.showNotifications(params);
+    },
+    REMIND_TASK_EVENT (task) {
+        Toast('提醒的通知');
+        // const params = {
+        //     taskDetail: task,
+        //     component: ExamineTask,
+        // }
+        // app.showNotifications(params);
     },
     getChildScene () {
         return this.scene;
@@ -202,7 +253,7 @@ const styles = StyleSheet.create({
         width: sr.w,
         position: 'absolute',
         left: 0,
-        top: sr.ch-60,
+        bottom: 0,
     },
     titleStyle: {
         fontSize:12,

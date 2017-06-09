@@ -13,6 +13,7 @@ const {
     TouchableOpacity,
 } = ReactNative;
 
+const Audio = require('@remobile/react-native-audio');
 const InputBoxReject = require('./InputBoxReject.js');
 const ShowBigImage = require('./ShowBigImage.js');
 
@@ -20,10 +21,12 @@ const { Button, DImage } = COMPONENTS;
 
 module.exports = React.createClass({
     getInitialState () {
+        this.isPlaying = _.fill(Array(this.props.data.audioList.length), false);
         return {
             lineHeight: 0,
             isLookAll: false,
             isExamine: false,
+            isPlaying: this.isPlaying,
         };
     },
     doLookAll () {
@@ -70,6 +73,79 @@ module.exports = React.createClass({
                 defaultIndex={index}
                 defaultImageArray={imageArray} />
         );
+    },
+    componentWillUnmount () {
+        clearInterval(this.intervalID);
+        this.intervalID = null;
+        if (this.player) {
+            this.voiceStop();
+        }
+    },
+    voiceStop () {
+        this.player.stop();
+        this.player.release();
+        this.player = null;
+    },
+    isPlayer () {
+        if (this.player) {
+            this.voiceStop();
+            this.isPlaying[this.isPlayingIndex] = false;
+            this.setState({ isPlaying: this.isPlaying });
+        }
+    },
+    playVoice(url, index) {
+        if (!url || url === 'null') {
+            Toast('音频地址为空');
+            return;
+        }
+        if (this.player && this.isPlaying[index]) {
+            this.voiceStop();
+            this.isPlaying[index] = false;
+            this.setState({ isPlaying: this.isPlaying });
+        } else {
+            const tempIsPlaying = _.find(this.isPlaying, (item) => item == true);
+            if (tempIsPlaying && tempIsPlaying != null) {
+                if (this.player != null) {
+                    this.player.stop();
+                    this.player.release();
+                }
+                this.player = null;
+                this.isPlaying[this.tempIndex] = false;
+                this.setState({ isPlaying: this.isPlaying });
+                this.player = new Audio(url, (error) => {
+                    if (!error) {
+                        this.isPlaying[index] = true;
+                        this.setState({ isPlaying: this.isPlaying });
+                        this.tempIndex = index;
+                        this.player != null && this.player.play(() => {
+                            this.player.release();
+                            this.player = null;
+                            this.isPlaying[index] = false;
+                            this.setState({ isPlaying: this.isPlaying });
+                        });
+                    } else {
+                        Toast('播放失败');
+                    }
+                });
+            } else {
+                this.player = new Audio(url, (error) => {
+                    if (!error) {
+                        this.isPlaying[index] = true;
+                        this.setState({ isPlaying: this.isPlaying });
+                        this.tempIndex = index;
+                        this.player != null && this.player.play(() => {
+                            this.player.release();
+                            this.player = null;
+                            this.isPlaying[index] = false;
+                            this.setState({ isPlaying: this.isPlaying });
+                        });
+                    } else {
+                        Toast('播放失败');
+                    }
+                });
+            }
+        }
+        this.isPlayingIndex = index;
     },
     render () {
         let {isLookAll, isExamine} = this.state;
@@ -135,36 +211,38 @@ module.exports = React.createClass({
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.remindContainer}>
-                    <View style={styles.divisionLine}/>
-                    <View style={styles.remindTitleView}>
-                        <View style={styles.remindTitleLeftView}>
-                            <DImage
-                                resizeMode='stretch'
-                                source={app.img.home_clock}
-                                style={styles.clockImage} />
-                            <Text style={styles.remindTitle}>{'任务提醒'}</Text>
-                        </View>
-                        <Button onPress={this.goRemindSetting} style={styles.btnSet} textStyle={styles.btnSetText}>{'点击设置'}</Button>
-                    </View>
-                    <View style={styles.divisionLine}/>
-                    {
-                        obj.imageList.map((item, i) => {
-                            return (
-                                <View key={i} style={styles.remindItem}>
-                                    <DImage
-                                        resizeMode='stretch'
-                                        source={app.img.home_remind_check}
-                                        style={styles.checkImage} />
-                                    <Text style={styles.remindItemTitle}>{'每天08:30提醒一次'}</Text>
-                                </View>
-                            );
-                        })
-                    }
-                    <View style={styles.divisionLine}/>
-                </View>
                 {
-                    obj.imageList.length&&
+                    !!obj.remindList&&
+                    <View style={styles.remindContainer}>
+                        <View style={styles.divisionLine}/>
+                        <View style={styles.remindTitleView}>
+                            <View style={styles.remindTitleLeftView}>
+                                <DImage
+                                    resizeMode='stretch'
+                                    source={app.img.home_clock}
+                                    style={styles.clockImage} />
+                                <Text style={styles.remindTitle}>{'任务提醒'}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.divisionLine}/>
+                        {
+                            obj.remindList.map((item, i) => {
+                                return (
+                                    <View key={i} style={styles.remindItem}>
+                                        <DImage
+                                            resizeMode='stretch'
+                                            source={app.img.home_remind_check}
+                                            style={styles.checkImage} />
+                                        <Text style={styles.remindItemTitle}>{remindData[item]}</Text>
+                                    </View>
+                                );
+                            })
+                        }
+                        <View style={styles.divisionLine}/>
+                    </View>
+                }
+                {
+                    !!obj.imageList&&
                     <View style={styles.imageUpLoadContainer}>
                         <View style={styles.remindTitleLeftView}>
                             <DImage
@@ -199,7 +277,7 @@ module.exports = React.createClass({
                     </View>
                 }
                 {
-                    obj.audioList.length&&
+                    !!obj.audioList&&
                     <View style={styles.voiceUpside}>
                         <View style={styles.remindTitleLeftView}>
                             <DImage
@@ -216,8 +294,9 @@ module.exports = React.createClass({
                                             <TouchableOpacity
                                                 activeOpacity={0.6}
                                                 delayLongPress={1500}
+                                                onPress={this.playVoice.bind(null, item.url, i)}
                                                 style={styles.audioPlay}>
-                                                <Image source={app.img.home_voice_say_play} style={styles.imageVoice} />
+                                                <Image source={this.state.isPlaying[i]?app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imageVoice} />
                                                 <Text style={styles.textTime} >{item.duration + "''"}</Text>
                                             </TouchableOpacity>
                                         </View>

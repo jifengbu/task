@@ -8,8 +8,10 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.remobile.RCTRemobilePackage;
+import com.remobile.audio.RCTAudioPackage;
 import com.remobile.camera.RCTCameraPackage;
 import com.remobile.filetransfer.RCTFileTransferPackage;
+import com.remobile.imagePicker.RCTImagePickerPackage;
 import com.remobile.sqlite.RCTSqlitePackage;
 import com.remobile.splashscreen.RCTSplashScreenPackage;
 import com.remobile.toast.RCTToastPackage;
@@ -53,7 +55,9 @@ public class MainApplication extends Application implements ReactApplication {
                 new RCTSqlitePackage(),
                 //VendorLibraries
                 new RNFSPackage(),
-                new PickerViewPackage()
+                new PickerViewPackage(),
+                new RCTImagePickerPackage(),
+                new RCTAudioPackage()
             );
         }
     };

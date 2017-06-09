@@ -17,9 +17,8 @@ const ForgetPassword = require('./ForgetPassword.js');
 const Register = require('./Register.js');
 const Home = require('../home/index.js');
 const LocalDataMgr = require('../../manager/LocalDataMgr.js');
-const SupervisionClientMgr = require('../../manager/SupervisionClientMgr.js');
-const ExecutorClientMgr = require('../../manager/ExecutorClientMgr.js');
 import { DeviceEventEmitter } from 'react-native';
+const PersonalInfoMgr = require('../../manager/PersonalInfoMgr.js');
 
 const { Button } = COMPONENTS;
 
@@ -163,7 +162,7 @@ module.exports = React.createClass({
                 break;
         }
     },
-    doLogin () {
+    doLogin() {
         const { phone, password } = this.state;
         if (!app.utils.checkPhone(phone)) {
             Toast('手机号码不是有效的手机号码');
@@ -177,25 +176,57 @@ module.exports = React.createClass({
             phone,
             password,
         };
-        app.showProgressHud();
-        POST(app.route.ROUTE_LOGIN, param, this.doLoginSuccess, this.doLoginError);
+
+        // if (app.socketconnect) {
+        //     app.socket.emit('CHECK_USER_LOGINED_RQ', param);
+        // } else {
+        //     Toast('网络不好，稍后再试');
+        // }
+        app.socket.login(param,(obj)=>{
+            if (obj.success) {
+                PersonalInfoMgr.setNeedLogin(false);
+                app.personal.info.phone = this.state.phone;
+                app.personal.info.userId = obj.userId;
+                app.login.savePhone(this.state.phone);
+                this.getPersonalInfo();
+            } else {
+                Toast(obj.msg);
+            }
+        });
     },
-    doLoginSuccess (data) {
-        if (data.success) {
-            app.personal.info.phone = this.state.phone;
-            app.personal.info.userId = data.context.userId;
-            app.socket.register(data.context.userId);
-            app.login.savePhone(this.state.phone);
-            this.getPersonalInfo();
-        } else {
-            Toast('获取用户信息失败');
-            app.dismissProgressHud();
-        }
-    },
-    doLoginError (error) {
-        LocalDataMgr.setValueAndKey('notNeedLogin', 0);
-        app.dismissProgressHud();
-    },
+    // doLoginMessage () {
+    //     const { phone, password } = this.state;
+    //     if (!app.utils.checkPhone(phone)) {
+    //         Toast('手机号码不是有效的手机号码');
+    //         return;
+    //     }
+    //     if (!app.utils.checkPassword(password)) {
+    //         Toast('密码必须有6-20位的数字，字母，下划线组成');
+    //         return;
+    //     }
+    //     const param = {
+    //         phone,
+    //         password,
+    //     };
+    //     app.showProgressHud();
+    //     POST(app.route.ROUTE_LOGIN, param, this.doLoginSuccess, this.doLoginError);
+    // },
+    // doLoginSuccess (data) {
+    //     if (data.success) {
+    //         app.personal.info.phone = this.state.phone;
+    //         app.personal.info.userId = data.context.userId;
+    //         // app.socket.register(data.context.userId);
+    //         app.login.savePhone(this.state.phone);
+    //         this.getPersonalInfo();
+    //     } else {
+    //         Toast('获取用户信息失败');
+    //         app.dismissProgressHud();
+    //     }
+    // },
+    // doLoginError (error) {
+    //     LocalDataMgr.setValueAndKey('notNeedLogin', 0);
+    //     app.dismissProgressHud();
+    // },
     getPersonalInfo () {
         const param = {
             userId: app.personal.info.userId,
@@ -210,6 +241,7 @@ module.exports = React.createClass({
             app.personal.set(context);
             this.getSupervisionClientList();
             this.getExecutorClientList();
+            this.getTaskTypeList();
             app.navigator.replace({
                 component: Home,
             });
@@ -240,10 +272,24 @@ module.exports = React.createClass({
             const context = data.context;
             if (context) {
                 if (type==='supervision') {
-                    SupervisionClientMgr.setList(data.context.clientList);
+                    app.supervisionClient.setList(data.context.clientList);
                 } else if (type==='executor') {
-                    ExecutorClientMgr.setList(data.context.clientList);
+                    app.executorClient.setList(data.context.clientList);
                 }
+            }
+        }
+    },
+    getTaskTypeList() {
+        const param = {
+            userId: app.personal.info.userId,
+        };
+        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getTaskTypeListSuccess);
+    },
+    getTaskTypeListSuccess(data) {
+        if (data.success) {
+            const context = data.context;
+            if (context) {
+                app.taskType.setList(data.context.taskTypeList);
             }
         }
     },

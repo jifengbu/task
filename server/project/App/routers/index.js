@@ -107,8 +107,8 @@ function registerSocketRouter (server, root, sockets) {
         }
     };
     io.on('connection', (socket) => {
-        socket.userId = socket.handshake.query.userId;
-        console.log('connection', socket.userId);
+        // socket.userId = socket.handshake.query.userId;
+        console.log('connection');
         socket.on('disconnect', () => {
             console.log('socket disconnect');
         });

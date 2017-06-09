@@ -35,9 +35,13 @@ const NetMgr = require('./manager/NetMgr.js');
 const UpdateMgr = require('./manager/UpdateMgr.js');
 const SettingMgr = require('./manager/SettingMgr.js');
 const LoginMgr = require('./manager/LoginMgr.js');
+const AudioFileMgr = require('./manager/AudioFileMgr.js');
 const WebsocketMgr = require('./manager/WebsocketMgr.js');
 const SocketMgr = require('./manager/SocketMgr.js');
 const CustomRemindTimeMgr = require('./manager/CustomRemindTimeMgr.js');
+const SupervisionClientMgr = require('./manager/SupervisionClientMgr.js');
+const ExecutorClientMgr = require('./manager/ExecutorClientMgr.js');
+const TaskTypeMgr = require('./manager/TaskTypeMgr.js');
 const { ProgressHud, DelayTouchableOpacity, Modal, Notifications } = COMPONENTS;
 
 global.app = {
@@ -52,6 +56,10 @@ global.app = {
     login: LoginMgr,
     socket: SocketMgr,
     customTime: CustomRemindTimeMgr,
+    supervisionClient: SupervisionClientMgr,
+    executorClient: ExecutorClientMgr,
+    taskType: TaskTypeMgr,
+    audioFileMgr:AudioFileMgr,
     isandroid: Platform.OS === 'android',
 };
 
@@ -216,6 +224,7 @@ module.exports = React.createClass({
                 'accessibilityExtraExtraExtraLarge': 1,
             });
         }
+        app.audioFileMgr.checkRootDir();
         app.root = this;
         app.showProgressHud = this.showProgressHud;
         app.dismissProgressHud = this.dismissProgressHud;
@@ -239,14 +248,13 @@ module.exports = React.createClass({
                 modalShow: false,
             });
         };
-
         app.showNotifications = (options = {}) => {
-            console.log('=============', options);
-            const { taskDetail, component } = options;
+            const { taskDetail, component, type} = options;
             this.setState({
                 notificationsShow: true,
                 taskDetail: taskDetail,
                 component: component,
+                type: type,
             });
         };
         app.closeNotifications = () => {
@@ -257,7 +265,6 @@ module.exports = React.createClass({
                 notificationsShow: false,
             });
         };
-
         app.update = () => {
             this.setState({});
         };
@@ -319,7 +326,7 @@ module.exports = React.createClass({
         }
     },
     componentDidMount: function () {
-        //app.net.register();
+        app.socket.register();
     },
     configureScene (route) {
         return app.configureScene(route);
@@ -402,7 +409,7 @@ module.exports = React.createClass({
                 }
                 {
                     this.state.notificationsShow &&
-                    <Notifications ref='notifications' taskDetail={this.state.taskDetail} component={this.state.component}/>
+                    <Notifications ref='notifications' taskDetail={this.state.taskDetail} component={this.state.component} type={this.state.type}/>
                 }
                 <ProgressHud
                     isVisible={this.state.is_hud_visible}

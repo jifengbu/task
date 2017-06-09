@@ -18,7 +18,7 @@ module.exports = React.createClass({
         let height = sr.rs(95);
         if (!!data) {
             for (var i = 0; i < data.length; i++) {
-                let num = (data[i].unfinish*1+data[i].finish*1) ==0?0:Math.round(data[i].unfinish*100/(data[i].unfinish*1+data[i].finish*1));
+                let num = (data[i].unfinish*1+data[i].finish*1) ==0?0:Math.round(data[i].finish*100/(data[i].unfinish*1+data[i].finish*1));
                 xData.push(data[i].name);
                 yData.push(num);
             }

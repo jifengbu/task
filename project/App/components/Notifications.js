@@ -55,11 +55,13 @@ module.exports = React.createClass({
         }
         ).start(() => {
             //push到特定的页面
-            const {taskDetail, component} = this.props;
-            app.navigator.push({
-                component: component,
-                passProps: {data: taskDetail}
-            });
+            const {taskDetail, component, type} = this.props;
+            if (type == 1) {
+                app.navigator.push({
+                    component: component,
+                    passProps: {data: taskDetail}
+                });
+            }
             app.removeNotifications();
         });
     },

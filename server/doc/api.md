@@ -326,6 +326,9 @@ uploadErrorCallback () {
 ```js
 {
     "success": true,
+    "context": {
+       "taskId": "59362535eae76f2c964bf8fc"
+    }
 }
 ```
 
@@ -361,6 +364,12 @@ uploadErrorCallback () {
 ```js
 {
     "success": true,
+    "context": {
+        "groupId": "5936254feae76f2c964bf905",
+        "taskIdList": [
+          "5936254feae76f2c964bf906"
+        ]
+  }
 }
 ```
 

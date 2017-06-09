@@ -36,7 +36,7 @@ module.exports = React.createClass({
     getGroupTaskDetail () {
         const param = {
             userId: app.personal.info.userId,
-            taskId: this.props.taskId,
+            taskId: this.props.data.id,
         };
         POST(app.route.ROUTE_GET_GROUP_TASK_DETAIL, param, this.getGroupTaskDetailSuccess);
     },

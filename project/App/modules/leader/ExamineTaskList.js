@@ -31,37 +31,10 @@ module.exports = React.createClass({
             infiniteLoadStatus: STATUS_TEXT_HIDE,
         };
     },
-    registerEvents (name) {
-        this.addListenerOn(app.socket, name, (param) => {
-            this[name](param);
-        });
-    },
-    componentWillMount () {
-        // this.registerEvents('NEW_PUBLISH_TASK_EVENT');
-        // this.registerEvents('NEW_TASK_PUBLISH_EVENT');
-        // this.registerEvents('TASK_LIST_UPDATE_EVENT');
-    },
-    NEW_PUBLISH_TASK_EVENT (task) {
-        // this.list.unshift(task);
-        // this.setState({dataSource: this.ds.cloneWithRows(this.list)});
-        // app.addTaskBadge(1);
-        // //更新badge
-        // Toast('有新的任务申请，请尽快审核');
-    },
-    // NEW_TASK_PUBLISH_EVENT (task) {
-    //     this.taskList.unshift(task);
-    //     this.setState({dataSource: this.ds.cloneWithRows(this.taskList)});
-    //     app.addTaskBadge(1);
-    // },
-    // TASK_LIST_UPDATE_EVENT (taskList) {
-    //     this.taskList = taskList;
-    //     this.setState({dataSource: this.ds.cloneWithRows(taskList)});
-    //     app.setTaskBadge(_.sum(_.map(this.taskList, (o)=>_.includes(o.readed, app.personal.info.phone)?0:1)));
-    // },
-    onPress(taskId) {
+    onPress(data) {
         app.navigator.push({
             component: ExamineTask,
-            passProps: {taskId}
+            passProps: {data}
         });
     },
     componentDidMount () {
@@ -112,7 +85,7 @@ module.exports = React.createClass({
     },
     renderRow (obj, sectionID, rowID) {
         return (
-            <TouchableOpacity onPress={this.onPress.bind(null, obj.id)} style={styles.rowItem}>
+            <TouchableOpacity onPress={this.onPress.bind(null, obj)} style={styles.rowItem}>
                 <View style={styles.rightStyle}>
                     <Image
                         resizeMode='stretch'

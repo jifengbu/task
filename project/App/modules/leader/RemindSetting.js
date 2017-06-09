@@ -18,15 +18,15 @@ const RemindItemView = require('./RemindItemView.js');
 
 const { Picker, Button, DImage } = COMPONENTS;
 
-let defaultRemindList = [
-    {'key': '1', 'content':'每天提醒1次（早上8:00）', 'isOver': 0},
-    {'key': '2', 'content':'每天提醒2次（早上8：00，下午13:00）', 'isOver': 0},
-    {'key': '3', 'content':'任务结束的最后10天提醒（每天提醒一次 早上9:00）', 'isOver': 0},
-    {'key': '4', 'content':'任务结束的最后5天提醒（每天提醒一次 早上9:00）', 'isOver': 0},
-    {'key': '5', 'content':'任务结束的最后3天提醒（每天提醒一次 早上9:00）', 'isOver': 0},
-    {'key': '6', 'content':'任务结束的最后1天提醒（每天提醒2次早上8：00，下午13:00）', 'isOver': 0},
-    {'key': '7', 'content':'任务执行的中间时期  提醒2天（早上8：00，下午13:00)', 'isOver': 0}
-]
+const defaultRemindList = [
+    {'key': 1, 'content':'每天提醒1次（早上8:00）', 'isOver': 0},
+    {'key': 2, 'content':'每天提醒2次（早上8：00，下午13:00）', 'isOver': 0},
+    {'key': 3, 'content':'任务结束的最后10天提醒（每天提醒一次 早上9:00）', 'isOver': 0},
+    {'key': 4, 'content':'任务结束的最后5天提醒（每天提醒一次 早上9:00）', 'isOver': 0},
+    {'key': 5, 'content':'任务结束的最后3天提醒（每天提醒一次 早上9:00）', 'isOver': 0},
+    {'key': 6, 'content':'任务结束的最后1天提醒（每天提醒2次早上8：00，下午13:00）', 'isOver': 0},
+    {'key': 7, 'content':'任务执行的中间时期  提醒2天（早上8：00，下午13:00)', 'isOver': 0}
+];
 
 module.exports = React.createClass({
     statics: {
@@ -37,46 +37,25 @@ module.exports = React.createClass({
     getInitialState () {
         this.remindList = [];
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-        for (let x = 0; x < defaultRemindList.length; x++) {
-            for (let y = 0; y < this.props.remindList.length; y++) {
-                if (parseInt(defaultRemindList[x].key) == this.props.remindList[y]) {
-                    defaultRemindList[x].isOver = 1;
-                }
-            }
-        }
         return {
             customRemindList: [],
-            customRemindIsOver: false,
+            customRemindIsOver: this.props.customRemind,
             startTime: moment(),
-            defaultRemindList: defaultRemindList,
+            selects: this.props.selects||[],
         };
     },
     updateRemind () {
         Picker.hide();
-        let {customRemindIsOver, startTime, defaultRemindList} = this.state;
-        _.forEach(defaultRemindList, (item) => {
-            if (item.isOver) {
-                this.remindList.push(item.key);
-            }
-        });
+        let {customRemindIsOver, startTime, selects} = this.state;
         const params = {
-            remindList: this.remindList,
+            remindList: selects,
             customRemind: customRemindIsOver?moment(startTime).format('YYYY-MM-DD HH:mm'):'',
         }
         this.props.doRefresh(params);
         app.navigator.pop();
     },
-    doActuallyComplete (currentID) {
-        let {defaultRemindList} = this.state;
-        const remindInfo = _.find(this.state.defaultRemindList, (item) => item.key == currentID);
-        if (remindInfo) {
-            if (remindInfo.isOver) {
-                remindInfo.isOver = 0;
-            } else {
-                remindInfo.isOver = 1;
-            }
-        }
-        this.setState({defaultRemindList: defaultRemindList});
+    doActuallyComplete (key) {
+        this.setState({selects: [...this.state.selects, key]});
     },
     renderSeparator (sectionID, rowID) {
         return (
@@ -88,6 +67,7 @@ module.exports = React.createClass({
             <RemindItemView
                 data={obj}
                 rowHeight={10}
+                selected={_.includes(this.state.selects, obj.key)}
                 doComplete={this.doActuallyComplete.bind(null, obj.key)}
                 />
         );
@@ -166,7 +146,7 @@ module.exports = React.createClass({
                 <ListView
                     style={styles.list}
                     enableEmptySections
-                    dataSource={this.ds.cloneWithRows(this.state.defaultRemindList)}
+                    dataSource={this.ds.cloneWithRows(defaultRemindList)}
                     renderRow={this.renderRowDayCommplete}
                     renderSeparator={this.renderSeparator}
                     />

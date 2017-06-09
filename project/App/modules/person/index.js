@@ -12,6 +12,7 @@ const {
 
 const Settings = require('./Settings');
 const EditPersonInfo = require('./EditPersonInfo.js');
+const PersonalInfoMgr = require('../../manager/PersonalInfoMgr.js');
 
 const { Button } = COMPONENTS;
 
@@ -20,9 +21,18 @@ module.exports = React.createClass({
         title: '个人中心',
     },
     doLogout () {
-        app.navigator.resetTo({
-            component: require('../login/Login.js'),
-        }, 0);
+        app.socket.logout({userId:app.personal.info.userId},(obj)=>{
+            if (obj.success) {
+                PersonalInfoMgr.setNeedLogin(true);
+                app.navigator.resetTo({
+                    component: require('../login/Login.js'),
+                }, 0);
+            } else {
+                console.log(obj.msg);
+                Toast('退出登录失败');
+            }
+        });
+
     },
     doEditPersonInfo () {
         app.navigator.push({
@@ -38,7 +48,7 @@ module.exports = React.createClass({
                         <Image
                             resizeMode='stretch'
                             defaultSource={app.img.personal_head}
-                            source={app.img.personal_head}
+                            source={{uri:app.personal.info.head}}
                             style={styles.headStyle}
                             />
                     </TouchableOpacity>

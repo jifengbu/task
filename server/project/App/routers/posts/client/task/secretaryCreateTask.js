@@ -36,5 +36,8 @@ export default async ({
     await doc.save();
     io.emitTo(examinerId, 'NEW_PUBLISH_TASK_NF', doc);
 
-    return { success: true };
+    return { success: true ,context: {
+        groupId: doc.id,
+        taskIdList:taskIdList,
+    }};
 };

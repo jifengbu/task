@@ -152,6 +152,8 @@ dependencies {
     //VendorLibraries
     compile project(':react-native-picker')
     compile project(':react-native-fs')
+    compile project(':react-native-image-picker')
+    compile project(':react-native-audio')
 }
 
 // Run this once to be able to run the application with BUCK
