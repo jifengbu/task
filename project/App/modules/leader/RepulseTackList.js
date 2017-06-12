@@ -19,7 +19,7 @@ module.exports = React.createClass({
         title: '任务列表',
     },
     getInitialState () {
-        this.pageNo = 1;
+        this.pageNo = 0;
         this.taskList = [];
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
@@ -30,9 +30,10 @@ module.exports = React.createClass({
         this.getTaskListByType();
     },
     getTaskListByType() {
+        const { authority, userId } = app.personal.info;
         const param = {
-            userId: app.personal.info.userId,
-            role: 'leader',
+            userId,
+            role: authority===2 ? 'leader' : authority===4 ? 'secretary' : undefined,
             pageNo: this.pageNo,
             pageSize: 10,
         };

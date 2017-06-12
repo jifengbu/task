@@ -45,7 +45,8 @@ module.exports = React.createClass({
                     style={styles.bannerImage} >
                     <DImage
                         resizeMode='cover'
-                        source={app.img.common_head}
+                        defaultSource={app.img.personal_head}
+                        source={{uri:app.personal.info.head}}
                         style={styles.headerImage}/>
                     <View style={styles.infoView}>
                         <Text style={styles.phoneText}>{phone}</Text>

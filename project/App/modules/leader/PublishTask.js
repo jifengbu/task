@@ -74,13 +74,11 @@ module.exports = React.createClass({
     changeTab (tabIndex) {
         this.setState({ tabIndex });
     },
-    showLongPressMessageBox (filepath, index) {
-        this.clickVoiceFilePath = filepath;
+    showLongPressMessageBox (index) {
         this.clickVoiceIndex = index;
         this.setState({ overlayShowLongPressMessageBox: true });
     },
-    showImageLongPressMessageBox (netPah, index) {
-        this.clickImageNetPath = netPah;
+    showImageLongPressMessageBox (index) {
         this.tempImageIndex = index;
         this.setState({ overlayShowImageLongPressMessageBox: true });
     },
@@ -501,7 +499,7 @@ module.exports = React.createClass({
                                                 activeOpacity={0.6}
                                                 onPress={this.playVoice.bind(null, item.voiceFilePath, i)}
                                                 delayLongPress={1500}
-                                                onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
+                                                onLongPress={this.showLongPressMessageBox.bind(null, i)}
                                                 style={styles.audioPlay}>
                                                 <Image source={voiceFileData[i].voiceIsPlaly ? app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imagevoice} />
                                                 <Text style={styles.textTime} >{item.voiceTime + "''"}</Text>
@@ -670,7 +668,7 @@ module.exports = React.createClass({
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
                                                 onPress={this.showBigImage.bind(null, this.state.imgFileData, i)}
-                                                onLongPress={this.showImageLongPressMessageBox.bind(null, item, i)}
+                                                onLongPress={this.showImageLongPressMessageBox.bind(null, i)}
                                                 style={styles.bigImageTouch}>
                                                 <Image
                                                     key={i}

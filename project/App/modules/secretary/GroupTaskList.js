@@ -420,7 +420,7 @@ module.exports = React.createClass({
         );
     },
     render () {
-        const {startTime, endTime, dataSource, taskList} = this.state;
+        const {startTime, endTime, dataSource, taskList, title, content} = this.state;
         return (
             <View style={this.props.style}>
                 <ScrollView style={styles.pageContainer}>
@@ -432,6 +432,7 @@ module.exports = React.createClass({
                             placeholder={'点击输入任务主题'}
                             textStyle={styles.inputText}
                             placeholderTextColor={'#A7A7A7'}
+                            value={title}
                             onChangeText={(text) => this.setState({title: text})}
                             />
                         <TextInput
@@ -441,6 +442,7 @@ module.exports = React.createClass({
                             placeholder={'点击输入任务描述'}
                             textStyle={styles.inputText}
                             placeholderTextColor={'#A7A7A7'}
+                            value={content}
                             onChangeText={(text) => this.setState({content: text})}
                             />
                     </View>

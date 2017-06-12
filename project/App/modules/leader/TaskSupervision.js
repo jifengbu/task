@@ -21,7 +21,7 @@ const ModifyTask = require('./ModifyTask.js');
 module.exports = React.createClass({
     statics: {
         title: '任务详情',
-        index: 0,
+        selectedTag: 0,
         leftButton: {  handler: ()=>{app.scene.goBack()}},
     },
     goBack() {
@@ -75,11 +75,11 @@ module.exports = React.createClass({
             Toast('获取数据错误，请稍后重试！');
         }
     },
-    changeTab (index) {
-        this.setState({ index });
+    changeTab (tag) {
+        this.setState({ selectedTag: tag });
         const {userId} = app.personal.info;
         const {id} = this.props.data;
-        switch (index) {
+        switch (tag) {
             case 0: {
                 app.showModal(
                     <InputBoxUpdate
@@ -119,32 +119,57 @@ module.exports = React.createClass({
                 break;
             }
             case 3: {
-                const param = {
-                    userId,
-                    taskId: id,
-                };
-                if (app.personal.info.authority === 2) {
-                    POST(app.route.ROUTE_AGREE_FINISH_TASK, param, this.doSuccess.bind(null, 3));
-                } else {
-                    POST(app.route.ROUTE_APPLY_FINISH_TASK, param, this.doSuccess.bind(null, 3));
-                }
+                app.showModal(
+                    <MessageBox
+                        content={`你确定同意结束该任务吗？`}
+                        doConfirm={()=>{
+                            const param = {
+                                userId,
+                                taskId: id,
+                            };
+                            POST(app.route.ROUTE_AGREE_FINISH_TASK, param, this.doSuccess.bind(null, 3));
+                        }}
+                        />
+                );
                 break;
             }
             case 4: {
-                const param = {
-                    userId,
-                    taskId: id,
-                };
-                POST(app.route.ROUTE_REJECT_FINISH_TASK, param, this.doSuccess.bind(null, 4));
+                app.showModal(
+                    <MessageBox
+                        content={`你确定驳回结束该任务吗？`}
+                        doConfirm={()=>{
+                            const param = {
+                                userId,
+                                taskId: id,
+                            };
+                            POST(app.route.ROUTE_REJECT_FINISH_TASK, param, this.doSuccess.bind(null, 4));
+                        }}
+                        />
+                );
+                break;
+            }
+            case 5: {
+                app.showModal(
+                    <MessageBox
+                        content={`你确定申请结束该任务吗？`}
+                        doConfirm={()=>{
+                            const param = {
+                                userId,
+                                taskId: id,
+                            };
+                            POST(app.route.ROUTE_APPLY_FINISH_TASK, param, this.doSuccess.bind(null, 4));
+                        }}
+                        />
+                );
                 break;
             }
             default:
         }
     },
-    doSuccess (index, data) {
+    doSuccess (tag, data) {
         if (data.success) {
-            switch (index) {
-                case 0:
+            switch (tag) {
+                case 0: {
                     const param = {
                         createTime: moment().format('YYYY-MM-DD HH:mm'),
                         content: this.content,
@@ -156,41 +181,43 @@ module.exports = React.createClass({
                     this.setState({ProgressList});
                     Toast('任务更新成功');
                     break;
-                case 1:
+                }
+                case 1: {
+                    const param = {
+                        createTime: moment().format('YYYY-MM-DD HH:mm'),
+                        content: '提醒一次任务',
+                        userName: app.personal.info.name,
+                        id: this.props.taskId
+                    };
+                    let {ProgressList} = this.state;
+                    ProgressList.push(param);
+                    this.setState({ProgressList});
                     Toast('该任务提醒成功');
                     break;
-                case 2:
-                    break;
+                }
                 case 3:
-                    if (app.personal.info.authority === 2) {
-                        Toast('同意该任务结束');
-                    } else {
-                        Toast('申请任务发送成功');
-                    }
-                    break;
                 case 4:
-                    Toast('驳回该任务结束');
-                    break;
-                default:
-
+                case 5:
+                    Toast('操作成功');
+                default:;
             }
         } else {
             Toast(data.msg);
         }
     },
     render () {
-        const { index, taskDetail, ProgressList } = this.state;
-        const { title, expectFinishTime, executor={} } = taskDetail || {};
-        const menuAdminArray = ['任务更新', '任务提醒', '任务变更'];
-        const {state} = this.props.data;
+        const { selectedTag, taskDetail, ProgressList } = this.state;
+        const userId = app.personal.info.userId;
+        const { state, title, expectFinishTime, examinerId, publisherId, executor={}, supervisor={} } = taskDetail || {};
         // 1：待审批，2：驳回审批，4：通过审批，8：待执行， 16：进行中，32：待完成审核，64：驳回完成审核，128：完成
-        if (state == 32) {
-            menuAdminArray.push('确认结束');
-            menuAdminArray.push('驳回结束');
-        }
-        if (app.personal.info.userId === executor.id) {
-            menuAdminArray.push('申请结束');
-        }
+        const menuAdminArray = [
+            {title: '任务更新', tag: 0, visible: true},
+            {title: '任务提醒', tag: 1, visible: state >= 16 && state < 128 && supervisor.id===userId},
+            {title: '任务变更', tag: 2, visible: publisherId===userId||examinerId === userId},
+            {title: '同意结束', tag: 3, visible: state == 32 && examinerId === userId},
+            {title: '驳回结束', tag: 4, visible: state == 32 && examinerId === userId},
+            {title: '申请结束', tag: 5, visible: state == 16 && userId===executor.id}
+        ];
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollContainer}>
@@ -218,14 +245,15 @@ module.exports = React.createClass({
                     {
                         menuAdminArray.map((item, i) => {
                             return (
+                                item.visible &&
                                 <TouchableOpacity
                                     key={i}
                                     underlayColor='rgba(0, 0, 0, 0)'
-                                    onPress={this.changeTab.bind(null, i)}
+                                    onPress={this.changeTab.bind(null, item.tag)}
                                     style={styles.touchTab}>
-                                    <View style={[styles.tabButton, {backgroundColor: index === i ? '#ea372f' : '#dcdcdc'}]}>
-                                        <Text style={[styles.tabText, { color: index === i ? '#FFFFFF' : '#000000', fontSize: 12 }]} >
-                                            {item}
+                                    <View style={[styles.tabButton, {backgroundColor: selectedTag === item.tag ? '#ea372f' : '#dcdcdc'}]}>
+                                        <Text style={[styles.tabText, { color: selectedTag === item.tag ? '#FFFFFF' : '#000000', fontSize: 12 }]} >
+                                            {item.title}
                                         </Text>
                                     </View>
                                 </TouchableOpacity>

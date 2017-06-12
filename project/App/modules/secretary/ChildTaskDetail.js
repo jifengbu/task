@@ -23,6 +23,7 @@ const RemindSetting = require('../leader/RemindSetting.js');
 const ShowBigImage = require('../leader/ShowBigImage.js');
 const VoiceLongPressMessageBox = require('../leader/VoiceLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('../leader/RecordVoiceMessageBox.js');
+const ImageLongPressMessageBox = require('../leader/ImageLongPressMessageBox.js');
 
 const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
@@ -37,9 +38,6 @@ module.exports = React.createClass({
             voiceTime:0,
             voiceIsPlaly: false,
         };
-        this.tempSupervisorClientList = [];
-        this.tempExecutorClientList = [];
-        this.tempTypeList = [];
         this.uploadOn=false;
         this.imgFileInfo = {
             imgFileUrl:'',
@@ -56,27 +54,24 @@ module.exports = React.createClass({
             remindList: [],
             customRemind: '',
             overlayShowLongPressMessageBox: false,
+            overlayShowImageLongPressMessageBox:false,
             overlayShowMessageBox: false,
             voiceFileData:[],
             imgFileData:[],
         };
     },
-    componentDidMount() {
-        this.supervisorClientList = app.supervisionClient.getList()||[];
-        this.executorClientList = app.executorClient.getList()||[];
-        this.typeList = app.taskType.getList()||[];
-        _.forEach(this.supervisorClientList, (item) => {
-            this.tempSupervisorClientList.push(item.name);
-        });
-        _.forEach(this.executorClientList, (item) => {
-            this.tempExecutorClientList.push(item.name);
-        });
-        _.forEach(this.typeList, (item) => {
-            this.tempTypeList.push(item.name);
-        });
-    },
-    showLongPressMessageBox (filepath, index) {
+    showLongPressMessageBox (index) {
+        this.clickVoiceIndex = index;
         this.setState({ overlayShowLongPressMessageBox: true });
+    },
+    showImageLongPressMessageBox (index) {
+        this.tempImageIndex = index;
+        this.setState({ overlayShowImageLongPressMessageBox: true });
+    },
+    doDeleteImage () {
+        const { imgFileData } = this.state;
+        _.remove(imgFileData, (item) => imgFileData[this.tempImageIndex].imgFilePath == item.imgFilePath);
+        this.setState({ imgFileData, overlayShowImageLongPressMessageBox: false });
     },
     showMessageBox () {
         this.setState({ overlayShowMessageBox: true });
@@ -148,16 +143,31 @@ module.exports = React.createClass({
         return moment(date).format('HH时mm分');
     },
     showSelectSuperVisor() {
+        this.tempSupervisorClientList = [];
+        this.supervisorClientList = app.supervisionClient.getList()||[];
+        _.forEach(this.supervisorClientList, (item) => {
+            this.tempSupervisorClientList.push(item.name);
+        });
         Picker(this.tempSupervisorClientList, [this.tempSupervisorClientList[0]], '').then((value)=>{
             this.setState({supervisor: value[0]});
         });
     },
     showSelectExecutor() {
+        this.tempExecutorClientList = [];
+        this.executorClientList = app.executorClient.getList()||[];
+        _.forEach(this.executorClientList, (item) => {
+            this.tempExecutorClientList.push(item.name);
+        });
         Picker(this.tempExecutorClientList, [this.tempExecutorClientList[0]], '').then((value)=>{
             this.setState({executor: value[0]});
         });
     },
     showSelectType() {
+        this.tempTypeList = [];
+        this.typeList = app.taskType.getList()||[];
+        _.forEach(this.typeList, (item) => {
+            this.tempTypeList.push(item.name);
+        });
         Picker(this.tempTypeList, [this.tempTypeList[0]], '').then((value)=>{
             this.setState({taskType: value[0]});
         });
@@ -237,13 +247,13 @@ module.exports = React.createClass({
         };
         Toast('上传失败');
     },
-    doDeleteVoice (index) {
-        this.setState({ overlayShowLongPressMessageBox: false });
+    doDeleteVoice () {
         AudioRecorder.playStop();
-        fs.unlink(his.state.voiceFileData[index].voiceFilePath);
-        _.remove(this.state.voiceFileData, (item) => this.state.voiceFileData[index].voiceFileUrl
+        let {voiceFileData} = this.state;
+        fs.unlink(voiceFileData[this.clickVoiceIndex].voiceFilePath);
+        _.remove(voiceFileData, (item) => voiceFileData[this.clickVoiceIndex].voiceFileUrl
                 == item.voiceFileUrl);
-
+        this.setState({voiceFileData, overlayShowLongPressMessageBox: false});
     },
     recordVoice () {
         if (this.uploadOn == true) {
@@ -458,7 +468,7 @@ module.exports = React.createClass({
                                                 activeOpacity={0.6}
                                                 onPress={this.playVoice.bind(null, item.voiceFilePath, i)}
                                                 delayLongPress={1500}
-                                                onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
+                                                onLongPress={this.showLongPressMessageBox.bind(null, i)}
                                                 style={styles.audioPlay}>
                                                 <Image source={voiceFileData[i].voiceIsPlaly ? app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imagevoice} />
                                                 <Text style={styles.textTime} >{item.voiceTime + "''"}</Text>
@@ -627,7 +637,7 @@ module.exports = React.createClass({
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
                                                 onPress={this.showBigImage.bind(null, this.state.imgFileData, i)}
-                                                onLongPress={this.showImageLongPressMessageBox}
+                                                onLongPress={this.showImageLongPressMessageBox.bind(null, i)}
                                                 style={styles.bigImageTouch}>
                                                 <Image
                                                     key={i}
@@ -648,7 +658,13 @@ module.exports = React.createClass({
                     this.state.overlayShowLongPressMessageBox &&
                     <VoiceLongPressMessageBox
                         doDelete={this.doDeleteVoice}
-                        doBack={this.doBack} />
+                        doBack={() => this.setState({overlayShowLongPressMessageBox: false})} />
+                }
+                {
+                    this.state.overlayShowImageLongPressMessageBox &&
+                    <ImageLongPressMessageBox
+                        doDelete={this.doDeleteImage}
+                        doBack={()=> this.setState({overlayShowImageLongPressMessageBox: false})} />
                 }
                 {
                     this.state.overlayShowMessageBox &&

@@ -20,6 +20,7 @@ const ImagePicker = require('@remobile/react-native-image-picker');
 const AudioRecorder = require('../../native/index.js').AudioRecorder;
 const moment = require('moment');
 const VoiceLongPressMessageBox = require('../leader/VoiceLongPressMessageBox.js');
+const ImageLongPressMessageBox = require('../leader/ImageLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('../leader/RecordVoiceMessageBox.js');
 const RemindSetting = require('../leader/RemindSetting.js');
 const ShowBigImage = require('../leader/ShowBigImage.js');
@@ -65,6 +66,7 @@ module.exports = React.createClass({
             imageList: this.props.obj.imageList,
             audioList: this.props.obj.audioList,
             overlayShowLongPressMessageBox: false,
+            overlayShowImageLongPressMessageBox:false,
             overlayShowMessageBox: false,
             isPlaying: this.isPlaying,
         };
@@ -154,10 +156,16 @@ module.exports = React.createClass({
         this.isPlayingIndex = index;
     },
     doDeleteVoice () {
-        this.setState({ overlayShowLongPressMessageBox: false });
-    },
-    doBack () {
-        this.setState({ overlayShowLongPressMessageBox: false });
+        if (this.player && this.isPlaying[this.clickVoiceIndex]) {
+            this.voiceStop();
+            this.isPlaying[this.clickVoiceIndex] = false;
+            this.setState({ isPlaying: this.isPlaying });
+        }
+        let {audioList} = this.state;
+        fs.unlink(audioList[this.clickVoiceIndex].url);
+        _.remove(audioList, (item) => audioList[this.clickVoiceIndex].url
+                == item.url);
+        this.setState({audioList, overlayShowLongPressMessageBox: false});
     },
     addPohotoImg () {
         if (this.uploadOn == true) {
@@ -302,7 +310,8 @@ module.exports = React.createClass({
                 defaultImageArray={imageArray} />
         );
     },
-    showLongPressMessageBox (filepath, index) {
+    showLongPressMessageBox (index) {
+        this.clickVoiceIndex = index;
         this.setState({ overlayShowLongPressMessageBox: true });
     },
     showMessageBox () {
@@ -401,6 +410,15 @@ module.exports = React.createClass({
     doDeleteTask(index) {
         this.props.doUpdateList(index);
     },
+    showImageLongPressMessageBox (index) {
+        this.tempImageIndex = index;
+        this.setState({ overlayShowImageLongPressMessageBox: true });
+    },
+    doDeleteImage () {
+        const { imageList } = this.state;
+        _.remove(imageList, (item) => imageList[this.tempImageIndex] == item);
+        this.setState({ imageList, overlayShowImageLongPressMessageBox: false });
+    },
     modifyTask() {
         const {title, content, startTime, endTime, supervisor, executor, remindList, taskType, customRemind, imageList, audioList} = this.state;
         let supervisorId = '';
@@ -494,7 +512,7 @@ module.exports = React.createClass({
                                                 activeOpacity={0.6}
                                                 onPress={this.playVoice.bind(null, item.url, i)}
                                                 delayLongPress={1500}
-                                                onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
+                                                onLongPress={this.showLongPressMessageBox.bind(null, i)}
                                                 style={styles.audioPlay}>
                                                 <Image source={this.state.isPlaying[i]?app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imagevoice} />
                                                 <Text style={styles.textTime} >{item.duration + "''"}</Text>
@@ -663,7 +681,7 @@ module.exports = React.createClass({
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
                                                 onPress={this.showBigImage.bind(null, imageList, i)}
-                                                onLongPress={this.showImageLongPressMessageBox}
+                                                onLongPress={this.showImageLongPressMessageBox.bind(null, i)}
                                                 style={styles.bigImageTouch}>
                                                 <Image
                                                     key={i}
@@ -684,7 +702,13 @@ module.exports = React.createClass({
                     this.state.overlayShowLongPressMessageBox &&
                     <VoiceLongPressMessageBox
                         doDelete={this.doDeleteVoice}
-                        doBack={this.doBack} />
+                        doBack={() => this.setState({overlayShowLongPressMessageBox: false})} />
+                }
+                {
+                    this.state.overlayShowImageLongPressMessageBox &&
+                    <ImageLongPressMessageBox
+                        doDelete={this.doDeleteImage}
+                        doBack={()=> this.setState({overlayShowImageLongPressMessageBox: false})} />
                 }
                 {
                     this.state.overlayShowMessageBox &&

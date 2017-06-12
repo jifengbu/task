@@ -239,7 +239,6 @@ module.exports = React.createClass({
             context['userId'] = app.personal.info.userId;
             context['phone'] = this.state.phone;
             app.personal.set(context);
-            this.getTaskTypeList();
             app.navigator.replace({
                 component: Home,
             });
@@ -250,20 +249,6 @@ module.exports = React.createClass({
     },
     getPersonalInfoError (error) {
         app.dismissProgressHud();
-    },
-    getTaskTypeList() {
-        const param = {
-            userId: app.personal.info.userId,
-        };
-        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getTaskTypeListSuccess);
-    },
-    getTaskTypeListSuccess(data) {
-        if (data.success) {
-            const context = data.context;
-            if (context) {
-                app.taskType.setList(data.context.taskTypeList);
-            }
-        }
     },
     showPassword () {
         this.setState({ showPassword: true });

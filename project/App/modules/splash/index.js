@@ -41,6 +41,20 @@ module.exports = React.createClass({
             }
         }
     },
+    getTaskTypeList() {
+        const param = {
+            userId: app.personal.info.userId,
+        };
+        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getTaskTypeListSuccess);
+    },
+    getTaskTypeListSuccess(data) {
+        if (data.success) {
+            const context = data.context;
+            if (context) {
+                app.taskType.setList(data.context.taskTypeList);
+            }
+        }
+    },
     enterLoginPage (needHideSplashScreen) {
         app.navigator.replace({
             component: Login,
@@ -63,6 +77,7 @@ module.exports = React.createClass({
         needHideSplashScreen && SplashScreen.hide();
     },
     changeToHomePage () {
+        this.getTaskTypeList();
         if (app.updateMgr.needShowSplash) {
             this.setState({ renderSplashType: 2 }, () => {
                 SplashScreen.hide();
