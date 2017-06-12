@@ -12,7 +12,7 @@ const {
     TouchableOpacity,
 } = ReactNative;
 
-const { Button, TaskStepList, DImage } = COMPONENTS;
+const { Button, TaskStepList, DImage, MessageBox} = COMPONENTS;
 const moment = require('moment');
 const SingleTaskContent = require('./SingleTaskContent.js');
 const InputBoxUpdate = require('./InputBoxUpdate.js');
@@ -97,11 +97,18 @@ module.exports = React.createClass({
                 break;
             }
             case 1: {
-                const param = {
-                    userId,
-                    taskId: id,
-                };
-                POST(app.route.ROUTE_REMIND_TASK, param, this.doSuccess.bind(null, 1));
+                app.showModal(
+                    <MessageBox
+                        content={`你确定提醒该任务吗？`}
+                        doConfirm={()=>{
+                            const param = {
+                                userId,
+                                taskId: id,
+                            };
+                            POST(app.route.ROUTE_REMIND_TASK, param, this.doSuccess.bind(null, 1));
+                        }}
+                        />
+                );
                 break;
             }
             case 2: {
@@ -173,6 +180,7 @@ module.exports = React.createClass({
     },
     render () {
         const { index, taskDetail, ProgressList } = this.state;
+        const { title, expectFinishTime, executor={} } = taskDetail || {};
         const menuAdminArray = ['任务更新', '任务提醒', '任务变更'];
         const {state} = this.props.data;
         // 1：待审批，2：驳回审批，4：通过审批，8：待执行， 16：进行中，32：待完成审核，64：驳回完成审核，128：完成
@@ -180,10 +188,9 @@ module.exports = React.createClass({
             menuAdminArray.push('确认结束');
             menuAdminArray.push('驳回结束');
         }
-        if (app.personal.info.authority != 8) {
+        if (app.personal.info.userId === executor.id) {
             menuAdminArray.push('申请结束');
         }
-        const { title, expectFinishTime } = this.state.taskDetail || {};
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollContainer}>

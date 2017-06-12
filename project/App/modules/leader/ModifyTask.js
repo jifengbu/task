@@ -53,10 +53,9 @@ module.exports = React.createClass({
             supervisor: supervisor.name||'',
             executor: executor.name||'',
             remindList: remindList,
-            netUrlImages: imageList,
-            uploadVoices: audioList,
+            imageList: imageList,
+            audioList: audioList,
             customRemind: app.customTime.getCustomTimes(id),
-            overlayShowLongPressMessageBox: false,
             overlayShowMessageBox: false,
             isPlaying: this.isPlaying,
         };
@@ -148,13 +147,6 @@ module.exports = React.createClass({
         }
         this.isPlayingIndex = index;
     },
-    doDeleteVoice () {
-        this.setState({ overlayShowLongPressMessageBox: false });
-        Toast('功能正在开发中。。。');
-    },
-    doBack () {
-        this.setState({ overlayShowLongPressMessageBox: false });
-    },
     addPohotoImg () {
         if (this.uploadOn == true) {
             Toast('正在上传中,稍候再增加');
@@ -193,9 +185,9 @@ module.exports = React.createClass({
     uploadSuccessCallback (data) {
         this.uploadOn = false;
         if (data.success) {
-            let {netUrlImages} = this.state;
-            netUrlImages.push(data.context.url);
-            this.setState({netUrlImages});
+            let {imageList} = this.state;
+            imageList.push(data.context.url);
+            this.setState({imageList});
         } else {
             Toast('上传失败');
         }
@@ -248,13 +240,13 @@ module.exports = React.createClass({
                 && this.fileInfo.voiceFilePath != ''
                 && this.fileInfo.voiceTime != 0 )
             {
-                let {uploadVoices} = this.state;
+                let {audioList} = this.state;
                 let param = {
                     url: data.context.url,
                     duration: voiceTime,
                 }
-                uploadVoices.push(param);
-                this.setState({uploadVoices});
+                audioList.push(param);
+                this.setState({audioList});
             }
             this.fileInfo = {
                 voiceFileUrl:'',
@@ -289,9 +281,6 @@ module.exports = React.createClass({
             Toast('放弃录音失败，请稍后再试');
         });
         this.setState({ overlayShowMessageBox: false });
-    },
-    showLongPressMessageBox (filepath, index) {
-        this.setState({ overlayShowLongPressMessageBox: true });
     },
     showMessageBox () {
         this.setState({ overlayShowMessageBox: true });
@@ -399,7 +388,7 @@ module.exports = React.createClass({
         this.setState({ remindList: obj.remindList, customRemind: obj.customRemind});
     },
     doCreateTask() {
-        const {title, content, startTime, endTime, supervisor, executor, taskTypeName, remindList, netUrlImages, uploadVoices} = this.state;
+        const {title, content, startTime, endTime, supervisor, executor, taskTypeName, remindList, imageList, audioList} = this.state;
         let supervisorId = '';
         let executorId = '';
         for (let item of this.supervisorClientList) {
@@ -428,8 +417,8 @@ module.exports = React.createClass({
             supervisorId,
             title,
             content,
-            audioList: uploadVoices,
-            imageList: netUrlImages,
+            audioList,
+            imageList,
             remindList,
             type: typeInfo.key,
             expectStartTime: moment(startTime).format('YYYY-MM-DD HH:mm'),
@@ -442,14 +431,14 @@ module.exports = React.createClass({
             if (!!this.state.customRemind) {
                 app.customTime.setCustomTime(this.state.customRemind,id,content,title,1);
             }
-            Toast('发布任务成功');
+            Toast('修改任务成功');
             app.navigator.pop();
         } else {
             Toast('获取数据错误，请稍后重试！');
         }
     },
     render () {
-        const {startTime, endTime, remindList, netUrlImages, uploadVoices, customRemind} = this.state;
+        const {startTime, endTime, remindList, imageList, audioList, customRemind} = this.state;
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
@@ -482,7 +471,7 @@ module.exports = React.createClass({
                         </TouchableOpacity>
                         <ScrollView horizontal style={styles.voiceContainer}>
                             {
-                                uploadVoices.map((item, i) => {
+                                audioList.map((item, i) => {
                                     return (
                                         <View key={i} style={[styles.audioContainer]}>
                                             <TouchableOpacity
@@ -490,7 +479,6 @@ module.exports = React.createClass({
                                                 activeOpacity={0.6}
                                                 onPress={this.playVoice.bind(null, item.url, i)}
                                                 delayLongPress={1500}
-                                                onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
                                                 style={styles.audioPlay}>
                                                 <Image source={this.state.isPlaying[i]?app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imageVoice} />
                                                 <Text style={styles.textTime} >{item.duration + "''"}</Text>
@@ -649,12 +637,12 @@ module.exports = React.createClass({
                             </DelayTouchableOpacity>
                             <ScrollView horizontal style={styles.imageContainer}>
                                 {
-                                    netUrlImages.map((item, i) => {
+                                    imageList.map((item, i) => {
                                         return (
                                             <TouchableHighlight
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
-                                                onPress={this.showBigImage.bind(null, netUrlImages, i)}
+                                                onPress={this.showBigImage.bind(null, imageList, i)}
                                                 onLongPress={this.showImageLongPressMessageBox}
                                                 style={styles.bigImageTouch}>
                                                 <Image
@@ -672,12 +660,6 @@ module.exports = React.createClass({
                     </View>
                     <Button onPress={this.doCreateTask} style={styles.btnSubmit} textStyle={styles.btnSubmitText}>{'确    定'}</Button>
                 </ScrollView>
-                {
-                    this.state.overlayShowLongPressMessageBox &&
-                    <VoiceLongPressMessageBox
-                        doDelete={this.doDeleteVoice}
-                        doBack={this.doBack} />
-                }
                 {
                     this.state.overlayShowMessageBox &&
                     <RecordVoiceMessageBox

@@ -17,6 +17,7 @@ const AudioRecorder = require('../../native/index.js').AudioRecorder;
 const RemindSetting = require('./RemindSetting.js');
 const VoiceLongPressMessageBox = require('./VoiceLongPressMessageBox.js');
 const RecordVoiceMessageBox = require('./RecordVoiceMessageBox.js');
+const ImageLongPressMessageBox = require('./ImageLongPressMessageBox.js');
 const fs = require('react-native-fs');
 const Camera = require('@remobile/react-native-camera');
 const ImagePicker = require('@remobile/react-native-image-picker');
@@ -55,6 +56,7 @@ module.exports = React.createClass({
             remindList: [],
             customRemind: '',
             overlayShowLongPressMessageBox: false,
+            overlayShowImageLongPressMessageBox:false,
             overlayShowMessageBox: false,
             voiceFileData:[],
             imgFileData:[],
@@ -73,17 +75,30 @@ module.exports = React.createClass({
         this.setState({ tabIndex });
     },
     showLongPressMessageBox (filepath, index) {
+        this.clickVoiceFilePath = filepath;
+        this.clickVoiceIndex = index;
         this.setState({ overlayShowLongPressMessageBox: true });
+    },
+    showImageLongPressMessageBox (netPah, index) {
+        this.clickImageNetPath = netPah;
+        this.tempImageIndex = index;
+        this.setState({ overlayShowImageLongPressMessageBox: true });
+    },
+    doDeleteImage () {
+        const { imgFileData } = this.state;
+        _.remove(imgFileData, (item) => imgFileData[this.tempImageIndex].imgFilePath == item.imgFilePath);
+        this.setState({ imgFileData, overlayShowImageLongPressMessageBox: false });
     },
     showMessageBox () {
         this.setState({ overlayShowMessageBox: true });
     },
     doDeleteVoice (index) {
-        this.setState({ overlayShowLongPressMessageBox: false });
         AudioRecorder.playStop();
-        fs.unlink(his.state.voiceFileData[index].voiceFilePath);
-        _.remove(this.state.voiceFileData, (item) => this.state.voiceFileData[index].voiceFileUrl
+        let {voiceFileData} = this.state;
+        fs.unlink(voiceFileData[this.clickVoiceIndex].voiceFilePath);
+        _.remove(voiceFileData, (item) => voiceFileData[this.clickVoiceIndex].voiceFileUrl
                 == item.voiceFileUrl);
+        this.setState({voiceFileData, overlayShowLongPressMessageBox: false});
 
     },
     recordVoice () {
@@ -655,7 +670,7 @@ module.exports = React.createClass({
                                                 key={i}
                                                 underlayColor='rgba(0, 0, 0, 0)'
                                                 onPress={this.showBigImage.bind(null, this.state.imgFileData, i)}
-                                                onLongPress={this.showImageLongPressMessageBox}
+                                                onLongPress={this.showImageLongPressMessageBox.bind(null, item, i)}
                                                 style={styles.bigImageTouch}>
                                                 <Image
                                                     key={i}
@@ -676,7 +691,9 @@ module.exports = React.createClass({
                     this.state.overlayShowLongPressMessageBox &&
                     <VoiceLongPressMessageBox
                         doDelete={this.doDeleteVoice}
-                        doBack={this.doBack} />
+                        doBack={() => {
+                            this.setState({overlayShowLongPressMessageBox: false})}
+                        } />
                 }
                 {
                     this.state.overlayShowMessageBox &&
@@ -685,6 +702,12 @@ module.exports = React.createClass({
                         doStartRecord={this.recordVoice}
                         doGiveup={this.doGiveup}
                         doConfirm={this.stopRecordVoice} />
+                }
+                {
+                    this.state.overlayShowImageLongPressMessageBox &&
+                    <ImageLongPressMessageBox
+                        doDelete={this.doDeleteImage}
+                        doBack={()=> this.setState({overlayShowImageLongPressMessageBox: false})} />
                 }
             </View>
         );

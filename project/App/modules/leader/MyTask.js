@@ -14,6 +14,7 @@ const CareTaskList = require('./CareTaskList.js');
 const ExamineTaskList = require('./ExamineTaskList.js');
 const Statistics = require('./Statistics.js');
 const TimeManageList = require('./TimeManageList.js');
+const authorityEnum = require('../../data/authorityEnum.js');
 const { DImage } = COMPONENTS;
 
 module.exports = React.createClass({
@@ -34,6 +35,7 @@ module.exports = React.createClass({
     render () {
         const { tabIndex } = this.state;
         const menuAdminArray = ['最关心任务', '日程提醒', '任务审批', '统计'];
+        let {phone, name, authority} = app.personal.info;
         return (
             <View style={styles.container}>
                 <DImage
@@ -45,11 +47,11 @@ module.exports = React.createClass({
                         source={app.img.common_head}
                         style={styles.headerImage}/>
                     <View style={styles.infoView}>
-                        <Text style={styles.phoneText}>{app.personal.info.phone}</Text>
+                        <Text style={styles.phoneText}>{phone}</Text>
                         <View style={styles.dividerLine} />
-                        <Text style={styles.nameText}>{'李达康'}</Text>
+                        <Text style={styles.nameText}>{name}</Text>
                         <View style={styles.dividerLine} />
-                        <Text style={styles.phoneText}>{'市委副书记'}</Text>
+                        <Text style={styles.phoneText}>{authorityEnum[authority]}</Text>
                     </View>
                 </DImage>
                 <View style={styles.tabContainer}>

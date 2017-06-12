@@ -42,6 +42,13 @@ module.exports = React.createClass({
             passProps: {data,UpdateTimeBack: this.UpdateTimeBack.bind(null,data.id)}
         });
     },
+    componentWillReceiveProps: function(nextProps) {
+        const preKeyword = this.props.keyword, keyword = nextProps.keyword;
+        const preTaskType = this.props.taskType, taskType = nextProps.taskType;
+        if (preKeyword !== keyword || preTaskType !==taskType) {
+            this.getTaskListByType(taskType,keyword);
+        }
+    },
     componentDidMount () {
         let { taskType,keyword } = this.props;
         this.getTaskListByType(taskType,keyword);
