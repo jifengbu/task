@@ -274,7 +274,7 @@ module.exports = React.createClass({
                                             <TouchableOpacity
                                                 activeOpacity={0.6}
                                                 delayLongPress={1500}
-                                                onPress={this.playVoice.bind(null, item.url, i, item.duration)}
+                                                onPress={this.playVoice.bind(null, item.url, i)}
                                                 style={styles.audioPlay}>
                                                 <Image source={this.state.isPlaying[i]?app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imageVoice} />
                                                 <Text style={styles.textTime} >{item.duration + "''"}</Text>

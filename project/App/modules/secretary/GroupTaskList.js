@@ -403,6 +403,8 @@ module.exports = React.createClass({
         this.setState({ dataSource: dataSource.cloneWithRows(newList), taskList:newList});
     },
     doModifyTaskAction(index){
+        Toast('功能正在开发中。。。');
+        return;
         let { taskList} = this.state;
         let task = taskList[index];
         app.navigator.push({
@@ -630,7 +632,6 @@ const styles = StyleSheet.create({
     imagevoice:{
         width:17,
         height:22,
-        marginRight: 10,
     },
     bigImageTouch: {
         flexDirection: 'row',
@@ -642,6 +643,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'left',
         color :'gray',
+        marginLeft: 10,
     },
     chooseContainer: {
         width:sr.w,

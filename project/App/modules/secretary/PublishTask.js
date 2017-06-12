@@ -14,10 +14,6 @@ const {
 } = ReactNative;
 
 const moment = require('moment');
-const VoiceLongPressMessageBox = require('../leader/VoiceLongPressMessageBox.js');
-const RemindSetting = require('../leader/RemindSetting.js');
-const ShowBigImage = require('../leader/ShowBigImage.js');
-const remindData = require('../../data/remindData.js');
 const GroupTaskList = require('./GroupTaskList.js');
 const TimeManageList = require('./TimeManageList.js');
 
@@ -25,17 +21,8 @@ const { Picker, Button, DImage, DelayTouchableOpacity } = COMPONENTS;
 
 module.exports = React.createClass({
     getInitialState () {
-        this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
-            taskList: [],
-            dataSource: this.ds.cloneWithRows([]),
-            title: '',
-            description: '',
             tabIndex: 0,
-            startTime: moment(),
-            endTime: moment(),
-            supervisor: '李经理',
-            executor: '李敏镐',
         };
     },
     onWillFocus() {
@@ -55,7 +42,6 @@ module.exports = React.createClass({
         );
     },
     render () {
-        const {startTime, endTime, dataSource} = this.state;
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
@@ -123,7 +109,7 @@ const styles = StyleSheet.create({
     },
     tabText: {
         fontSize: 13,
-        fontFamily: 'STHeitiSC-Medium', 
+        fontFamily: 'STHeitiSC-Medium',
     },
     tabLine: {
         width: 2,
@@ -214,7 +200,6 @@ const styles = StyleSheet.create({
     imagevoice:{
         width:17,
         height:22,
-        marginRight: 10,
     },
     bigImageTouch: {
         flexDirection: 'row',
@@ -226,6 +211,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'left',
         color :'gray',
+        marginLeft: 10,
     },
     chooseContainer: {
         width:sr.w,

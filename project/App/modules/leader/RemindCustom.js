@@ -14,8 +14,6 @@ const {
 } = ReactNative;
 
 const moment = require('moment');
-const RemindItemView = require('./RemindItemView.js');
-
 const { Picker, Button, DImage } = COMPONENTS;
 
 const defaultRemindList = [
@@ -35,42 +33,20 @@ module.exports = React.createClass({
         rightButton: { title: '完成', delayTime:1, handler: () => { app.scene.updateRemind(); } },
     },
     getInitialState () {
-        this.remindList = [];
-        this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return {
             customRemindList: [],
             customRemindIsOver: this.props.customRemind,
-            startTime: this.props.customRemind||moment(),
-            selects: this.props.selects||[],
+            startTime: moment(),
         };
     },
     updateRemind () {
         Picker.hide();
-        let {customRemindIsOver, startTime, selects} = this.state;
+        let {customRemindIsOver, startTime} = this.state;
         const params = {
-            remindList: selects,
             customRemind: customRemindIsOver?moment(startTime).format('YYYY-MM-DD HH:mm'):'',
         }
-        this.props.doRefresh(params);
+        this.props.doRefresh(params,this.props.customId);
         app.navigator.pop();
-    },
-    doActuallyComplete (key) {
-        this.setState({selects: [...this.state.selects, key]});
-    },
-    renderSeparator (sectionID, rowID) {
-        return (
-            <View style={styles.separator} key={rowID} />
-        );
-    },
-    renderRowDayCommplete (obj) {
-        return (
-            <RemindItemView
-                data={obj}
-                rowHeight={10}
-                selected={_.includes(this.state.selects, obj.key)}
-                doComplete={this.doActuallyComplete.bind(null, obj.key)}
-                />
-        );
     },
     showDataPicker(index) {
         let date = this.state.startTime;
@@ -141,19 +117,6 @@ module.exports = React.createClass({
                     resizeMode='stretch'
                     source={app.img.home_task_bg}
                     style={styles.titleBgImage}>
-                    <Text style={styles.titleText}>{'默认提醒'}</Text>
-                </DImage>
-                <ListView
-                    style={styles.list}
-                    enableEmptySections
-                    dataSource={this.ds.cloneWithRows(defaultRemindList)}
-                    renderRow={this.renderRowDayCommplete}
-                    renderSeparator={this.renderSeparator}
-                    />
-                <DImage
-                    resizeMode='stretch'
-                    source={app.img.home_task_bg}
-                    style={styles.titleBgImage}>
                     <Text style={styles.titleText}>{'在指定日期提醒我'}</Text>
                 </DImage>
                 <View style={styles.chooseContainer}>
@@ -209,15 +172,6 @@ const styles = StyleSheet.create({
         fontFamily: 'STHeitiSC-Medium',
         backgroundColor: 'transparent',
     },
-    separator: {
-        width: sr.w - 30,
-        height: 1,
-        backgroundColor: '#F1F0F5',
-        alignSelf: 'center',
-    },
-    list: {
-        alignSelf:'stretch',
-    },
     chooseContainer: {
         width:sr.w,
         height:45,
@@ -225,11 +179,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems:'center',
         justifyContent: 'space-between',
-    },
-    menuText: {
-        color: 'black',
-        fontSize: 14,
-        marginLeft: 15,
     },
     updownlside:{
         width: sr.w-80,

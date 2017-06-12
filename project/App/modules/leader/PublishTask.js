@@ -68,33 +68,16 @@ module.exports = React.createClass({
     componentDidMount() {
         this.supervisorClientList = app.supervisionClient.getList()||[];
         this.executorClientList = app.executorClient.getList()||[];
+        this.typeList = app.taskType.getList()||[];
         _.forEach(this.supervisorClientList, (item) => {
             this.tempSupervisorClientList.push(item.name);
         });
         _.forEach(this.executorClientList, (item) => {
             this.tempExecutorClientList.push(item.name);
         });
-        this.getTaskTypeList();
-    },
-    getTaskTypeList() {
-        const param = {
-            userId: app.personal.info.userId,
-        };
-        POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getTaskTypeListSuccess);
-    },
-    getTaskTypeListSuccess(data) {
-        if (data.success) {
-            this.listFlags = 1;
-            const context = data.context;
-            if (context) {
-                this.typeList = data.context.taskTypeList;
-                _.forEach(this.typeList, (item) => {
-                    this.tempTypeList.push(item.name);
-                });
-            }
-        } else {
-            this.listFlags = 0;
-        }
+        _.forEach(this.typeList, (item) => {
+            this.tempTypeList.push(item.name);
+        });
     },
     changeTab (tabIndex) {
         this.setState({ tabIndex });

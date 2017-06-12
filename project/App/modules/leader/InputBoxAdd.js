@@ -42,7 +42,7 @@ module.exports = React.createClass({
         app.closeModal();
     },
     setAlert () {
-        this.props.setAlert();
+        // this.props.setAlert();
     },
     doHideDismissKeyboard () {
         dismissKeyboard();
@@ -85,16 +85,18 @@ module.exports = React.createClass({
                     style={styles.overlayContainer}>
                     <View style={[styles.background, { height:sr.s(332)}]}>
                         <View style={[styles.container, { height:sr.s(312)}]}>
-                            <View>
-                                <TouchableOpacity onPress={this.setAlert} style={[styles.topViewNoSide, { height: textHeight }]}>
-                                    <Image
-                                        resizeMode='contain'
-                                        source={app.img.leader_inputBox_alert}
-                                        style={styles.alertIcon} />
-                                    <Text style={styles.alertButtonStyle} >点击提醒设置</Text>
-                                </TouchableOpacity>
-                                <View style={styles.lineView} />
-                            </View>
+                            {
+                                // <View>
+                                //     <TouchableOpacity onPress={this.setAlert} style={[styles.topViewNoSide, { height: sr.s(textHeight) }]}>
+                                //         <Image
+                                //             resizeMode='contain'
+                                //             source={app.img.leader_inputBox_alert}
+                                //             style={styles.alertIcon} />
+                                //         <Text style={styles.alertButtonStyle} >点击提醒设置</Text>
+                                //     </TouchableOpacity>
+                                //     <View style={styles.lineView} />
+                                // </View>
+                            }
                             <View style={[styles.textStyleViewNoSide, { height: sr.s(250 - textHeight) }]}>
                                 <TextInput
                                     ref={(ref) => { this.contentInput = ref; }}

@@ -14,6 +14,7 @@ const TaskSupervision = require('./TaskSupervision.js');
 const RecordItemView = require('./RecordItemView.js');
 const InputBoxAlert = require('./InputBoxAlert.js');
 const InputBoxAdd = require('./InputBoxAdd.js');
+const RemindCustom = require('./RemindCustom.js');
 const moment = require('moment');
 
 module.exports = React.createClass({
@@ -38,6 +39,10 @@ module.exports = React.createClass({
         if (data.success) {
             if (data.context) {
                 this.timeList = data.context.scheduleList;
+                for (var i = 0; i < this.timeList.length; i++) {
+                    let time = app.customTime.getCustomTimes(this.timeList[i].id);
+                    this.timeList[i]['customRemind'] = time || '暂无提醒，点击设置';
+                }
                 this.setState({dataSource: this.ds.cloneWithRows(this.timeList)});
             }
         } else {
@@ -98,8 +103,20 @@ module.exports = React.createClass({
             this.setState({dataSource: this.ds.cloneWithRows(this.timeList)});
         }
     },
-    setAlert() {
+    setAlert(id) {
         //设置提醒
+        app.navigator.push({
+            component: RemindCustom,
+            passProps:{ doRefresh:this.doRefreshRemind, customRemind: this.state.customRemind, customId: id },
+        })
+        app.closeModal();
+    },
+    doRefreshRemind(obj,id) {
+        let param = _.find(this.timeList,(o) => o.id === id);
+        if (param) {
+            param['customRemind'] = obj.customRemind;
+            app.customTime.setCustomTime(param.customRemind, id, param.content,'日程提醒',0);
+        }
     },
     doAdd(content) {
         //增加日程

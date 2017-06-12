@@ -14,6 +14,7 @@ const {
 } = ReactNative;
 
 const Audio = require('@remobile/react-native-audio');
+const remindData = require('../../data/remindData.js');
 const InputBoxReject = require('./InputBoxReject.js');
 const ShowBigImage = require('./ShowBigImage.js');
 

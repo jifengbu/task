@@ -44,8 +44,8 @@ module.exports = React.createClass({
         this.props.doDelete(id);
         app.closeModal();
     },
-    setAlert () {
-        this.props.setAlert();
+    setAlert (id) {
+        this.props.setAlert(id);
     },
     doHideDismissKeyboard () {
         dismissKeyboard();
@@ -91,12 +91,15 @@ module.exports = React.createClass({
                     <View style={[styles.background, { height:sr.s(332)}]}>
                         <View style={[styles.container, { height:sr.s(312)}]}>
                             <View>
-                                <TouchableOpacity onPress={this.setAlert} style={[styles.topViewNoSide, { height: textHeight }]}>
-                                    <Image
-                                        resizeMode='contain'
-                                        source={app.img.leader_inputBox_alert}
-                                        style={styles.alertIcon} />
-                                    <Text style={styles.alertButtonStyle} >点击提醒设置</Text>
+                                <TouchableOpacity onPress={this.setAlert.bind(null,data.id)} style={[styles.topViewNoSide, { height: sr.s(textHeight) }]}>
+                                    <View style={styles.customRem}>
+                                        <Image
+                                            resizeMode='contain'
+                                            source={app.img.leader_inputBox_alert}
+                                            style={styles.alertIcon} />
+                                        <Text style={styles.alertButtonStyle} >点击提醒设置</Text>
+                                    </View>
+                                    <Text style={[styles.alertButtonStyle,{marginLeft: 15,color: '#444444'}]} >{data.customRemind}</Text>
                                 </TouchableOpacity>
                                 <View style={styles.lineView} />
                             </View>
@@ -213,6 +216,10 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         alignItems: 'center',
         backgroundColor: 'white',
+        flexDirection: 'row',
+    },
+    customRem: {
+        alignItems: 'center',
         flexDirection: 'row',
     },
     indexStyle: {

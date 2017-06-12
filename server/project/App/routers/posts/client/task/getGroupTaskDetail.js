@@ -29,6 +29,7 @@ export default async ({
             type: 1,
             imageList: 1,
             audioList: 1,
+            remindList:1,
         },
         populate: [{
             path: 'executorId',
