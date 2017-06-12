@@ -403,8 +403,6 @@ module.exports = React.createClass({
         this.setState({ dataSource: dataSource.cloneWithRows(newList), taskList:newList});
     },
     doModifyTaskAction(index){
-        Toast('功能正在开发中。。。');
-        return;
         let { taskList} = this.state;
         let task = taskList[index];
         app.navigator.push({

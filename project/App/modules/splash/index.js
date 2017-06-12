@@ -23,6 +23,24 @@ module.exports = React.createClass({
             renderSplashType: 0,
         };
     },
+    getClientList(type) {
+        const param = {
+            authority: type==='supervision' ? 8 : 15,
+        };
+        POST(app.route.ROUTE_GET_CLIENT_LIST, param, this.getClientListSuccess.bind(null, type));
+    },
+    getClientListSuccess(type, data) {
+        if (data.success) {
+            const context = data.context;
+            if (context) {
+                if (type==='supervision') {
+                    app.supervisionClient.setList(data.context.clientList);
+                } else if (type==='executor') {
+                    app.executorClient.setList(data.context.clientList);
+                }
+            }
+        }
+    },
     enterLoginPage (needHideSplashScreen) {
         app.navigator.replace({
             component: Login,
@@ -105,6 +123,8 @@ module.exports = React.createClass({
         }
     },
     componentDidMount () {
+        this.getClientList('supervision');
+        this.getClientList('executor');
         app.utils.until(
             () => app.personal.initialized && app.updateMgr.initialized && app.navigator,
             (cb) => setTimeout(cb, 100),

@@ -1,5 +1,5 @@
 module.exports = {
-    host: '192.168.1.222',
+    host: 'localhost',
     port: 4000,
     apiRoot: '/api',
     timeout: 0,

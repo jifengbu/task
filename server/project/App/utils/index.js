@@ -53,7 +53,7 @@ export function getKeywordCriteriaForTask (keyword, criteria = {}) {
     if (keyword) {
         const regex = new RegExp('.*' + (keyword || '') + '.*', 'gim');
         criteria = _.omitBy(criteria, _.isNil);
-        criteria = { ...criteria, $or: [{ name: regex }, { phone: regex }] };
+        criteria = { ...criteria, $or: [{ title: regex }, { content: regex }] };
     }
     return criteria;
 }

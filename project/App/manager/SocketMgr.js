@@ -5,7 +5,7 @@ const io = require('socket.io-client');
 class Manager extends EventEmitter {
     register() {
         this.callbacks = {};
-        this.socket = io.connect('ws://192.168.1.222:4000', {
+        this.socket = io.connect('ws://120.25.96.74:4000', {
             connect_timeout: 3000,
             transports: ['websocket'],
             path: '/api/socket',

@@ -31,6 +31,11 @@ module.exports = React.createClass({
         title: '修改任务',
     },
     getInitialState () {
+        this.fileInfo = {
+            voiceFileUrl:'',
+            voiceFilePath:'',
+            voiceTime:0,
+        };
         this.tempSupervisorClientList = [];
         this.tempExecutorClientList = [];
         this.typeList = [];
@@ -151,17 +156,145 @@ module.exports = React.createClass({
         this.setState({ overlayShowLongPressMessageBox: false });
     },
     addPohotoImg () {
-        Toast('功能正在开发中。。。');
+        if (this.uploadOn == true) {
+            Toast('正在上传中,稍候再增加');
+            return;
+        }
+        const options = { maximumImagesCount: 1, width: 400 };
+        const filePaths = [];
+        ImagePicker.getPictures(options, (results) => {
+            if (results.length > 0) {
+                for (let i = 0; i < results.length; i++) {
+                    const filePath = results[i];
+                    const item = {
+                        name: 'file',
+                        filename: filePath.substr(filePath.lastIndexOf('/') + 1),
+                        filepath: filePath,
+                        filetype: 'image/png',
+                    };
+                    filePaths.push(item);
+                }
+                this.uploadImg(filePaths[0].filepath);
+            }
+        }, (error) => {
+        });
     },
-    changeTab (tabIndex) {
-        this.setState({ tabIndex });
+    uploadImg(filePath) {
+        const options = {};
+        options.fileKey = 'file';
+        options.fileName = filePath.substr(filePath.lastIndexOf('/') + 1);
+        options.mimeType = 'image/png';
+        options.params = {
+            userId: app.personal.info.userId,
+        };
+        this.uploadOn = true;
+        UPLOAD(filePath, app.route.ROUTE_UPDATE_FILE, options, (progress) => console.log(progress), this.uploadSuccessCallback, this.uploadErrorCallback, true);
+    },
+    uploadSuccessCallback (data) {
+        this.uploadOn = false;
+        if (data.success) {
+            let {netUrlImages} = this.state;
+            netUrlImages.push(data.context.url);
+            this.setState({netUrlImages});
+        } else {
+            Toast('上传失败');
+        }
+    },
+    uploadErrorCallback () {
+        this.uploadOn = false;
+        Toast('上传失败');
+    },
+    recordVoice () {
+        if (this.uploadOn == true) {
+            Toast('正在上传中,稍候再录制');
+            return;
+        }
+        // AudioRecorder.playStop();
+        const time = Date.now();
+        const name = app.audioFileMgr.getFileNameFromTime(time);
+        this.fileInfo.voiceFilePath = app.audioFileMgr.getFilePathFromName(name);
+        AudioRecorder.record((result) => {
+
+        }, (error) => {
+            Toast('录制音频文件失败，请稍后再试');
+        }, this.fileInfo.voiceFilePath);
+    },
+    stopRecordVoice (voiceTime) {
+        this.fileInfo.voiceTime = voiceTime;
+        AudioRecorder.stop((result) => {
+            this.uploadVoice(this.fileInfo.voiceFilePath, voiceTime);
+        }, (error) => {
+            Toast('录制音频文件失败，请稍后再试');
+        });
+        this.setState({ overlayShowMessageBox: false });
+    },
+    uploadVoice (filePath, voiceTime) {
+        const options = {};
+        options.fileKey = 'file';
+        options.fileName = filePath.substr(filePath.lastIndexOf('/') + 1);
+        options.mimeType = 'm4a';
+        options.params = {
+            userID:app.personal.info.userID,
+        };
+        this.uploadOn = true;
+        UPLOAD(filePath, app.route.ROUTE_UPDATE_FILE, options, (progress) => console.log(progress),
+        this.uploadVoiceSuccessCallback.bind(null, voiceTime, filePath), this.uploadVoiceErrorCallback.bind(null, filePath), true);
+    },
+    uploadVoiceSuccessCallback (voiceTime, filePath, data) {
+        this.uploadOn = false;
+        if (data.success) {
+            this.fileInfo.voiceFileUrl = data.context.url;
+            if (this.fileInfo.voiceFileUrl != ''
+                && this.fileInfo.voiceFilePath != ''
+                && this.fileInfo.voiceTime != 0 )
+            {
+                let {uploadVoices} = this.state;
+                let param = {
+                    url: data.context.url,
+                    duration: voiceTime,
+                }
+                uploadVoices.push(param);
+                this.setState({uploadVoices});
+            }
+            this.fileInfo = {
+                voiceFileUrl:'',
+                voiceFilePath:'',
+                voiceTime:0,
+            };
+        } else {
+            Toast('上传失败');
+            this.fileInfo = {
+                voiceFileUrl:'',
+                voiceFilePath:'',
+                voiceTime:0,
+            };
+        }
+    },
+    uploadVoiceErrorCallback (filePath) {
+        this.fileInfo = {
+            voiceFileUrl:'',
+            voiceFilePath:'',
+            voiceTime:0,
+        };
+        this.uploadOn = false;
+    },
+    doGiveup () {
+        this.fileInfo = {
+            voiceFileUrl:'',
+            voiceFilePath:'',
+            voiceTime:0,
+        };
+        AudioRecorder.stop((result) => {
+        }, (error) => {
+            Toast('放弃录音失败，请稍后再试');
+        });
+        this.setState({ overlayShowMessageBox: false });
     },
     showLongPressMessageBox (filepath, index) {
         this.setState({ overlayShowLongPressMessageBox: true });
     },
     showMessageBox () {
-        Toast('功能正在开发中。。。');
-        // this.setState({ overlayShowMessageBox: true });
+        this.setState({ overlayShowMessageBox: true });
     },
     showDataPicker(index) {
         let date = index===0 ? this.state.startTime : this.state.endTime;
@@ -266,7 +399,7 @@ module.exports = React.createClass({
         this.setState({ remindList: obj.remindList, customRemind: obj.customRemind});
     },
     doCreateTask() {
-        const {title, content, startTime, endTime, supervisor, executor, taskTypeName, remindList} = this.state;
+        const {title, content, startTime, endTime, supervisor, executor, taskTypeName, remindList, netUrlImages, uploadVoices} = this.state;
         let supervisorId = '';
         let executorId = '';
         for (let item of this.supervisorClientList) {
@@ -295,14 +428,14 @@ module.exports = React.createClass({
             supervisorId,
             title,
             content,
-            audioList: [],
-            imageList: [],
+            audioList: uploadVoices,
+            imageList: netUrlImages,
             remindList,
             type: typeInfo.key,
             expectStartTime: moment(startTime).format('YYYY-MM-DD HH:mm'),
             expectFinishTime: moment(endTime).format('YYYY-MM-DD HH:mm'),
         };
-        POST(app.route.ROUTE_LEADER_CREATE_TASK, param, this.leaderCreateTaskSuccess.bind(null,this.props.taskDetail.id,content,title));
+        POST(app.route.ROUTE_MODIFY_TASK, param, this.leaderCreateTaskSuccess.bind(null,this.props.taskDetail.id,content,title));
     },
     leaderCreateTaskSuccess (id,content,title,data) {
         if (data.success) {
@@ -343,34 +476,31 @@ module.exports = React.createClass({
                             onChangeText={(text) => this.setState({content: text})}
                             />
                     </View>
-                    {
-                        !!uploadVoices&&
-                        <View style={styles.voiceUpside}>
-                            <TouchableOpacity onPress={this.showMessageBox} style={styles.voiceButtonView}>
-                                <DImage resizeMode='cover' source={app.img.home_voice_icon2} style={styles.voiceStyle} />
-                            </TouchableOpacity>
-                            <ScrollView horizontal style={styles.voiceContainer}>
-                                {
-                                    uploadVoices.map((item, i) => {
-                                        return (
-                                            <View key={i} style={[styles.audioContainer]}>
-                                                <TouchableOpacity
-                                                    key={i}
-                                                    activeOpacity={0.6}
-                                                    onPress={this.playVoice.bind(null, item.url, i)}
-                                                    delayLongPress={1500}
-                                                    onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
-                                                    style={styles.audioPlay}>
-                                                    <Image source={this.state.isPlaying[i]?app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imageVoice} />
-                                                    <Text style={styles.textTime} >{item.duration + "''"}</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        );
-                                    })
-                                }
-                            </ScrollView>
-                        </View>
-                    }
+                    <View style={styles.voiceUpside}>
+                        <TouchableOpacity onPress={this.showMessageBox} style={styles.voiceButtonView}>
+                            <DImage resizeMode='cover' source={app.img.home_voice_icon2} style={styles.voiceStyle} />
+                        </TouchableOpacity>
+                        <ScrollView horizontal style={styles.voiceContainer}>
+                            {
+                                uploadVoices.map((item, i) => {
+                                    return (
+                                        <View key={i} style={[styles.audioContainer]}>
+                                            <TouchableOpacity
+                                                key={i}
+                                                activeOpacity={0.6}
+                                                onPress={this.playVoice.bind(null, item.url, i)}
+                                                delayLongPress={1500}
+                                                onLongPress={this.showLongPressMessageBox.bind(null, item, i)}
+                                                style={styles.audioPlay}>
+                                                <Image source={this.state.isPlaying[i]?app.img.home_voice_say_play : app.img.home_voice_say} style={styles.imageVoice} />
+                                                <Text style={styles.textTime} >{item.duration + "''"}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    );
+                                })
+                            }
+                        </ScrollView>
+                    </View>
                     <View style={styles.chooseContainer}>
                         <Text style={styles.menuText}>任务监督人:</Text>
                         <View style={styles.updownlside}>

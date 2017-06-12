@@ -36,8 +36,6 @@ module.exports = React.createClass({
             voiceTime:0,
             voiceIsPlaly: false,
         };
-        this.tempSupervisorClientList = [];
-        this.tempExecutorClientList = [];
         this.typeList = [];
         this.tempTypeList = [];
         this.uploadOn=false;
@@ -66,15 +64,7 @@ module.exports = React.createClass({
         this.listFlags = 0;
     },
     componentDidMount() {
-        this.supervisorClientList = app.supervisionClient.getList()||[];
-        this.executorClientList = app.executorClient.getList()||[];
         this.typeList = app.taskType.getList()||[];
-        _.forEach(this.supervisorClientList, (item) => {
-            this.tempSupervisorClientList.push(item.name);
-        });
-        _.forEach(this.executorClientList, (item) => {
-            this.tempExecutorClientList.push(item.name);
-        });
         _.forEach(this.typeList, (item) => {
             this.tempTypeList.push(item.name);
         });
@@ -273,11 +263,21 @@ module.exports = React.createClass({
         return moment(date).format('HH时mm分');
     },
     showSelectSuperVisor() {
+        this.tempSupervisorClientList = [];
+        this.supervisorClientList = app.supervisionClient.getList()||[];
+        _.forEach(this.supervisorClientList, (item) => {
+            this.tempSupervisorClientList.push(item.name);
+        });
         Picker(this.tempSupervisorClientList, [this.tempSupervisorClientList[0]], '').then((value)=>{
             this.setState({supervisor: value[0]});
         });
     },
     showSelectExecutor() {
+        this.tempExecutorClientList = [];
+        this.executorClientList = app.executorClient.getList()||[];
+        _.forEach(this.executorClientList, (item) => {
+            this.tempExecutorClientList.push(item.name);
+        });
         Picker(this.tempExecutorClientList, [this.tempExecutorClientList[0]], '').then((value)=>{
             this.setState({executor: value[0]});
         });
