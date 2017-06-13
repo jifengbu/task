@@ -213,7 +213,7 @@ module.exports = React.createClass({
         const menuAdminArray = [
             {title: '任务更新', tag: 0, visible: true},
             {title: '任务提醒', tag: 1, visible: state >= 16 && state < 128 && supervisor.id===userId},
-            {title: '任务变更', tag: 2, visible: publisherId===userId||examinerId === userId},
+            {title: '任务变更', tag: 2, visible: false && (publisherId===userId||examinerId === userId)},
             {title: '同意结束', tag: 3, visible: state == 32 && examinerId === userId},
             {title: '驳回结束', tag: 4, visible: state == 32 && examinerId === userId},
             {title: '申请结束', tag: 5, visible: state == 16 && userId===executor.id}

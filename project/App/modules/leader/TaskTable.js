@@ -131,16 +131,13 @@ module.exports = React.createClass({
                         <ApproveTaskList />
                     }
                     {
-                        this.state.tabIndex ===3&&
-                        <TaskList taskType={taskType} keyword={keyword}/>
-                    }
-                    {
-                        this.state.tabIndex ===4&&
-                        <TaskList taskType={taskType} keyword={keyword}/>
-                    }
-                    {
-                        this.state.tabIndex ===5&&
-                        <TaskList taskType={taskType} keyword={keyword}/>
+                        menuAdminArray.map((item, i) => {
+                            if (this.state.tabIndex ===i+3) {
+                                return (
+                                    <TaskList key={i} taskType={taskType} keyword={keyword}/>
+                                );
+                            }
+                        })
                     }
                 </View>
             </View>

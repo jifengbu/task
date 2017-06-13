@@ -21,6 +21,7 @@ export removeTask from './task/removeTask'; // 删除单一任务
 
 export leaderCreateTask from './task/leaderCreateTask'; // 领导创建任务
 export secretaryCreateTask from './task/secretaryCreateTask'; // 秘书创建任务
+export reapplyPublishTaskList from './task/reapplyPublishTaskList'; // 重新提交任务审核
 export getApplyPublishTaskList from './task/getApplyPublishTaskList'; // 获取待审核发布的任务列表
 export agreePublishTask from './task/agreePublishTask'; // 同意发布任务
 export rejectPublishTask from './task/rejectPublishTask'; // 不同意发布任务

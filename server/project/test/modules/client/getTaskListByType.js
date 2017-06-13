@@ -4,7 +4,8 @@ var args = process.argv.splice(2);
 
 var param = {
     userId,
-    type: args[0] || 1,
+    type: args[0] || 2,
+    keyword: '666664',
     pageNo: 0,
     pageSize: 3,
 };

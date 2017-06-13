@@ -381,11 +381,21 @@ module.exports = React.createClass({
         const {title, content, startTime, endTime, supervisor, executor, taskType, remindList, imgFileData, voiceFileData} = this.state;
         let executorId = '';
         let supervisorId = '';
-        for (let item of this.supervisorClientList) {
-            supervisorId = item.name === supervisor? item.id:'';
+        if (!title) {
+            Toast('请输入子任务标题');
+            return;
         }
-        for (let item of this.executorClientList) {
-            executorId = item.name === executor? item.id:'';
+        if (!content) {
+            Toast('请输入子任务内容');
+            return;
+        }
+        const supervisorInfo = _.find(this.supervisorClientList, (item) => item.name == supervisor);
+        if (supervisorInfo) {
+            supervisorId = supervisorInfo.id;
+        }
+        const executorInfo = _.find(this.executorClientList, (item) => item.name == executor);
+        if (executorInfo) {
+            executorId = executorInfo.id;
         }
         if (!supervisorId) {
             Toast('请选择监督人');
@@ -395,7 +405,7 @@ module.exports = React.createClass({
             Toast('请选择执行人');
             return;
         }
-        const typeInfo = _.find(this.typeList, (item) => item.name === taskType);
+        const typeInfo = _.find(this.typeList, (item) => item.name == taskType);
         if (!typeInfo) {
             Toast('请选择任务类型');
             return;
@@ -429,7 +439,7 @@ module.exports = React.createClass({
         app.navigator.pop();
     },
     render () {
-        const {startTime, endTime, remindList, customRemind, voiceFileData, imgFileData} = this.state;
+        const {startTime, endTime, remindList, customRemind, voiceFileData, imgFileData, title, content} = this.state;
         const obj = this.props.obj;
         return (
             <View style={styles.container}>
@@ -442,6 +452,7 @@ module.exports = React.createClass({
                             placeholder={'点击输入任务主题'}
                             textStyle={styles.contentText}
                             placeholderTextColor={'#A7A7A7'}
+                            value={title}
                             onChangeText={(text) => this.setState({title: text})}
                             />
                         <TextInput
@@ -451,6 +462,7 @@ module.exports = React.createClass({
                             placeholder={'点击输入任务描述'}
                             textStyle={styles.contentText}
                             placeholderTextColor={'#A7A7A7'}
+                            value={content}
                             onChangeText={(text) => this.setState({content: text})}
                             />
                     </View>

@@ -76,7 +76,7 @@ app.use(async (req, res, next) => {
     res.locals.header = [
         {
             tag: 'title',
-            content: '刷我的卡',
+            content: '经开区任务根据提醒管理平台',
         },
         {
             tag: 'link',

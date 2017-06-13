@@ -391,11 +391,21 @@ module.exports = React.createClass({
         const {title, content, startTime, endTime, supervisor, executor, taskTypeName, remindList, imageList, audioList} = this.state;
         let supervisorId = '';
         let executorId = '';
-        for (let item of this.supervisorClientList) {
-            supervisorId = item.name === supervisor? item.id:'';
+        if (!title) {
+            Toast('请输入子任务标题');
+            return;
         }
-        for (let item of this.executorClientList) {
-            executorId = item.name === executor? item.id:'';
+        if (!content) {
+            Toast('请输入子任务内容');
+            return;
+        }
+        const supervisorInfo = _.find(this.supervisorClientList, (item) => item.name == supervisor);
+        if (supervisorInfo) {
+            supervisorId = supervisorInfo.id;
+        }
+        const executorInfo = _.find(this.executorClientList, (item) => item.name == executor);
+        if (executorInfo) {
+            executorId = executorInfo.id;
         }
         if (!supervisorId) {
             Toast('请选择监督人');

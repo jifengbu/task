@@ -7,7 +7,7 @@ export default async ({ userId, role, pageNo, pageSize }) => { // role = ['leade
     } else if (role === 'secretary') {
         criteria = { $or: [{ state: 2, publisherId: userId }, { state: 64, publisherId: userId }] };
     } else {
-        criteria = { state: 64, executorId: userId };
+        criteria = { state: -1 };
     }
 
     const query = TaskModel.find(criteria).sort({ publishTime: 'desc' }).skip(pageNo * pageSize).limit(pageSize);
