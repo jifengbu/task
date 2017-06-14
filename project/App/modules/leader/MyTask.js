@@ -14,6 +14,7 @@ const CareTaskList = require('./CareTaskList.js');
 const ExamineTaskList = require('./ExamineTaskList.js');
 const Statistics = require('./Statistics.js');
 const TimeManageList = require('./TimeManageList.js');
+const EditPersonInfo = require('../person/EditPersonInfo.js');
 const authorityEnum = require('../../data/authorityEnum.js');
 const { DImage } = COMPONENTS;
 
@@ -25,9 +26,17 @@ module.exports = React.createClass({
     },
     onWillFocus() {
         app.toggleNavigationBar(false);
+        if (this.examineTaskList) {
+            this.examineTaskList.onWillFocus();
+        }
     },
     onWillHide() {
         app.toggleNavigationBar(true);
+    },
+    doEditPersonInfo () {
+        app.navigator.push({
+            component: EditPersonInfo,
+        });
     },
     changeTab (tabIndex) {
         this.setState({ tabIndex });
@@ -42,10 +51,13 @@ module.exports = React.createClass({
                     resizeMode='stretch'
                     source={app.img.home_banner}
                     style={styles.bannerImage} >
-                    <DImage
-                        resizeMode='cover'
-                        source={app.img.common_head}
-                        style={styles.headerImage}/>
+                    <TouchableOpacity onPress={this.doEditPersonInfo}>
+                        <DImage
+                            resizeMode='cover'
+                            defaultSource={app.img.personal_default_head}
+                            source={{uri:app.personal.info.head||''}}
+                            style={styles.headerImage}/>
+                    </TouchableOpacity>
                     <View style={styles.infoView}>
                         <Text style={styles.phoneText}>{phone}</Text>
                         <View style={styles.dividerLine} />
@@ -92,7 +104,7 @@ module.exports = React.createClass({
                     }
                     {
                         this.state.tabIndex ===2&&
-                        <ExamineTaskList />
+                        <ExamineTaskList ref={(ref) => { this.examineTaskList = ref; }}/>
                     }
                     {
                         this.state.tabIndex ===3&&

@@ -378,7 +378,7 @@ module.exports = React.createClass({
         this.props.doUpdateList(index);
     },
     addTask() {
-        const {title, content, startTime, endTime, supervisor, executor, taskType, remindList, imgFileData, voiceFileData} = this.state;
+        const {title, content, startTime, endTime, supervisor, executor, taskType, remindList, imgFileData, voiceFileData,customRemind} = this.state;
         let executorId = '';
         let supervisorId = '';
         if (!title) {
@@ -432,6 +432,7 @@ module.exports = React.createClass({
             imageList,
             remindList,
             type: typeInfo.key,
+            customRemind,
             expectStartTime: moment(startTime).format('YYYY-MM-DD HH:mm'),
             expectFinishTime: moment(endTime).format('YYYY-MM-DD HH:mm'),
         };

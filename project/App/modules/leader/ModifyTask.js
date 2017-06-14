@@ -352,18 +352,18 @@ module.exports = React.createClass({
         return moment(date).format('HH时mm分');
     },
     showSelectSuperVisor() {
-        Picker(this.tempSupervisorClientList, [this.state.supervisor], '').then((value)=>{
+        Picker(this.tempSupervisorClientList, [this.tempSupervisorClientList[0]], '').then((value)=>{
             this.setState({supervisor: value[0]});
         });
     },
     showSelectExecutor() {
-        Picker(this.tempExecutorClientList, [this.state.executor], '').then((value)=>{
+        Picker(this.tempExecutorClientList, [this.tempExecutorClientList[0]], '').then((value)=>{
             this.setState({executor: value[0]});
         });
     },
     showSelectType() {
-        Picker(this.tempTypeList, [this.state.taskTypeName], '').then((value)=>{
-            this.setState({taskTypeName: value[0]});
+        Picker(this.tempTypeList, [this.tempTypeList[0]], '').then((value)=>{
+            this.setState({taskType: value[0]});
         });
     },
     showBigImage (imageArray, index) {
@@ -392,11 +392,11 @@ module.exports = React.createClass({
         let supervisorId = '';
         let executorId = '';
         if (!title) {
-            Toast('请输入子任务标题');
+            Toast('请输入任务标题');
             return;
         }
         if (!content) {
-            Toast('请输入子任务内容');
+            Toast('请输入任务内容');
             return;
         }
         const supervisorInfo = _.find(this.supervisorClientList, (item) => item.name == supervisor);
@@ -439,12 +439,29 @@ module.exports = React.createClass({
     leaderCreateTaskSuccess (id,content,title,data) {
         if (data.success) {
             if (!!this.state.customRemind) {
-                app.customTime.setCustomTime(this.state.customRemind,id,content,title,1);
+                app.customTime.isPublish = true;
+                app.customTime.setCustomTime(this.state.customRemind,id,content,title,8);
             }
-            Toast('修改任务成功');
+            if (this.props.isReapplyPublish) {
+                this.reapplyPublishTaskList(id);
+            } else {
+                Toast('修改任务成功');
+            }
             app.navigator.pop();
         } else {
             Toast('获取数据错误，请稍后重试！');
+        }
+    },
+    reapplyPublishTaskList (id) {
+        const param = {
+            userId: app.personal.info.userId,
+            taskId: id,
+        };
+        POST(app.route.ROUTE_REAPPLY_PUBLISH_TASK_LIST, param, this.reapplyPublishTaskListSuccess);
+    },
+    reapplyPublishTaskListSuccess (data) {
+        if (data.success) {
+            Toast('提交申请成功');
         }
     },
     render () {
@@ -668,7 +685,7 @@ module.exports = React.createClass({
                             </ScrollView>
                         </View>
                     </View>
-                    <Button onPress={this.doCreateTask} style={styles.btnSubmit} textStyle={styles.btnSubmitText}>{'确    定'}</Button>
+                    <Button onPress={this.doCreateTask} style={styles.btnSubmit} textStyle={styles.btnSubmitText}>{this.props.isReapplyPublish?'提交申请':'确    定'}</Button>
                 </ScrollView>
                 {
                     this.state.overlayShowMessageBox &&

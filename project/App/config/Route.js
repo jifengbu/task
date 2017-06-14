@@ -30,6 +30,7 @@ module.exports = {
     ROUTE_APPLY_FINISH_TASK: API_SERVER + 'applyFinishTask', //  申请完成任务
     ROUTE_SECRETARY_CREATE_TASK: API_SERVER + 'secretaryCreateTask', //  申请完成任务
     ROUTE_MODIFY_TASK: API_SERVER + 'modifyTask', //  修改任务
+    ROUTE_REAPPLY_PUBLISH_TASK_LIST: API_SERVER + 'reapplyPublishTaskList', //  重新申请发布的群组任务
 
     // 网页地址
     ROUTE_USER_LICENSE: API_SERVER + 'protocals/user.html', // 用户协议

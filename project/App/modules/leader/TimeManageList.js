@@ -115,6 +115,7 @@ module.exports = React.createClass({
         let param = _.find(this.timeList,(o) => o.id === id);
         if (param) {
             param['customRemind'] = obj.customRemind;
+            app.customTime.isPublish = true;
             app.customTime.setCustomTime(param.customRemind, id, param.content,'日程提醒',0);
         }
     },

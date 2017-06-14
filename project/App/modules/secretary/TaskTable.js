@@ -66,6 +66,11 @@ module.exports = React.createClass({
     componentDidMount() {
         this.getTaskTypeList();
     },
+    onWillFocus() {
+        if (this.repulseTackList) {
+            this.repulseTackList.onWillFocus();
+        }
+    },
     getTaskTypeList() {
         const param = {
             userId: app.personal.info.userId,
@@ -124,7 +129,7 @@ module.exports = React.createClass({
                     }
                     {
                         this.state.tabIndex ===1&&
-                        <RepulseTackList />
+                        <RepulseTackList ref={(ref) => { this.repulseTackList = ref; }} />
                     }
                     {
                         this.state.tabIndex ===2&&

@@ -13,12 +13,13 @@ const {
     TouchableOpacity,
 } = ReactNative;
 
+const moment = require('moment');
 const Audio = require('@remobile/react-native-audio');
 const InputBoxReject = require('./InputBoxReject.js');
 const ShowBigImage = require('./ShowBigImage.js');
 const remindData = require('../../data/remindData.js');
 
-const { Button, TaskStepList, DImage, DelayTouchableOpacity } = COMPONENTS;
+const { Picker,Button, TaskStepList, DImage, DelayTouchableOpacity } = COMPONENTS;
 
 module.exports = React.createClass({
     getInitialState () {
@@ -28,6 +29,7 @@ module.exports = React.createClass({
             isLookAll: false,
             taskType: '',
             isPlaying: this.isPlaying,
+            remindTime:moment(),
         };
     },
     componentDidMount () {
@@ -141,8 +143,68 @@ module.exports = React.createClass({
         }
         this.isPlayingIndex = index;
     },
+    showDatePicker() {
+        let date = this.state.remindTime;
+        const now = moment();
+        if (date.isBefore(now)) {
+            date = now;
+        }
+        let pickerData = app.utils.createDateData(now);
+        let defaultSelectValue = [date.year() + '年', (date.month() + 1) + '月', date.date() + '日'];
+        Picker(pickerData, defaultSelectValue, '').then((value)=>{
+            this.setChooseValue('date',value);
+        });
+    },
+    showTimePicker () {
+        let time = this.state.remindTime;
+        const now = moment();
+        if (time.isBefore(now)) {
+            time = now;
+        }
+        let _now = new moment();
+        const ih = _now.hour(), it = _now.minute();
+        let hour = time.hour(), minute = time.minute();
+        if (this.isToday) {
+            hour = (ih > hour) ? ih : hour;
+            minute = (it > minute) ? it : minute;
+        }
+        let pickerData = app.utils.createTimeData(_now);
+        let defaultSelectValue = [hour + '时', minute + '分'];
+        Picker(pickerData, defaultSelectValue, '').then((value)=>{
+            this.setChooseValue('time',value);
+        });
+    },
+    setChooseValue (type,value) {
+        if (type === 'date') {
+            const date = moment(value, 'YYYY年MM月DD日');
+            this.isToday = date.isSame(moment().startOf('day'));
+            if (this.isToday) {
+                const now = new moment();
+                const ih = now.hour(), it = now.minute();
+                date.add(ih, 'hour').add(it, 'minute');
+            }
+            this.setState({ remindTime: date });
+        }  else if (type === 'time') {
+            const time = moment(value, 'HH时mm分');
+            const remindTime = this.state.remindTime;
+            const date = moment(remindTime.year() + '年' + (remindTime.month() + 1) + '月' +
+            remindTime.date() + '日' + time.hour() + '时' + time.minute() + '分', 'YYYY年MM月DD日HH时mm分');
+            this.setState({ remindTime: date });
+        }
+    },
+    getDateText (date) {
+        return moment(date).format('YYYY年MM月DD日');
+    },
+    getTimeText (date) {
+        return moment(date).format('HH时mm分');
+    },
+    saveRemindTime () {
+        const obj = this.props.data;
+        app.customTime.isPublish = true;
+        app.customTime.setCustomTime(this.state.remindTime.format('YYYY-MM-DD HH:mm'),obj.id,obj.content,obj.title,8);
+    },
     render () {
-        let {isLookAll, taskType} = this.state;
+        let {isLookAll, taskType,remindTime} = this.state;
         const obj = this.props.data;
         return (
             <View style={styles.container}>
@@ -205,6 +267,27 @@ module.exports = React.createClass({
                                 style={styles.clockImage} />
                             <Text style={styles.remindTitle}>{'任务提醒'}</Text>
                         </View>
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={this.showDatePicker}
+                            style={styles.timeTextContainer}
+                            >
+                            <Text style={styles.timeText}>
+                                {this.getDateText(remindTime)}
+                            </Text>
+                            <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={this.showTimePicker}
+                            style={[styles.timeTextContainer, { marginLeft: 10 }]}
+                            >
+                            <Text style={styles.timeText}>
+                                {this.getTimeText(remindTime)}
+                            </Text>
+                            <DImage resizeMode='cover' source={app.img.home_down_check} style={styles.downCheckImage} />
+                        </TouchableOpacity>
+                        <Button onPress={this.saveRemindTime} style={styles.btnSet} textStyle={styles.btnSetText}>{'确定'}</Button>
                     </View>
                     <View style={styles.divisionLine}/>
                     {
@@ -409,7 +492,7 @@ const styles = StyleSheet.create({
     },
     remindTitleView: {
         width: sr.w,
-        height: 30,
+        height: 40,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -418,6 +501,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         marginLeft: 10,
+        marginTop:10,
     },
     clockImage: {
         width: 25,
@@ -496,9 +580,6 @@ const styles = StyleSheet.create({
         height: 100,
         marginRight: 10,
     },
-
-
-
     taskItem: {
         marginTop: 10,
         backgroundColor: '#EEEEE0',
@@ -572,6 +653,37 @@ const styles = StyleSheet.create({
     },
     btnLoginText: {
         fontSize: 18,
+        fontWeight: '600',
+        color: '#FFFFFF',
+    },
+    timeTextContainer: {
+        height: 30,
+        borderRadius: 4,
+        backgroundColor: '#f1f1f1',
+        flexDirection: 'row',
+        alignItems:'center',
+        marginTop:5,
+        marginHorizontal:10,
+    },
+    timeText: {
+        fontSize: 13,
+        backgroundColor: 'transparent',
+    },
+    downCheckImage: {
+        width: 21,
+        height: 12,
+    },
+    btnSet: {
+        height: 25,
+        width: 40,
+        marginRight: 10,
+        marginTop:5,
+        alignSelf: 'center',
+        borderRadius: 6,
+        backgroundColor: '#f3433d',
+    },
+    btnSetText: {
+        fontSize: 14,
         fontWeight: '600',
         color: '#FFFFFF',
     },

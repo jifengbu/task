@@ -13,6 +13,7 @@ class Manager extends EventEmitter {
         super();
         this.list = [];
         this.isStart = true;
+        this.isPublish = false;
         this.get();
     }
     get () {
@@ -36,6 +37,7 @@ class Manager extends EventEmitter {
     }
     setTiming() {
         if (this.isStart) {
+            console.log('<><><>');
             this.intervalID = setInterval(() => {
                 if (this.list.length === 0) {
                     clearInterval(this.intervalID);
@@ -51,8 +53,12 @@ class Manager extends EventEmitter {
                 }
                 const startMoment = moment(time), nowMoment = moment();
                 const isNotice = moment(startMoment).isBefore(moment(nowMoment));
-                if (this.intervalID != null && isNotice) {
+                console.log('..>...',this.list,startMoment.format('YYYY-MM-DD HH:mm:ss'),nowMoment.format('YYYY-MM-DD HH:mm:ss'));
+                console.log('<',this.intervalID,isNotice,this.isPublish);
+                if (this.intervalID != null && isNotice && this.isPublish) {
+
                     this.emit('TIMING_TASK_EVENT', date);
+                    console.log('TIMING_TASK_EVENT',date);
                     _.remove(this.list, (o) => o === date);
                     if (this.list.length === 0) {
                         clearInterval(this.intervalID);
@@ -75,6 +81,7 @@ class Manager extends EventEmitter {
         return time;
     }
     setCustomTime (time, id, content,title,type) {
+        console.log('...',time,id,content,title,type,this.isStart,this.isPublish);
         if (!this.isStart) {
             this.isStart = true;
             this.setTiming();

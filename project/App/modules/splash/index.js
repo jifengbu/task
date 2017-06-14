@@ -43,7 +43,7 @@ module.exports = React.createClass({
     },
     getTaskTypeList() {
         const param = {
-            userId: app.personal.info.userId,
+            userId: app.personal.info&&app.personal.info.userId,
         };
         POST(app.route.ROUTE_GET_TASK_TYPE_LIST, param, this.getTaskTypeListSuccess);
     },
@@ -53,6 +53,23 @@ module.exports = React.createClass({
             if (context) {
                 app.taskType.setList(data.context.taskTypeList);
             }
+        }
+    },
+    getPersonalInfo () {
+        const param = {
+            userId: app.personal.info.userId,
+        };
+        POST(app.route.ROUTE_GET_PERSONAL_INFO, param, this.getPersonalInfoSuccess, this.getPersonalInfoError);
+    },
+    getPersonalInfoSuccess (data) {
+        if (data.success) {
+            const context = data.context;
+            context['userId'] = data.context.id;
+            app.personal.set(context);
+            this.enterHomePage(true);
+        } else {
+            app.dismissProgressHud();
+            Toast(data.msg);
         }
     },
     enterLoginPage (needHideSplashScreen) {
@@ -77,13 +94,12 @@ module.exports = React.createClass({
         needHideSplashScreen && SplashScreen.hide();
     },
     changeToHomePage () {
-        this.getTaskTypeList();
         if (app.updateMgr.needShowSplash) {
             this.setState({ renderSplashType: 2 }, () => {
                 SplashScreen.hide();
             });
         } else {
-            this.enterHomePage(true);
+            this.getPersonalInfo();
         }
     },
     enterNextPage () {
@@ -140,6 +156,7 @@ module.exports = React.createClass({
     componentDidMount () {
         this.getClientList('supervision');
         this.getClientList('executor');
+        this.getTaskTypeList();
         app.utils.until(
             () => app.personal.initialized && app.updateMgr.initialized && app.navigator,
             (cb) => setTimeout(cb, 100),

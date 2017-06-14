@@ -114,7 +114,7 @@ module.exports = React.createClass({
             case 2: {
                 app.navigator.push({
                     component: ModifyTask,
-                    passProps: {taskDetail: this.state.taskDetail,isPop: true}
+                    passProps: {taskDetail: this.state.taskDetail, isReapplyPublish: false}
                 })
                 break;
             }
@@ -161,6 +161,13 @@ module.exports = React.createClass({
                         }}
                         />
                 );
+                break;
+            }
+            case 6: {
+                app.navigator.push({
+                    component: ModifyTask,
+                    passProps: {taskDetail: this.state.taskDetail, isReapplyPublish: true}
+                })
                 break;
             }
             default:
@@ -216,7 +223,8 @@ module.exports = React.createClass({
             {title: '任务变更', tag: 2, visible: false && (publisherId===userId||examinerId === userId)},
             {title: '同意结束', tag: 3, visible: state == 32 && examinerId === userId},
             {title: '驳回结束', tag: 4, visible: state == 32 && examinerId === userId},
-            {title: '申请结束', tag: 5, visible: state == 16 && userId===executor.id}
+            {title: '申请结束', tag: 5, visible: state == 16 && userId===executor.id},
+            {title: '重新提交申请', tag: 6, visible: state == 2 && publisherId===userId}
         ];
         return (
             <View style={styles.container}>

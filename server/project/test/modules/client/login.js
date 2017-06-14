@@ -6,7 +6,7 @@ var args = process.argv.splice(2);
 
 var param = {
     phone: clientPhone,
-    password: '341233',
+    password: '123456',
 };
 
 function log (obj) {

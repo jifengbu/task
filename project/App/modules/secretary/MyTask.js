@@ -14,6 +14,7 @@ const CareTaskList = require('../leader/CareTaskList.js');
 const ExamineTaskList = require('../leader/ExamineTaskList.js');
 const Statistics = require('../leader/Statistics.js');
 const TimeManageList = require('../leader/TimeManageList.js');
+const EditPersonInfo = require('../person/EditPersonInfo.js');
 const authorityEnum = require('../../data/authorityEnum.js');
 const { DImage } = COMPONENTS;
 
@@ -30,6 +31,11 @@ module.exports = React.createClass({
     onWillHide() {
         app.toggleNavigationBar(true);
     },
+    doEditPersonInfo () {
+        app.navigator.push({
+            component: EditPersonInfo,
+        });
+    },
     changeTab (tabIndex) {
         this.setState({ tabIndex });
     },
@@ -43,11 +49,13 @@ module.exports = React.createClass({
                     resizeMode='stretch'
                     source={app.img.home_banner}
                     style={styles.bannerImage} >
-                    <DImage
-                        resizeMode='cover'
-                        defaultSource={app.img.personal_head}
-                        source={{uri:app.personal.info.head}}
-                        style={styles.headerImage}/>
+                    <TouchableOpacity onPress={this.doEditPersonInfo}>
+                        <DImage
+                            resizeMode='cover'
+                            defaultSource={app.img.personal_default_head}
+                            source={{uri:app.personal.info.head||''}}
+                            style={styles.headerImage}/>
+                    </TouchableOpacity>
                     <View style={styles.infoView}>
                         <Text style={styles.phoneText}>{phone}</Text>
                         <View style={styles.dividerLine} />

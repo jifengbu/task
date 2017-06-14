@@ -34,7 +34,7 @@ module.exports = React.createClass({
                       <Text style={[styles.textContent, {color: rowID == lastNum? 'red': '#c1c1c1'}]}>{obj.content}</Text>
                   </View>
                 }
-                <View style={[styles.itemStyle,{marginLeft: rowID%2 !== 0?sr.w/2-25:0}]}>
+                <View style={[styles.itemStyle,{marginLeft: rowID%2 !== 0 ? sr.s(sr.w/2-25) : 0}]}>
                     <View style={[styles.lineStyle,{backgroundColor: '#cacaca'}]}/>
                     <DImage
                         resizeMode='cover'

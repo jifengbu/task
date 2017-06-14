@@ -1,11 +1,12 @@
 'use strict';
 const EventEmitter = require('EventEmitter');
 const io = require('socket.io-client');
+const { BASE_SERVER } = CONSTANTS;
 
 class Manager extends EventEmitter {
     register() {
         this.callbacks = {};
-        this.socket = io.connect('ws://localhost:4000', {
+        this.socket = io.connect('ws://'+BASE_SERVER, {
             connect_timeout: 3000,
             transports: ['websocket'],
             path: '/api/socket',
@@ -32,16 +33,22 @@ class Manager extends EventEmitter {
         })._on('USER_REGISTER_RS', (obj) => {
 
         })._on('NEW_PUBLISH_TASK_NF', (obj) => {
+            console.log('NEW_PUBLISH_TASK_NF===========', obj);
             this.emit('NEW_PUBLISH_TASK_EVENT', obj);
         })._on('AGREE_PUBLISH_TASK_NF', (obj) => {
+            console.log('AGREE_PUBLISH_TASK_NF===========', obj);
             this.emit('AGREE_PUBLISH_TASK_EVENT', obj);
         })._on('REJECT_PUBLISH_TASK_NF', (obj) => {
+            console.log('REJECT_PUBLISH_TASK_NF===========', obj);
             this.emit('REJECT_PUBLISH_TASK_EVENT', obj);
         })._on('AGREE_FINISH_TASK_NF', (obj) => {
+            console.log('AGREE_FINISH_TASK_NF===========', obj);
             this.emit('AGREE_FINISH_TASK_EVENT', obj);
         })._on('APPLY_FINISH_TASK_NF', (obj) => {
+            console.log('APPLY_FINISH_TASK_NF===========', obj);
             this.emit('APPLY_FINISH_TASK_EVENT', obj);
         })._on('REJECT_FINISH_TASK_NF', (obj) => {
+            console.log('REJECT_FINISH_TASK_NF===========', obj);
             this.emit('REJECT_FINISH_TASK_EVENT', obj);
         })._on('REMIND_TASK_NF', (obj) => {
             this.emit('REMIND_TASK_EVENT', obj);

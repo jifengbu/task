@@ -12,6 +12,7 @@ const {
 
 const Subscribable = require('Subscribable');
 import Badge from 'react-native-smart-badge';
+const TaskSupervision = require('./TaskSupervision.js');
 
 module.exports = React.createClass({
     mixins: [Subscribable.Mixin],
@@ -27,6 +28,9 @@ module.exports = React.createClass({
         };
     },
     componentDidMount () {
+        this.getTaskListByType();
+    },
+    onWillFocus() {
         this.getTaskListByType();
     },
     getTaskListByType() {
@@ -57,10 +61,16 @@ module.exports = React.createClass({
         // this.pageNo++;
         // this.getTaskListByType(this.type);
     },
+    goGroupTaskDetail (data) {
+        app.navigator.push({
+            component: TaskSupervision,
+            passProps: {data}
+        });
+    },
     renderRow (obj, sectionID, rowID) {
         return (
           <View>
-            <RowItem  obj={obj}/>
+            <RowItem goGroupTaskDetail={this.goGroupTaskDetail} obj={obj}/>
           </View>
         );
     },
@@ -96,7 +106,8 @@ const RowItem = React.createClass({
             this.setState({ lineHeight: height + 26 });
         }
     },
-    onPress() {
+    onPress(obj) {
+        this.props.goGroupTaskDetail(obj);
     },
     doLookAll () {
         this.setState({ isLookAll: !this.state.isLookAll });

@@ -18,6 +18,9 @@ const MyTask = require('./MyTask.js');
 const publishTask = require('./publishTask.js');
 const Person = require('../person');
 
+const CustomRemind = require('../../manager/CustomRemindTimeMgr.js');
+const TaskSupervision = require('../leader/TaskSupervision.js');
+
 const INIT_ROUTE_INDEX = 0;
 const ROUTE_STACK = [
     { index: 0, component: MyTask },
@@ -142,14 +145,47 @@ module.exports = React.createClass({
         this.registerEvents('REJECT_FINISH_TASK_EVENT');
         this.registerEvents('AGREE_FINISH_TASK_EVENT');
         this.registerEvents('REMIND_TASK_EVENT');
+        this.addListenerOn(CustomRemind, 'TIMING_TASK_EVENT', (param) => {
+            this.TIMING_TASK_EVENT(param);
+        });
+    },
+    componentDidMount: function() {
+        app.customTime.setTiming();
+    },
+    TIMING_TASK_EVENT (task) {
+        let data = null;
+        if (!!task) {
+            for (var i = 0; i < task.timeText.length; i++) {
+                data = task.timeText[i];
+                const params = {
+                    type: task.type,
+                    taskDetail: data,
+                    component: TaskSupervision,
+                }
+                app.showNotifications(params);
+            }
+        }
+
     },
     registerEvents (name) {
         this.addListenerOn(app.socket, name, (param) => {
             this[name](param);
         });
     },
+    // 0: '自定义提醒通知' TIMING_TASK_EVENT
+    // 1: '综合部创建一条群组任务', NEW_PUBLISH_TASK_NF
+    // 2: '发布一条新任务', AGREE_PUBLISH_TASK_NF
+    // 3: '领导拒绝申请发布该任务', REJECT_PUBLISH_TASK_NF
+    // 4: '申请完成该任务', APPLY_FINISH_TASK_NF
+    // 5: '领导同意完成该任务', AGREE_FINISH_TASK_NF
+    // 6: '领导拒绝完成该任务', REJECT_FINISH_TASK_NF
+    // 7: '定时任务通知', REMIND_TASK_NF
     AGREE_PUBLISH_TASK_EVENT (task) {
+        if (task.publisherId == app.personal.info.userId) {
+            app.customTime.isPublish = true;
+        }
         const params = {
+            type: 2,
             taskDetail: task,
             component: TaskSupervision,
         }
@@ -157,32 +193,35 @@ module.exports = React.createClass({
     },
     REJECT_PUBLISH_TASK_EVENT (task) {
         const params = {
+            type: 3,
             taskDetail: task,
-            component: ExamineTask,
+            component: TaskSupervision,
         }
         app.showNotifications(params);
     },
     REJECT_FINISH_TASK_EVENT (task) {
         const params = {
+            type: 6,
             taskDetail: task,
-            component: ExamineTask,
+            component: TaskSupervision,
         }
         app.showNotifications(params);
     },
     AGREE_FINISH_TASK_EVENT (task) {
         const params = {
+            type: 5,
             taskDetail: task,
-            component: ExamineTask,
+            component: TaskSupervision,
         }
         app.showNotifications(params);
     },
     REMIND_TASK_EVENT (task) {
-        Toast('提醒的通知');
-        // const params = {
-        //     taskDetail: task,
-        //     component: ExamineTask,
-        // }
-        // app.showNotifications(params);
+        const params = {
+            type: 7,
+            taskDetail: task,
+            component: TaskSupervision,
+        }
+        app.showNotifications(params);
     },
     getChildScene () {
         return this.scene;

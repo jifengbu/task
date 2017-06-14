@@ -50,7 +50,7 @@ export default async ({
     doc.taskList = [ task.id ];
     await doc.save();
     await updateTaskProgress(userId, task.id, '发布任务');
-    io.emitTo([doc.executorId, doc.supervisorId], 'AGREE_PUBLISH_TASK_NF', task);
+    io.emitTo([executorId, supervisorId], 'AGREE_PUBLISH_TASK_NF', task);
     startScheduleSendSMS(executorId, task.id); // 发执行者定时
     startScheduleRemind(io, task.id, remindList, expectStartTime, expectFinishTime);
 

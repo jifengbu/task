@@ -165,6 +165,15 @@ module.exports = React.createClass({
         }
 
     },
+    // 0: '自定义提醒通知' TIMING_TASK_EVENT
+    // 1: '综合部创建一条群组任务', NEW_PUBLISH_TASK_NF
+    // 2: '发布一条新任务', AGREE_PUBLISH_TASK_NF
+    // 3: '领导拒绝申请发布该任务', REJECT_PUBLISH_TASK_NF
+    // 4: '申请完成该任务', APPLY_FINISH_TASK_NF
+    // 5: '领导同意完成该任务', AGREE_FINISH_TASK_NF
+    // 6: '领导拒绝完成该任务', REJECT_FINISH_TASK_NF
+    // 7: '定时任务通知', REMIND_TASK_NF
+    //type用于方便显示通知的类型
     NEW_PUBLISH_TASK_EVENT (task) {
         const params = {
             type: 1,
@@ -175,19 +184,19 @@ module.exports = React.createClass({
     },
     APPLY_FINISH_TASK_EVENT (task) {
         const params = {
-            type: 1,
+            type: 4,
             taskDetail: task,
-            component: ExamineTask,
+            component: TaskSupervision,
         }
         app.showNotifications(params);
     },
     REMIND_TASK_EVENT (task) {
-        Toast('提醒的通知');
-        // const params = {
-        //     taskDetail: task,
-        //     component: ExamineTask,
-        // }
-        // app.showNotifications(params);
+        const params = {
+            type: 7,
+            taskDetail: task,
+            component: TaskSupervision,
+        }
+        app.showNotifications(params);
     },
     getChildScene () {
         return this.scene;

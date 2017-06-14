@@ -61,7 +61,7 @@ module.exports = React.createClass({
         dismissKeyboard();
         if (this.state.isEditStatus) {
             const { head, name, position } = app.personal.info;
-            if (name != this.state.name ||position != this.state.position) {
+            if (head != this.state.head.uri || name != this.state.name ||position != this.state.position) {
                 this.updatePersnalInfo();
             } else {
                 this.setState({ isEditStatus: false });
@@ -151,10 +151,11 @@ module.exports = React.createClass({
             userHead: this.state.head.uri,
             phone: app.personal.info.phone,
         };
-        POST(app.route.ROUTE_MODIFY_PERSONAL_INFO, param, this.updatePersnalInfoSuccess, this.updatePersnalInfoError, true);
+        POST(app.route.ROUTE_MODIFY_PERSONAL_INFO, param, this.updatePersnalInfoSuccess.bind(null, this.state.head.uri), this.updatePersnalInfoError, true);
     },
-    updatePersnalInfoSuccess (data) {
+    updatePersnalInfoSuccess (url, data) {
         if (data.success) {
+            app.personal.info.head = url;
             this.setPersonalInfo();
             this.setState({ isEditStatus: false, showSuccessToast: true });
             app.getCurrentRoute().leftButton = { handler: () => { app.scene.goBack(); } };
@@ -224,7 +225,6 @@ module.exports = React.createClass({
         if (data.success) {
             const context = data.context;
             this.setState({head: { uri: context.url }});
-            app.personal.info.head = (context.url);
         } else {
             Toast('上传头像失败');
         }

@@ -31,6 +31,9 @@ module.exports = React.createClass({
             infiniteLoadStatus: STATUS_TEXT_HIDE,
         };
     },
+    onWillFocus() {
+        this.getList();
+    },
     onPress(data) {
         app.navigator.push({
             component: ExamineTask,

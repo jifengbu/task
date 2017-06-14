@@ -464,6 +464,7 @@ module.exports = React.createClass({
             supervisorId,
             executorId,
             type: typeInfo.key,
+            customRemind,
             remindList,
             audioList,
             imageList,

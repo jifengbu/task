@@ -37,8 +37,6 @@ module.exports = React.createClass({
             voiceTime:0,
             voiceIsPlaly: false,
         };
-        this.typeList = [];
-        this.tempTypeList = [];
         this.uploadOn=false;
         this.imgFileInfo = {
             imgFileUrl:'',
@@ -64,12 +62,6 @@ module.exports = React.createClass({
     },
     componentWillMount () {
         this.listFlags = 0;
-    },
-    componentDidMount() {
-        this.typeList = app.taskType.getList()||[];
-        _.forEach(this.typeList, (item) => {
-            this.tempTypeList.push(item.name);
-        });
     },
     changeTab (tabIndex) {
         this.setState({ tabIndex });
@@ -296,6 +288,11 @@ module.exports = React.createClass({
         });
     },
     showSelectType() {
+        this.tempTypeList = [];
+        this.typeList = app.taskType.getList()||[];
+        _.forEach(this.typeList, (item) => {
+            this.tempTypeList.push(item.name);
+        });
         Picker(this.tempTypeList, [this.tempTypeList[0]], '').then((value)=>{
             this.setState({taskType: value[0]});
         });
@@ -449,7 +446,8 @@ module.exports = React.createClass({
         if (data.success) {
             if (data.context) {
                 if (!!this.state.customRemind) {
-                    app.customTime.setCustomTime(this.state.customRemind,data.context.taskId,content,title,1);
+                    app.customTime.isPublish = true;
+                    app.customTime.setCustomTime(this.state.customRemind,data.context.taskId,content,title,8);
                 }
             }
             this.setState({
@@ -470,7 +468,7 @@ module.exports = React.createClass({
         }
     },
     render () {
-        const {startTime, endTime, remindList, customRemind, voiceFileData, imgFileData} = this.state;
+        const {startTime, endTime, remindList, customRemind, voiceFileData, imgFileData, title, content} = this.state;
         const isFirstTap = this.state.tabIndex === 0;
         return (
             <View style={styles.container}>
@@ -483,6 +481,7 @@ module.exports = React.createClass({
                             placeholder={'点击输入任务主题'}
                             textStyle={styles.contentText}
                             placeholderTextColor={'#A7A7A7'}
+                            value={title}
                             onChangeText={(text) => this.setState({title: text})}
                             />
                         <TextInput
@@ -492,6 +491,7 @@ module.exports = React.createClass({
                             placeholder={'点击输入任务描述'}
                             textStyle={styles.contentText}
                             placeholderTextColor={'#A7A7A7'}
+                            value={content}
                             onChangeText={(text) => this.setState({content: text})}
                             />
                     </View>

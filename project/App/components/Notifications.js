@@ -10,6 +10,16 @@ const {
     Platform,
     TouchableOpacity,
 } = ReactNative;
+const noticEnum = {
+            0: '自定义提醒通知',
+            1: '综合部创建一条群组任务',
+　　　　　　　2: '发布一条新任务',
+　　　　　　　3: '领导拒绝申请发布该任务',
+　　　　　　　4: '申请完成该任务',
+　　　　　　　5: '领导同意完成该任务',
+　　　　　　　6: '领导拒绝完成该任务',
+　　　　　　　7: '定时任务通知'
+}
 
 module.exports = React.createClass({
     getDefaultProps () {
@@ -56,7 +66,7 @@ module.exports = React.createClass({
         ).start(() => {
             //push到特定的页面
             const {taskDetail, component, type} = this.props;
-            if (type == 1) {
+            if (type != 0) {
                 app.navigator.push({
                     component: component,
                     passProps: {data: taskDetail}
@@ -66,22 +76,27 @@ module.exports = React.createClass({
         });
     },
     render () {
-        const {title, content} = this.props.taskDetail || {};
+        const {title, content, type} = this.props.taskDetail || {};
         return (
             <Animated.View style={styles.overlayContainer}>
                 <View style={styles.notificationContainer}>
-                    <View style={styles.titleView}>
-                        <Text style={styles.titleText}>
-                            {title}
-                        </Text>
-                        <TouchableOpacity onPress={this.closeNotification} style={styles.touchCloseView}>
-                            <Image
-                                resizeMode='contain'
-                                source={app.img.home_close_icon}
-                                style={styles.iconStyle} />
-                        </TouchableOpacity>
-                    </View>
                     <TouchableOpacity onPress={this.seeMoreNotification}>
+                        <View style={styles.topView}>
+                            <View style={styles.titleView}>
+                                <Text style={styles.titleText}>
+                                    {noticEnum[this.props.type]}
+                                </Text>
+                                <TouchableOpacity onPress={this.closeNotification} style={styles.touchCloseView}>
+                                    <Image
+                                        resizeMode='contain'
+                                        source={app.img.home_close_icon}
+                                        style={styles.iconStyle} />
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={styles.titleText}>
+                                {title}
+                            </Text>
+                        </View>
                         <Text numberOfLines={3} style={styles.describeText}>
                             {(Platform.OS === 'android' ? '        ' : '\t') + content}
                         </Text>
@@ -102,16 +117,19 @@ const styles = StyleSheet.create({
     },
     notificationContainer: {
         width: sr.w-10,
-        marginTop: 10,
+        marginTop: 20,
         marginLeft: 5,
         opacity: 0.9,
         backgroundColor: '#f1f1f1',
         borderTopLeftRadius: 4,
         borderTopRightRadius: 4,
     },
+    topView: {
+        width: sr.w-10,
+        backgroundColor: '#FFFFFF',
+    },
     titleView: {
         width: sr.w-10,
-        height: 25,
         backgroundColor: '#FFFFFF',
         flexDirection: 'row',
         alignItems: 'center',
@@ -120,6 +138,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 4,
     },
     titleText: {
+        width: sr.w-60,
         fontSize: 13,
         color: '#54110c',
         fontFamily:'STHeitiSC-Medium',

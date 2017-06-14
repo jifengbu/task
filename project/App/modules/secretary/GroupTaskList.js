@@ -369,6 +369,13 @@ module.exports = React.createClass({
     secretaryCreateTaskSuccess(data) {
         if (data.success) {
             let {title, content, leader, taskList, dataSource} = this.state;
+            for (var i in taskList) {
+                if (taskList.hasOwnProperty(i)) {
+                    var item = taskList[i];
+                    console.log('aaaa...',item);
+                    app.customTime.setCustomTime(item.customRemind,data.context.taskIdList[i],item.content,item.title,8);
+                }
+            }
             taskList.splice(0, taskList.length);
             this.setState({
                 title: '',
