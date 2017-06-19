@@ -27,6 +27,7 @@ class Manager extends EventEmitter {
         })._on('connect_timeout', (obj) => {
         })._on('reconnect', (obj) => {
             app.socketconnect = true;
+            this.socket.emit('LOGIN_RQ', {phone:app.personal.info.phone});
             Toast('服务器重新连接连接成功');
         })._on('reconnect_error', (obj) => {
         })._on('reconnect_failed', (obj) => {

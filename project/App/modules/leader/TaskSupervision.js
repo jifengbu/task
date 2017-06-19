@@ -223,7 +223,7 @@ module.exports = React.createClass({
             {title: '任务变更', tag: 2, visible: false && (publisherId===userId||examinerId === userId)},
             {title: '同意结束', tag: 3, visible: state == 32 && examinerId === userId},
             {title: '驳回结束', tag: 4, visible: state == 32 && examinerId === userId},
-            {title: '申请结束', tag: 5, visible: state == 16 && userId===executor.id},
+            {title: '申请结束', tag: 5, visible: (state == 16 || state == 64) && userId===executor.id},
             {title: '重新提交申请', tag: 6, visible: state == 2 && publisherId===userId}
         ];
         return (

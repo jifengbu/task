@@ -46,9 +46,9 @@ module.exports = React.createClass({
                 <View style={styles.headImgBg}>
                     <TouchableOpacity onPress={this.doEditPersonInfo}>
                         <Image
-                            resizeMode='stretch'
+                            resizeMode='cover'
                             defaultSource={app.img.personal_default_head}
-                            source={{uri:app.personal.info.head}}
+                            source={{uri:app.personal.info.head||''}}
                             style={styles.headStyle}
                             />
                     </TouchableOpacity>
@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
         marginTop: 38,
         width: 87,
         height: 87,
-        borderWidth: app.isandroid ? 0 : 3,
         borderColor: '#FFFFFF',
         borderRadius: 43.5,
     },

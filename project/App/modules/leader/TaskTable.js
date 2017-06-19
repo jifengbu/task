@@ -27,6 +27,7 @@ var Title = React.createClass({
         return (
             <View style={styles.txtInputView}>
                 <TextInput
+                    underlineColorAndroid="transparent"
                     placeholder="输入搜索关键字"
                     defaultValue={searchText}
                     onChangeText={(text) => {searchText=text}}

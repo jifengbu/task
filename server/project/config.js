@@ -4,6 +4,6 @@ module.exports = {
     apiRoot: '/api',
     timeout: 0,
     db: {
-        uri: 'mongodb://localhost/task'
+        uri: 'mongodb://root:rootTask@localhost/task'
     }
 }

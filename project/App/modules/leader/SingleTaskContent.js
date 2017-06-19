@@ -202,6 +202,7 @@ module.exports = React.createClass({
         const obj = this.props.data;
         app.customTime.isPublish = true;
         app.customTime.setCustomTime(this.state.remindTime.format('YYYY-MM-DD HH:mm'),obj.id,obj.content,obj.title,8);
+        Toast('设置成功');
     },
     render () {
         let {isLookAll, taskType,remindTime} = this.state;

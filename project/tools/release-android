@@ -55,6 +55,5 @@ cd ../android
 ./gradlew assembleRelease
 #./gradlew installRelease
 CHANNEL=$(grep "CHANNEL: '" ../App/config/Constants.js|sed "s/.*'\(.*\)'.*/\1/")
-mv app/build/outputs/apk/app-release.apk ../../../CardNodeServer/tools/dist/${file}/${file}_${CHANNEL}.apk
-echo "../../../CardNodeServer/tools/dist/${file}/${file}_${CHANNEL}.apk"
-./genBigVersionMd5
+mv app/build/outputs/apk/app-release.apk ../../server/dist/public/${file}/${file}_${CHANNEL}.apk
+echo "../../server/dist/public/${file}/${file}_${CHANNEL}.apk"
